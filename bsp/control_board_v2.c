@@ -56,7 +56,7 @@ void init_hw_drv8847(void) {
     // Enable overflow interrupt、center-aligned PWM
     // FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_CPWMS_MASK | FTM_SC_PS(2) | FTM_SC_TOIE_MASK;
     FTM_1A1B->CNTIN = 0;                     // start count
-    SET_1A1B_PERIOD = PERIOD_COUNT;           // period
+    SET_1A1B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_1A_DUTY = 0;
     SET_1B_DUTY = 0;
     FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;
@@ -80,7 +80,7 @@ void init_hw_drv8847(void) {
     // FTM_2A2B->CONTROLS[CH_2B].CnV = 30000; // duty + CNTIN
     // FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;
     FTM_2A2B->CNTIN = 0;
-    SET_2A2B_PERIOD = PERIOD_COUNT;           // period
+    SET_2A2B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_2A_DUTY = 0;
     SET_2B_DUTY = 0;
     FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;

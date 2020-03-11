@@ -121,20 +121,12 @@ int main (void) {
             cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
             cal_current_correct(&fb_exc_angle, &fb_current);
             update_cangle(&cangle, get_cangle_inc(&adj_v));
-            // set_cangle_inc(&adj_v, 1);
-            // RS485_trm("%.2f, %.2f\n", sin(fb_exc_angle.th_esvpwm), sin(fb_exc_angle.th_esvpwm)*drv8847.drv->period1);
-            // drv8847.drv->set_duty1((uint16_t) abs_float(sin(fb_exc_angle.th_esvpwm)*drv8847.drv->period1));
-            // drv8847.drv->set_duty2((uint16_t) abs_float(cos(fb_exc_angle.th_esvpwm)*drv8847.drv->period2));
         }
         if(cnt % 10000 == 0) {
             RS485_trm("%.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f\n", drv8847.current_Rsense1, drv8847.current_Rsense2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum);
         }
-        // if(cnt % 2000 == 0) {
-        //     if(fg) drv8847.clockwise();
-        //     else drv8847.counterclockwise();
-        //     fg ^= 1;
-        // }
+
         cnt++;
     }
 
