@@ -122,11 +122,12 @@ int main (void) {
             cal_current_correct(&fb_exc_angle, &fb_current);
             update_cangle(&cangle, get_cangle_inc(&adj_v));
         }
-        if(cnt % 10000 == 0) {
-            RS485_trm("%.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f\n", drv8847.current_Rsense1, drv8847.current_Rsense2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum);
-        }
-
+        // if(cnt % 1000 == 0) {
+        //     RS485_trm("%.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f\n", drv8847.current_Rsense1, drv8847.current_Rsense2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+        //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum);
+        // }
+        RS485_trm("Hello World !!!\n");
+        hal_delay(200);
         cnt++;
     }
 

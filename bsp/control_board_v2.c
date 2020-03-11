@@ -144,7 +144,7 @@ void init_hw_rs485(void) {
     // CTR1 and CTR2 pin as output, default is LOW
     PORT_CTR1->PCR[PIN_CTR1] |= PORT_PCR_MUX(MUX_ALT_1);
     GPIO_CTR1->PDDR |= (1<<PIN_CTR1);
-    GPIO_CTR1->PCOR |= (1<<PIN_CTR1);
+    GPIO_CTR1->PSOR |= (1<<PIN_CTR1);
 
     PORT_CTR2->PCR[PIN_CTR2] |= PORT_PCR_MUX(MUX_ALT_1);
     GPIO_CTR2->PDDR |= (1<<PIN_CTR2);
