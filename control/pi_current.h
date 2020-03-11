@@ -11,6 +11,10 @@
 #define PI_CURRENT_H
 #include "i_excite_angle.h"
 
+/* Experiment value */
+#define Ia_MAX        0.5
+#define Ib_MAX        0.5
+
 typedef struct _fb_current_ {
     fb_pid_t pid;
     float i_svpwm;

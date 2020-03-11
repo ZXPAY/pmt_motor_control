@@ -7,7 +7,7 @@ PLATFORM = MKV30F128
 THUMB    = YES
 
 ### Source files and search directories
-CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c
+CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c
 CSRC	= main.c uart.c system.c syscall.c control_board_v2.c hal_as5047d.c as5047d.c hal_drv8847.c drv8847.c mkv30f_it.c hal_tick.c
 CSRC   += $(CONTROL_CSRC)
 ASRC	= fpu.S

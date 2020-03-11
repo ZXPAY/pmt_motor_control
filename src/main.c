@@ -5,7 +5,6 @@
  * @date 2020.xx.xx
  *
  * Compiler: arm-none-eabi-gcc (8.3.1)
- * TODO: current (I) not in the structure
  * TODO: overflow problem (0~360)
  */
 
@@ -22,11 +21,11 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
 /* Define parameters */
-#define EXC_KI        0.1
-#define I_SVPWM_KP    1.5
-#define I_SVPWM_KI    0.1
-#define I_SVPWM_LOW   -200.0
-#define I_SVPWM_HIGH  200.0
+#define EXC_KI        0.1         /* 激磁角Ki回饋 */
+#define I_SVPWM_KP    1.5         /* 電流Kp回饋 */
+#define I_SVPWM_KI    0.1         /* 電流Ki回饋 */
+#define I_SVPWM_LOW   -200.0      /* 電流下限 */
+#define I_SVPWM_HIGH  200.0       /* 電流上限 */
 
 /* RS485 transmit macro */
 #define RS485_trm(format, args...) printf("\r[RS485] "format, ##args)
@@ -39,8 +38,8 @@
 #include "hal_as5047d.h"
 #include "hal_drv8847.h"
 
-extern drv8847_t drv8847;
-extern as50474_t as5047d;
+extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
+extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 /* Include control library */
 #include "sin_cos_val_table.h"
@@ -48,16 +47,18 @@ extern as50474_t as5047d;
 #include "adj_velocity.h"
 #include "pi_current.h"
 #include "i_excite_angle.h"
-
+#include "svpwm.h"
 
 /* Define stepper motor control object */
-sangle_t sangle;
-cangle_t cangle;
-adj_v_t adj_v;
-fb_exc_angle_t fb_exc_angle;
-fb_current_t fb_current;
+sangle_t sangle;                 /* 感測角 */
+cangle_t cangle;                 /* 命令角 */
+adj_v_t adj_v;                   /* 相位調整限速器 */
+fb_exc_angle_t fb_exc_angle;     /* 激磁角回饋 */
+fb_current_t fb_current;         /* 電流回饋 */
+pwmAB_t AB1;                     /* 1A 1B PWM */
+pwmAB_t AB2;                     /* 2A 2B PWM */
 
-/* Define the N-step */
+/* Define default N-step */
 #define N_STEP 1
 
 /* Main code */
