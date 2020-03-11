@@ -102,23 +102,25 @@ static void drv8847_set_period1(uint16_t period) {
 
 static void drv8847_set_period2(uint16_t period) {
     drv8847_dri.period2 = period;
-    FTM_2A2B->CNTIN = drv8847_dri.period1 >> 1;   // FTM_1A1B->MOD / 2
-    FTM_2A2B->MOD = period + (drv8847_dri.period1 >> 1);
+    // FTM_2A2B->CNTIN = drv8847_dri.period1 >> 1;   // FTM_1A1B->MOD / 2
+    // FTM_2A2B->MOD = period + (drv8847_dri.period1 >> 1);
 }
 
 static void drv8847_set_duty1(uint16_t duty) {
     drv8847_dri.duty1 = duty;
-     FTM_1A1B->CONTROLS[CH_1A].CnV = duty;
 }
 
 static void drv8847_set_duty2(uint16_t duty) {
-    if(duty == 0) {
-        FTM_2A2B->CONTROLS[CH_2B].CnV = 0;
-    }
-    else {
-        FTM_2A2B->CONTROLS[CH_2B].CnV = duty + (drv8847_dri.period1 >> 1);
-    }
     drv8847_dri.duty2 = duty;
+    // if(duty == 0 || duty == drv8847_dri.period2) {
+    //     FTM_2A2B->CNTIN = 0;
+    //     FTM_2A2B->MOD = drv8847_dri.period2;
+    //     drv8847_dri.duty2 = duty;
+    // }
+    // else {
+    //     drv8847_set_period2(drv8847_dri.period2);
+    //     drv8847_dri.duty2 = duty + (drv8847_dri.period1 >> 1);
+    // }
 }
 
 static void drv8847_Rsense_trig(void) {

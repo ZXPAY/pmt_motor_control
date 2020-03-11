@@ -5,6 +5,7 @@
  * @date 2020.xx.xx
  *
  * Encoder resolutio: 16 bits
+ * 感測電子角與命令電子角轉換
  */
 
 #ifndef ELE_ANGLE_H

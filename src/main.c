@@ -12,7 +12,6 @@
 /* Include C standard library */
 #include <stdbool.h>
 #include <stdio.h>
-#include <math.h>
 
 /* Include hardware library */
 #include "uart.h"
@@ -44,6 +43,7 @@ extern drv8847_t drv8847;
 extern as50474_t as5047d;
 
 /* Include control library */
+#include "sin_cos_val_table.h"
 #include "ele_angle.h"
 #include "adj_velocity.h"
 #include "pi_current.h"
@@ -58,10 +58,7 @@ fb_exc_angle_t fb_exc_angle;
 fb_current_t fb_current;
 
 /* Define the N-step */
-#define N_STEP 64
-
-int16_t sin_data[100];
-int16_t cos_data[100];
+#define N_STEP 1
 
 /* Main code */
 int main (void) {
@@ -73,23 +70,13 @@ int main (void) {
     init_hw_as5047d();
     init_hw_drv8847();
     enable_fpu();
-    // Initialize SysTick
-    SYST_RVR = 24000;   // 10 ms
-    SYST_CSR = 0x07;
 
     RS485_trm("initialize \n");
     as5047d.init();
     drv8847.init();
 
-    drv8847.drv->set_period1(30000);
-    drv8847.drv->set_period2(30000);
-    drv8847.drv->set_duty1(15000);
-    drv8847.drv->set_duty2(15000);
-
-    for(int i=0;i<100;i++) {
-        sin_data[i] = 15000 * (sin(i*2*3.141593/100) + 1);
-        cos_data[i] = 15000 * (cos(i*2*3.141593/100) + 1);
-    }
+    /* Initialize sin, cos table, call get_sin() and get_cos() to get current value  */
+    init_sin_cos_table(PERIOD_COUNT, N_STEP);
 
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
@@ -101,7 +88,11 @@ int main (void) {
     /* Initialize current feedback */
     init_current_para(&fb_current, I_SVPWM_KP, I_SVPWM_KI, I_SVPWM_LOW, I_SVPWM_HIGH);
 
+    // Initialize SysTick, setting slot 1 ms
+    SYST_RVR = 24000;
+    SYST_CSR = 0x07;
     hal_delay(500);
+
     /* Initialize machanical angle */
     for(int i=0;i<16;i++) {
         as5047d.update();    // update encoder angle to be first machanical angle
@@ -110,11 +101,13 @@ int main (void) {
     init_cangle(&cangle, N_STEP, 0);
 
     RS485_trm("start\n");
-    // Initialize SysTick
-    SYST_RVR = 24000;   // 1 ms
-    SYST_CSR = 0x07;
+
+    // Enable interrupt
+    __enable_irqn(FTM0_IRQn);
+    __enable_irqn(FTM1_IRQn);
+    __enable_irqn(ADC0_IRQn);
+
     uint32_t cnt = 0;
-    uint8_t fg = 1;
     while (true) {
         as5047d.update();
 

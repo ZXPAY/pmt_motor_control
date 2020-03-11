@@ -12,7 +12,7 @@
 #include "hal_drv8847.h"
 #include "hal_tick.h"
 #include "control_board_v2.h"
-#include <stdio.h>
+#include "sin_cos_val_table.h"
 
 extern drv8847_t drv8847;
 
@@ -30,17 +30,24 @@ extern drv8847_t drv8847;
 * Rsense2 : ADC0_SE23
 */
 
-int16_t sin_data[100];
-int16_t cos_data[100];
-volatile int d1 = 0;
-volatile int d2 = 0;
+volatile int8_t sign1, sign2;
 
 /** @brief 2A 2B timer/PWM handler
  *
  */
 void FTM0_IRQHandler(void) {
-    // drv8847.drv->set_duty1(sin_data[d1++]);
-    // if(d1 == 100) d1 = 0;
+    int32_t temp = get_cos();
+    if(temp >= 0) {
+        SET_2B_DUTY = temp;
+        SET_2A_DUTY = 0;
+        sign2 = 1;
+    }
+    else {
+        SET_2B_DUTY = 0;
+        SET_2A_DUTY = -temp;
+        sign2 = -1;
+    }
+
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
 }
@@ -49,8 +56,18 @@ void FTM0_IRQHandler(void) {
  *
  */
 void FTM1_IRQHandler(void) {
-    // drv8847.drv->set_duty2(sin_data[d2++]);
-    // if(d2 == 100) d2 = 0;
+    int32_t temp = get_sin();
+    if(temp >= 0) {
+        SET_1A_DUTY = temp;
+        SET_1B_DUTY = 0;
+        sign1 = 1;
+    }
+    else {
+        SET_1A_DUTY = 0;
+        SET_1B_DUTY = -temp;
+        sign1 = -1;
+    }
+
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;
 }

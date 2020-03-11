@@ -3,6 +3,8 @@
  * @author Xiang-Guan Deng
  * @brief Excited angle feedback
  * @date 2020.xx.xx
+ *
+ * 激磁角回饋
  */
 
 #ifndef I_EXCITE_ANGLE_H
@@ -27,12 +29,12 @@ typedef struct _fb_exc_angle_ {
     float th_cum;
 }fb_exc_angle_t;
 
-/** brief TODO
+/** @brief TODO
  *
  */
 void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki);
 
-/** brief TODO
+/** @brief TODO
  *
  */
 void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e_cdegree);

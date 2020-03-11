@@ -3,6 +3,8 @@
  * @author Xiang-Guan Deng
  * @brief Adjust the stepper motor velocity
  * @date 2020.xx.xx
+ *
+ * 電流回饋
  */
 
 #ifndef PI_CURRENT_H
@@ -16,12 +18,12 @@ typedef struct _fb_current_ {
     float high_limit;
 }fb_current_t;
 
-/** brief TODO
+/** @brief TODO
  *
  */
 void init_current_para(fb_current_t *fb_current, float kp, float ki, float low_limit, float high_limit);
 
-/** brief TODO
+/** @brief TODO
  *
  */
 void cal_current_correct(fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_current);

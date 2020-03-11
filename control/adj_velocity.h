@@ -3,6 +3,8 @@
  * @author Xiang-Guan Deng
  * @brief Adjust the stepper motor velocity
  * @date 2020.xx.xx
+ *
+ * 相位調整限速器
  */
 
 #ifndef ADJ_VELOCITY_H

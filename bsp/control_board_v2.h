@@ -52,13 +52,14 @@
 #define CH_2B    0
 #define CH_2A    1
 /* Define for setting period and duty cycle */
-#define SET_1A1B_PERIOD  FTM_1A1B->MOD
-#define SET_1A_DUTY      FTM_1A1B->CONTROLS[CH_1A].CnV
-#define SET_1B_DUTY      FTM_1A1B->CONTROLS[CH_1B].CnV
+#define PERIOD_COUNT 60000
+#define SET_1A1B_PERIOD    FTM_1A1B->MOD
+#define SET_1A_DUTY        FTM_1A1B->CONTROLS[CH_1A].CnV
+#define SET_1B_DUTY        FTM_1A1B->CONTROLS[CH_1B].CnV
 
 #define SET_2A2B_PERIOD    FTM_2A2B->MOD
-#define SET_2B_DUTY      FTM_2A2B->CONTROLS[CH_2B].CnV
-#define SET_2A_DUTY      FTM_2A2B->CONTROLS[CH_2A].CnV
+#define SET_2B_DUTY        FTM_2A2B->CONTROLS[CH_2B].CnV
+#define SET_2A_DUTY        FTM_2A2B->CONTROLS[CH_2A].CnV
 
 #define GPIO_MODE GPIOE
 #define PORT_MODE PORTE
