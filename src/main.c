@@ -27,9 +27,6 @@
 #define I_SVPWM_LOW   -200.0      /* 電流下限 */
 #define I_SVPWM_HIGH  200.0       /* 電流上限 */
 
-/* RS485 transmit macro */
-#define RS485_trm(format, args...) printf("\r[RS485] "format, ##args)
-
 /* Include other library */
 #include "hal_tick.h"
 
@@ -37,6 +34,7 @@
 #include "control_board_v2.h"
 #include "hal_as5047d.h"
 #include "hal_drv8847.h"
+#include "rs485.h"
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
@@ -55,8 +53,7 @@ cangle_t cangle;                 /* 命令角 */
 adj_v_t adj_v;                   /* 相位調整限速器 */
 fb_exc_angle_t fb_exc_angle;     /* 激磁角回饋 */
 fb_current_t fb_current;         /* 電流回饋 */
-pwmAB_t AB1;                     /* 1A 1B PWM */
-pwmAB_t AB2;                     /* 2A 2B PWM */
+pwmAB_t pwm12;                     /* 1A1B 2A2B PWM */
 
 /* Define default N-step */
 #define N_STEP 1
@@ -70,6 +67,7 @@ int main (void) {
     uart_init();
     init_hw_as5047d();
     init_hw_drv8847();
+    init_hw_rs485();
     enable_fpu();
 
     RS485_trm("initialize \n");
@@ -81,7 +79,7 @@ int main (void) {
 
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
-    set_cangle_wback(&adj_v, 1);
+    set_cangle_wback(&adj_v, 0);
 
     /* Initialize excited angle feedback */
     init_exc_ang_para(&fb_exc_angle, EXC_KI);
@@ -106,7 +104,7 @@ int main (void) {
     // Enable interrupt
     __enable_irqn(FTM0_IRQn);
     __enable_irqn(FTM1_IRQn);
-    __enable_irqn(ADC0_IRQn);
+    __enable_irqn(UART1_RX_TX_IRQn);
 
     uint32_t cnt = 0;
     while (true) {
@@ -121,13 +119,13 @@ int main (void) {
             cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
             cal_current_correct(&fb_exc_angle, &fb_current);
             update_cangle(&cangle, get_cangle_inc(&adj_v));
+            cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
         }
-        // if(cnt % 1000 == 0) {
-        //     RS485_trm("%.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f\n", drv8847.current_Rsense1, drv8847.current_Rsense2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-        //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum);
-        // }
-        RS485_trm("Hello World !!!\n");
-        hal_delay(200);
+        if(cnt % 100 == 0) {
+            RS485_trm("%.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld\n", drv8847.i1, drv8847.i2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
+        }
+
         cnt++;
     }
 

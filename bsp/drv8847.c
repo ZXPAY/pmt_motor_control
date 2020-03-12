@@ -3,9 +3,6 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "control_board_v2.h"
 
-#define CONVERSION_READY   1
-#define CONVERSION_BUZY    0
-
 extern uint8_t drv8847_dir;
 
 /**
@@ -35,13 +32,11 @@ static void drv8847_set_period2(uint16_t period);
 static void drv8847_set_duty1(uint16_t duty);
 static void drv8847_set_duty2(uint16_t duty);
 static void drv8847_Rsense_trig(void);
-static void drv8847_update_Rsenses(void);
 
 drv8847_io_t drv8847_dri = {                       \
     .ch = ADC_CH_R_SENSE1,                         \
-    .R_sense1 = 0,                                 \
-    .R_sense2 = 0,                                 \
-    .flag = CONVERSION_READY,                      \
+    .v_r1 = 0,                                     \
+    .v_r2 = 0,                                     \
     .sleep_low = drv8847_sleep_low,                \
     .sleep_high = drv8847_sleep_high,              \
     .mode_low = drv8847_mode_low,                  \
@@ -56,7 +51,6 @@ drv8847_io_t drv8847_dri = {                       \
     .set_duty1 = drv8847_set_duty1,                \
     .set_duty2 = drv8847_set_duty2,                \
     .Rsense_trig = drv8847_Rsense_trig,            \
-    .update_Rsenses = drv8847_update_Rsenses,      \
 };
 
 static void drv8847_sleep_low(void) {
@@ -102,8 +96,6 @@ static void drv8847_set_period1(uint16_t period) {
 
 static void drv8847_set_period2(uint16_t period) {
     drv8847_dri.period2 = period;
-    // FTM_2A2B->CNTIN = drv8847_dri.period1 >> 1;   // FTM_1A1B->MOD / 2
-    // FTM_2A2B->MOD = period + (drv8847_dri.period1 >> 1);
 }
 
 static void drv8847_set_duty1(uint16_t duty) {
@@ -112,41 +104,22 @@ static void drv8847_set_duty1(uint16_t duty) {
 
 static void drv8847_set_duty2(uint16_t duty) {
     drv8847_dri.duty2 = duty;
-    // if(duty == 0 || duty == drv8847_dri.period2) {
-    //     FTM_2A2B->CNTIN = 0;
-    //     FTM_2A2B->MOD = drv8847_dri.period2;
-    //     drv8847_dri.duty2 = duty;
-    // }
-    // else {
-    //     drv8847_set_period2(drv8847_dri.period2);
-    //     drv8847_dri.duty2 = duty + (drv8847_dri.period1 >> 1);
-    // }
 }
 
 static void drv8847_Rsense_trig(void) {
-    if(drv8847_dri.flag == CONVERSION_READY) {
-        switch(drv8847_dri.ch) {
-            case ADC_CH_R_SENSE1:
-                drv8847_dri.ch = ADC_CH_R_SENSE2;
-                break;
-            case ADC_CH_R_SENSE2:
-                drv8847_dri.ch = ADC_CH_R_SENSE1;
-                break;
-        }
-        ADC_R_SENSE->SC1[0] = ADC_SC1_AIEN_MASK | drv8847_dri.ch;
-        drv8847_dri.flag = CONVERSION_BUZY;
+    switch(drv8847_dri.ch) {
+        case ADC_CH_R_SENSE1:
+            ADC_R_SENSE->SC1[0] =  drv8847_dri.ch;
+            while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
+            drv8847_dri.v_r1 = ADC_R_SENSE->R[0];
+            drv8847_dri.ch = ADC_CH_R_SENSE2;
+            break;
+        case ADC_CH_R_SENSE2:
+            ADC_R_SENSE->SC1[0] = drv8847_dri.ch;
+            while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
+            drv8847_dri.v_r2 = ADC_R_SENSE->R[0];
+            drv8847_dri.ch = ADC_CH_R_SENSE1;
+            break;
     }
 }
 
-static void drv8847_update_Rsenses(void) {
-    switch(drv8847_dri.ch) {
-        case ADC_CH_R_SENSE1:
-            drv8847_dri.R_sense1 = ADC_R_SENSE->R[0];
-            drv8847_dri.flag = CONVERSION_READY;
-            break;
-        case ADC_CH_R_SENSE2:
-            drv8847_dri.R_sense2 = ADC_R_SENSE->R[0];
-            drv8847_dri.flag = CONVERSION_READY;
-            break;
-    }
-}

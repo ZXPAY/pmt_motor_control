@@ -13,6 +13,8 @@
 #include "hal_tick.h"
 #include "control_board_v2.h"
 #include "sin_cos_val_table.h"
+#include "uart.h"
+#include "rs485.h"
 
 extern drv8847_t drv8847;
 
@@ -31,7 +33,7 @@ extern drv8847_t drv8847;
 */
 
 volatile int8_t sign1, sign2;
-
+extern int fg2;
 /** @brief 2A 2B timer/PWM handler
  *
  */
@@ -72,20 +74,16 @@ void FTM1_IRQHandler(void) {
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;
 }
 
-uint8_t data;
 /** brief TODO
  *
  */
+uint8_t buf[200];
+uint8_t cc = 0;
 void UART1_RX_TX_IRQHandler(void) {
     // Data receive
-    data = RS485_UART->D;
-}
-
-/** brief TODO
- *
- */
-void ADC0_IRQHandler(void) {
-    drv8847.handler();
+    buf[cc] = RS485_UART->D;
+    cc++;
+    if(cc == 200) {cc = 0;}
 }
 
 /** brief TODO

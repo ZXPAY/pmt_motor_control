@@ -32,13 +32,12 @@ enum STEP_DIR{
 
 typedef struct _drv8847_io {
     uint8_t ch;
-    uint16_t R_sense1;
-    uint16_t R_sense2;
+    uint16_t v_r1;
+    uint16_t v_r2;
     uint16_t period1;
     uint16_t period2;
     uint16_t duty1;
     uint16_t duty2;
-    volatile uint8_t flag;
     void (*sleep_low)(void);
     void (*sleep_high)(void);
     void (*mode_low)(void);
@@ -54,13 +53,12 @@ typedef struct _drv8847_io {
     void (*set_duty2)(uint16_t duty);
     void (*set_channel)(uint8_t ch);
     void (*Rsense_trig)(void);
-    void (*update_Rsenses)(void);
 }drv8847_io_t;
 
 typedef struct _a4988 {
     drv8847_io_t *drv;
-    volatile float current_Rsense1;
-    volatile float current_Rsense2;
+    float i1;
+    float i2;
     uint8_t status;
     void (*init)(void);
     void (*clockwise)(void);
@@ -68,7 +66,6 @@ typedef struct _a4988 {
     void (*setMode)(uint8_t mode);
     void (*setTorque)(uint8_t trq);
     void (*trigger)(void);
-    void (*handler)(void);
     void (*update_current)(void);
 }drv8847_t;
 

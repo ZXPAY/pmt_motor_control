@@ -12,13 +12,12 @@ static void drv8847_counterclockwise(void);
 static void drv8847_setMode(uint8_t mode);
 static void drv8847_setTorque(uint8_t trq);
 static void drv8847_trigger(void);
-static void drv8847_handler(void);
 static void drv8847_update_current(void);
 
 drv8847_t drv8847 = {                              \
     .drv = &drv8847_dri,                           \
-    .current_Rsense1 = 0.0,                        \
-    .current_Rsense2 = 0.0,                        \
+    .i1 = 0.0,                                     \
+    .i2 = 0.0,                                     \
     .status = DRV8847_STATUS_OK,                   \
     .init = drv8847_init,                          \
     .clockwise = drv8847_clockwise,                \
@@ -26,7 +25,6 @@ drv8847_t drv8847 = {                              \
     .setMode = drv8847_setMode,                    \
     .setTorque = drv8847_setTorque,                \
     .trigger = drv8847_trigger,                    \
-    .handler = drv8847_handler,                    \
     .update_current = drv8847_update_current,      \
 
 };
@@ -84,11 +82,7 @@ static void drv8847_trigger(void) {
     drv8847.drv->Rsense_trig();
 }
 
-static void drv8847_handler(void) {
-    drv8847.drv->update_Rsenses();
-}
-
 static void drv8847_update_current(void) {
-    drv8847.current_Rsense1 = drv8847.drv->R_sense1*ADC_REF/ADC_RES/R_SENSE;
-    drv8847.current_Rsense2 = drv8847.drv->R_sense2*ADC_REF/ADC_RES/R_SENSE;
+    drv8847.i1 = drv8847.drv->v_r1*ADC_REF/ADC_RES/R_SENSE;
+    drv8847.i2 = drv8847.drv->v_r2*ADC_REF/ADC_RES/R_SENSE;
 }

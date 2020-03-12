@@ -12,9 +12,6 @@
 #include <stdint.h>
 #include "pid.h"
 
-#define ACCUMULATE_MAX    180
-#define ACCUMULATE_MIN    -180
-
 #ifndef abs_float
 #define abs_float(X) ((X < 0)? (-X) : (X))
 #endif
@@ -27,6 +24,7 @@ typedef struct _fb_exc_angle_ {
     float th_esvpwm;
     float th_er;
     float th_cum;
+    float cum_limit;
 }fb_exc_angle_t;
 
 /** @brief TODO
