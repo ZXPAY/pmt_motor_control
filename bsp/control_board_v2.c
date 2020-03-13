@@ -4,6 +4,8 @@
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
+#define PWM_PERIOD 5
+
 /**
 * @brief DRV8847 pin map
 * 1B : PTB1   FTM1_CH1
@@ -25,19 +27,19 @@ void init_hw_drv8847(void) {
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
     SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
 
-    // MODE and NSLEEP pin as output
+    // MODE, NSLEEP and TRQ pin as output
     PORT_MODE->PCR[PIN_MODE] |= PORT_PCR_MUX(MUX_ALT_1);
     GPIO_MODE->PDDR |= (1<<PIN_MODE);
 
     PORT_NSLEEP->PCR[PIN_NSLEEP] |= PORT_PCR_MUX(MUX_ALT_1);
     GPIO_NSLEEP->PDDR |= (1<<PIN_NSLEEP);
 
-    // NFAULT pin and TRQ pin as input
+    PORT_TRQ->PCR[PIN_TRQ] |= PORT_PCR_MUX(MUX_ALT_1);
+    GPIO_TRQ->PDDR |= (1<<PIN_TRQ);
+
+    // NFAULT pin as input
     PORT_NFAULT->PCR[PIN_NFAULT] |= PORT_PCR_MUX(MUX_ALT_1) | PORT_PCR_PE(PCR_PULL_EN) | PORT_PCR_PS(PCR_PULL_UP);
     GPIO_NFAULT->PDDR &= ~(1<<PIN_NFAULT);
-
-    PORT_TRQ->PCR[PIN_TRQ] |= PORT_PCR_MUX(MUX_ALT_1) | PORT_PCR_PE(PCR_PULL_EN) | PORT_PCR_PS(PCR_PULL_UP);
-    GPIO_NFAULT->PDDR &= ~(1<<PIN_TRQ);
 
     // ===== Setting PWM for 1A 1B =====
     // Enable clock source
@@ -59,7 +61,7 @@ void init_hw_drv8847(void) {
     SET_1A1B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_1A_DUTY = 0;
     SET_1B_DUTY = 0;
-    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;
+    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK;
 
     // ===== Setting PWM for 2A 2B =====
     // Enable clock source
@@ -83,7 +85,7 @@ void init_hw_drv8847(void) {
     SET_2A2B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_2A_DUTY = 0;
     SET_2B_DUTY = 0;
-    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;
+    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK;
 
     // Setting ADC0 for R sense
     // Enable clock source

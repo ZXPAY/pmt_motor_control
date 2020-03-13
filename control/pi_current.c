@@ -14,6 +14,6 @@ void cal_current_correct(fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_current)
     fb_current->i_svpwm = 0.5*fb_current->low_limit + 0.5*fb_current->high_limit - fb_current->pid.kp*fb_exc_angle->th_er - fb_current->pid.ki*fb_exc_angle->th_cum;
 
     /* 限制上下界 */
-    if(fb_current->i_svpwm < fb_current->low_limit) fb_current->i_svpwm = fb_current->low_limit;
+    if(fb_current->i_svpwm < -fb_current->low_limit) fb_current->i_svpwm = fb_current->low_limit;
     if(fb_current->i_svpwm > fb_current->high_limit) fb_current->i_svpwm = fb_current->high_limit;
 }

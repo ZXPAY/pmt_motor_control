@@ -8,10 +8,11 @@ void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki) {
     fb_exc_angle->th_er = 0;
     fb_exc_angle->th_esvpwm = 0;
     fb_exc_angle->cum_limit = 90.0/ki;
+    fb_exc_angle->last_er = 0;
 }
 
 void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e_cdegree) {
-    fb_exc_angle->th_er = e_sdegree - e_cdegree;     /* 計算C電子角(命令) 與 S電子角誤差(感測) */
+    fb_exc_angle->th_er = e_sdegree - e_cdegree;     /* 計算C電子角(命令) 與 S電子角誤差(感測) (度度量) */
     fb_exc_angle->th_cum += fb_exc_angle->th_er;     /* 累計誤差 */
 
     /* 限制上下界 */
@@ -19,6 +20,8 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     if(fb_exc_angle->th_cum < -fb_exc_angle->cum_limit) fb_exc_angle->th_cum = -fb_exc_angle->cum_limit;
 
     /* 計算 theta_svpwm 值 (角差I回饋) */
+    /* (0~360) +- 90 => (-90~450) */
     fb_exc_angle->th_esvpwm = e_cdegree - fb_exc_angle->pid.ki*fb_exc_angle->th_cum;
 
+    fb_exc_angle->last_er = fb_exc_angle->th_er;
 }

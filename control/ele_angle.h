@@ -48,6 +48,7 @@ typedef struct _cangle_ {
     float K_degree;
     int16_t init_ele_angle;
     int16_t ele_angle;
+    int16_t ele_limit;
     float ele_dangle;
 }cangle_t;
 

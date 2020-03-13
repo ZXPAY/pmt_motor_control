@@ -60,12 +60,15 @@ void update_sangle(sangle_t *angle, uint16_t enc_angle) {
 
 void init_cangle(cangle_t *angle, uint16_t N_step, int16_t init_ele_angle) {
     angle->K_degree = 360.0/(N_step*FULL_STEPS_NUM);
+    angle->ele_limit = N_step*FULL_STEPS_NUM;
     angle->init_ele_angle = init_ele_angle;
     angle->ele_angle = 0;
 }
 
 void update_cangle(cangle_t *angle, int16_t th_inc) {
     angle->ele_angle += th_inc;
+    if(angle->ele_angle > angle->ele_limit) angle->ele_angle = 0;
+
     angle->ele_dangle = (float)angle->ele_angle*angle->K_degree;
     /* Constrain angle */
     if(angle->ele_dangle > 360.0) {angle->ele_dangle = 0;}
