@@ -12,9 +12,9 @@
 * 1A : PTB0   FTM1_CH0
 * 2A : PTC2   FTM0_CH1
 * 2B : PTC1   FTM0_CH0
-* MODE : PTE18
+* MODE : PTE18    (SDA)
 * NFAULT : PTD5
-* TRQ : PTE19
+* TRQ : PTE19     (SCL)
 * NSLEEP : PTC3
 * Rsense1 : PTE24
 * Rsense2 : ADC0_SE23
@@ -99,6 +99,85 @@ void init_hw_drv8847(void) {
 }
 
 void init_hw_drvs8847(void){
+    // Enable PORT clock source
+    SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTC_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
+
+    // NSLEEP and nFault pin as output
+    PORT_NSLEEP->PCR[PIN_NSLEEP] |= PORT_PCR_MUX(MUX_ALT_1);
+    GPIO_NSLEEP->PDDR |= (1<<PIN_NSLEEP);
+    PORT_NFAULT->PCR[PIN_NFAULT] |= PORT_PCR_MUX(MUX_ALT_1);
+    GPIO_NFAULT->PDDR |= (1<<PIN_NFAULT);
+    GPIO_NFAULT->PCOR |= (1<<PIN_NFAULT);
+
+    // Setting SDA(Mode), SCL(TRQ)
+    SIM->SCGC4 |= SIM_SCGC4_I2C0_MASK;
+    PORT_SDA->PCR[PIN_SDA] |= PORT_PCR_MUX(MUX_ALT_4);
+    PORT_SCL->PCR[PIN_SCL] |= PORT_PCR_MUX(MUX_ALT_4);
+    DRVS8847_I2C->A1 = 0;
+    DRVS8847_I2C->F  = 0;
+    DRVS8847_I2C->C1 = 0;
+    DRVS8847_I2C->S  = 0xFFU;
+    DRVS8847_I2C->C2 = 0;
+    DRVS8847_I2C->F |= I2C_F_MULT(2) | I2C_F_ICR(0x03);
+    DRVS8847_I2C->C1 = I2C_C1_IICEN_MASK;
+
+    // ===== Setting PWM for 1A 1B =====
+    // Enable clock source
+    SIM->SCGC6 |= SIM_SCGC6_FTM1_MASK;
+    FTM_1A1B->SC = 0;
+    FTM_1A1B->MODE |= FTM_MODE_WPDIS_MASK;
+    // Setting FTM1 CH0 and CH1 for 1A, 1B
+    FTM_1A1B->CONTROLS[CH_1A].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    FTM_1A1B->CONTROLS[CH_1B].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    // FTM_1A1B->COMBINE |= FTM_COMBINE_COMP0_MASK;
+    PORT_1A->PCR[PIN_1A] |= PORT_PCR_MUX(MUX_ALT_3);
+    GPIO_1A->PDDR |= (1<<PIN_1A);
+    PORT_1B->PCR[PIN_1B] |= PORT_PCR_MUX(MUX_ALT_3);
+    GPIO_1B->PDDR |= (1<<PIN_1B);
+    // FTM_1A1B->CONTROLS[CH_1B].CnSC |=  FTM_CnSC_ELSB_MASK;
+    // Enable overflow interrupt、center-aligned PWM
+    // FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_CPWMS_MASK | FTM_SC_PS(2) | FTM_SC_TOIE_MASK;
+    FTM_1A1B->CNTIN = 0;                     // start count
+    SET_1A1B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
+    SET_1A_DUTY = 0;
+    SET_1B_DUTY = 0;
+    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK;
+
+    // ===== Setting PWM for 2A 2B =====
+    // Enable clock source
+    SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
+    FTM_2A2B->SC = 0;
+    FTM_2A2B->MODE |= FTM_MODE_WPDIS_MASK;
+    // FTM0 CH0 and CH1 are complement and enable deadtime
+    // FTM_2A2B->COMBINE |= FTM_COMBINE_COMP0_MASK;
+    FTM_2A2B->CONTROLS[CH_2B].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    FTM_2A2B->CONTROLS[CH_2A].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    // FTM_2A2B->COMBINE |= FTM_COMBINE_COMP0_MASK;
+    PORT_2B->PCR[PIN_2B] |= PORT_PCR_MUX(MUX_ALT_4);
+    GPIO_2B->PDDR |= (1<<PIN_2B);
+    PORT_2A->PCR[PIN_2A] |= PORT_PCR_MUX(MUX_ALT_4);
+    GPIO_2A->PDDR |= (1<<PIN_2A);
+    // FTM_2A2B->MOD = 60000;     // period + CNTIN
+    // FTM_2A2B->CNTIN = 0;   // FTM_1A1B->MOD / 2 (phase shift)
+    // FTM_2A2B->CONTROLS[CH_2B].CnV = 30000; // duty + CNTIN
+    // FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(7) | FTM_SC_TOIE_MASK;
+    FTM_2A2B->CNTIN = 0;
+    SET_2A2B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
+    SET_2A_DUTY = 0;
+    SET_2B_DUTY = 0;
+    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK;
+
+    // Setting ADC0 for R sense
+    // Enable clock source
+    SIM->SCGC6 |= SIM_SCGC6_ADC0_MASK;
+    PORT_R_SENSE1->PCR[PIN_R_SENSE1] &= ~PORT_PCR_MUX_MASK;
+    PORT_R_SENSE2->PCR[PIN_R_SENSE2] &= ~PORT_PCR_MUX_MASK;
+    ADC_R_SENSE->CFG1 |= ADC_CFG1_MODE(3);   // 16 bit
+    ADC_R_SENSE->SC1[0] = ADC_CH_R_SENSE1;
+    ADC_R_SENSE->SC3 |= ADC_SC3_AVGE_MASK;
 
 }
 

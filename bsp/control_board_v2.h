@@ -17,13 +17,13 @@
 
 /**
 * @brief DRV8847 pin map
-* 1A : PTB0   FTM1_CH0
 * 1B : PTB1   FTM1_CH1
-* 2B : PTC1   FTM0_CH0
+* 1A : PTB0   FTM1_CH0
 * 2A : PTC2   FTM0_CH1
-* MODE : PTE18
+* 2B : PTC1   FTM0_CH0
+* MODE : PTE18    (SDA)
 * NFAULT : PTD5
-* TRQ : PTE19
+* TRQ : PTE19     (SCL)
 * NSLEEP : PTC3
 * Rsense1 : PTE24
 * Rsense2 : ADC0_SE23
@@ -51,6 +51,7 @@
 #define CH_1B    1
 #define CH_2B    0
 #define CH_2A    1
+
 /* Define for setting period and duty cycle */
 #define PERIOD_COUNT 60000
 #define SET_1A1B_PERIOD    FTM_1A1B->MOD
@@ -88,6 +89,16 @@
 #define ADC_R_SENSE ADC0
 #define ADC_CH_R_SENSE1 0x11
 #define ADC_CH_R_SENSE2 0x17
+
+#define DRVS8847_I2C  I2C0
+
+#define GPIO_SDA GPIOE
+#define PORT_SDA PORTE
+#define PIN_SDA  18
+
+#define GPIO_SCL GPIOE
+#define PORT_SCL PORTE
+#define PIN_SCL  19
 
 /**
 * @brief AS5047D pin map

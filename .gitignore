@@ -5,6 +5,7 @@
 
 # Prerequisites
 *.d
+*.iex
 
 # Object files
 *.o

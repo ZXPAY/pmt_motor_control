@@ -5,12 +5,17 @@
 /* Define N step */
 #define N_STEP 16
 
+/* Define I2C address */
+#define DRVS8847_ADDRESS     0x60
+#define DRVS8847_IC1_CON     0x01
+#define DRVS8847_IC2_CON     0x02
+#define DRVS8847_SLR_STATUS  0x03
+#define DRVS8847_STATUS2     0x04
+
 /* ADC parameters */
 #define R_SENSE 0.15
 #define ADC_RES 65535
 #define ADC_REF 3.3
-
-/* PWM parameters */
 
 #define DRV8847_STATUS_OK      0
 #define DRV8847_STATUS_FAULT   1
