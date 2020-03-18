@@ -40,18 +40,8 @@ extern pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
  *
  */
 void FTM0_IRQHandler(void) {
-    int32_t temp = get_cos();
-    // int32_t temp = pwm12.pwmb;
-    if(temp >= 0) {
-        SET_2B_DUTY = temp;
-        SET_2A_DUTY = 0;
-        sign2 = 1;
-    }
-    else {
-        SET_2B_DUTY = 0;
-        SET_2A_DUTY = -temp;
-        sign2 = -1;
-    }
+    drv8847.trigger();
+    drv8847.update_current();
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -61,18 +51,8 @@ void FTM0_IRQHandler(void) {
  *
  */
 void FTM1_IRQHandler(void) {
-    int32_t temp = get_sin();
-    // int32_t temp = pwm12.pwma;
-    if(temp >= 0) {
-        SET_1A_DUTY = temp;
-        SET_1B_DUTY = 0;
-        sign1 = 1;
-    }
-    else {
-        SET_1A_DUTY = 0;
-        SET_1B_DUTY = -temp;
-        sign1 = -1;
-    }
+    drv8847.trigger();
+    drv8847.update_current();
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;

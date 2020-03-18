@@ -112,13 +112,10 @@ int main (void) {
     __enable_irqn(FTM0_IRQn);
     __enable_irqn(FTM1_IRQn);
     __enable_irqn(UART1_RX_TX_IRQn);
-
+    uint32_t aa = 1000;
     uint32_t cnt = 0;
     while (true) {
         as5047d.update();
-        drv8847.trigger();
-        drv8847.update_current();
-
 
         update_sangle(&sangle, as5047d.angle);
         cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
@@ -129,10 +126,11 @@ int main (void) {
             update_cangle(&cangle, get_cangle_inc(&adj_v));
         }
 
-        // RS485_trm(", %.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.i1, drv8847.i2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-        //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
-        RS485_trm("%x, %x, %x, %x\n", drv8847.drv->i2c_read(0), drv8847.drv->i2c_read(1), drv8847.drv->i2c_read(2), drv8847.drv->i2c_read(3));
+        RS485_trm(", %.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.i1, drv8847.i2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
+        // RS485_trm("%x, %x, %x, %x\n", drv8847.drv->i2c_read(0), drv8847.drv->i2c_read(1), drv8847.drv->i2c_read(2), drv8847.drv->i2c_read(3));
         hal_delay(100);
+        aa += 1000;
         cnt++;
     }
 

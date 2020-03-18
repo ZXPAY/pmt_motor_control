@@ -53,7 +53,7 @@
 #define CH_2A    1
 
 /* Define for setting period and duty cycle */
-#define PERIOD_COUNT 60000
+#define PERIOD_COUNT       30000
 #define SET_1A1B_PERIOD    FTM_1A1B->MOD
 #define SET_1A_DUTY        FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY        FTM_1A1B->CONTROLS[CH_1B].CnV
