@@ -53,23 +53,27 @@ typedef struct _cangle_ {
 }cangle_t;
 
 
-/** brief get eletrical rotor angle(50) from encoder(16384)
+/**
+ * @brief get eletrical rotor angle(50) from encoder(16384)
  * 1. encoder is 14-bit resolution, 16384 per revolution
  * 2. 16384/50 = 327.68 (pulses per eletrical rotor angle)
  */
 void init_sangle(sangle_t *angle, uint16_t init_mach_angle);
 
-/** brief TODO
+/**
+ * @brief TODO
  *
  */
 void update_sangle(sangle_t *angle, uint16_t enc_angle);
 
-/** brief TODO
+/**
+ * @brief TODO
  *
  */
 void init_cangle(cangle_t *angle, uint16_t N_step, int16_t init_ele_angle);
 
-/** brief TODO
+/**
+ * @brief TODO
  *
  */
 void update_cangle(cangle_t *angle, int16_t th_inc);

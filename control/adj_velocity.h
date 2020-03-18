@@ -33,24 +33,16 @@ typedef struct _adj_v_ {
     uint8_t sm;              /* Current status */
 }adj_v_t;
 
-/** brief TODO
- *
- */
+
 void init_cangle_inc(adj_v_t *adj_v);
 
-/** brief TODO
- *
- */
+
 void set_cangle_inc(adj_v_t *adj_v, int16_t th_add);
 
-/** brief TODO
- *
- */
+
 void set_cangle_wback(adj_v_t *adj_v, int16_t w_back);
 
-/** brief TODO
- *
- */
+
 int16_t get_cangle_inc(adj_v_t *adj_v);
 
 #endif /* ADJ_VELOCITY_H */

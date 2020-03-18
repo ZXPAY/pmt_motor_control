@@ -1,5 +1,8 @@
 #include "ele_angle.h"
-#include <stdio.h>
+#include "step_accumulator.h"
+
+step_caccumulator_t c_accum = STEP_CACCUMUILATOR_INIT;  /* 命令微步累加器 */
+step_saccumulator_t s_accum = STEP_SACCUMUILATOR_INIT;  /* 感測微步累加器 */
 
 void init_sangle(sangle_t *angle, uint16_t init_mach_angle) {
     angle->K_degree = SENSOR2DEGREE;
@@ -56,6 +59,8 @@ void update_sangle(sangle_t *angle, uint16_t enc_angle) {
         angle->err_count = 0;
     }
     angle->ele_dangle = (float)angle->ele_angle*angle->K_degree;
+
+    update_step_saccum(&s_accum, enc_angle);
 }
 
 void init_cangle(cangle_t *angle, uint16_t N_step, int16_t init_ele_angle) {
@@ -73,4 +78,7 @@ void update_cangle(cangle_t *angle, int16_t th_inc) {
     /* Constrain angle */
     if(angle->ele_dangle > 360.0) {angle->ele_dangle = 0;}
     if(angle->ele_dangle < -360.0) {angle->ele_dangle = 0;}
+
+    /* command angle accumlate */
+    update_step_caccum(&c_accum, th_inc);
 }

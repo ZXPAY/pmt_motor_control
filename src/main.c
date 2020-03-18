@@ -21,11 +21,13 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
 /* Define parameters */
-#define EXC_KI        0.01         /* 激磁角Ki回饋 */
-#define I_SVPWM_KP    1/360.0   /* 電流Kp回饋 */
-#define I_SVPWM_KI    0.1/360.0   /* 電流Ki回饋 */
-#define I_SVPWM_LOW   0.4         /* 電流下限 */
-#define I_SVPWM_HIGH  0.4         /* 電流上限 */
+#define EXC_KI        0.01            /* 激磁角Ki回饋 */
+#define I_SVPWM_KP    1/360.0         /* 電流Kp回饋 */
+#define I_SVPWM_KI    0.1/360.0       /* 電流Ki回饋 */
+#define I_SVPWM_LOW   0.4             /* 電流下限 */
+#define I_SVPWM_HIGH  0.4             /* 電流上限 */
+#define STEP_C_THETA_LENGTH   1.0     /* 命令微步累加器角度轉換成長度增益 */
+#define STEP_S_THETA_LENGTH   1.0     /* 感測微步累加器角度轉換成長度增益 */
 
 /* Include other library */
 #include "hal_tick.h"
@@ -46,14 +48,17 @@ extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 #include "pi_current.h"
 #include "i_excite_angle.h"
 #include "svpwm.h"
+#include "step_accumulator.h"
 
 /* Define stepper motor control object */
-sangle_t sangle;                 /* 感測角 */
-cangle_t cangle;                 /* 命令角 */
-adj_v_t adj_v;                   /* 相位調整限速器 */
-fb_exc_angle_t fb_exc_angle;     /* 激磁角回饋 */
-fb_current_t fb_current;         /* 電流回饋 */
-pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
+sangle_t sangle;                        /* 感測角 */
+cangle_t cangle;                        /* 命令角 */
+adj_v_t adj_v;                          /* 相位調整限速器 */
+fb_exc_angle_t fb_exc_angle;            /* 激磁角回饋 */
+fb_current_t fb_current;                /* 電流回饋 */
+pwmAB_t pwm12;                          /* 1A1B 2A2B PWM */
+extern step_caccumulator_t c_accum;     /* 命令微步累加器, 在ele_angle.c內初始化 */
+extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在ele_angle.c內初始化 */
 
 /* Define default N-step */
 #define N_STEP 1
@@ -90,7 +95,9 @@ void i2c_send(uint8_t address, uint8_t regAdd, uint8_t value) {
 uint8_t i2c_read(uint8_t address, uint8_t regAdd) {
     DRVS8847_I2C->C1 |= I2C_C1_MST_MASK | I2C_C1_TX_MASK;
     if(i2c_set((address<<1)&(0xFE))) {
-        if(i2c_set(regAdd));
+        if(i2c_set(regAdd)) {
+
+        }
     }
 
     DRVS8847_I2C->C1 = I2C_C1_MST_MASK | I2C_C1_TXAK_MASK | I2C_C1_RSTA_MASK | I2C_C1_IICEN_MASK;
@@ -138,6 +145,10 @@ int main (void) {
     /* Initialize current feedback */
     init_current_para(&fb_current, I_SVPWM_KP, I_SVPWM_KI, I_SVPWM_LOW, I_SVPWM_HIGH);
 
+    /* Initialize step accumulator */
+    set_caccum_k(&c_accum, STEP_C_THETA_LENGTH);
+    set_saccum_k(&s_accum, STEP_S_THETA_LENGTH);
+
     // Initialize SysTick, setting slot 1 ms
     SYST_RVR = 24000;
     SYST_CSR = 0x07;
@@ -154,8 +165,8 @@ int main (void) {
         i2c_send(ad, 0x01, 0x78);
         hal_delay(1);
     }
-    // i2c_send(0x60, 0x01, 0x78);
-    // i2c_read(0x60, 0);
+    i2c_send(0x60, 0x01, 0x78);
+    i2c_read(0x60, 0);
     RS485_trm("start\n");
 
 
@@ -167,23 +178,23 @@ int main (void) {
     uint32_t cnt = 0;
     while (true) {
         as5047d.update();
+        drv8847.trigger();
+        drv8847.update_current();
 
-        // drv8847.trigger();
-        // drv8847.update_current();
 
         update_sangle(&sangle, as5047d.angle);
         cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
         cal_current_correct(&fb_exc_angle, &fb_current);
         cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
 
-        // if(cnt % 1000 == 0) {
-        //     update_cangle(&cangle, get_cangle_inc(&adj_v));
-        // }
+        if(cnt % 1000 == 0) {
+            update_cangle(&cangle, get_cangle_inc(&adj_v));
+        }
 
         // RS485_trm(", %.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.i1, drv8847.i2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
         //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
         // hal_delay(100);
-        // cnt++;
+        cnt++;
     }
 
 
