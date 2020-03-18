@@ -3,6 +3,7 @@
 #include "cortex_m4.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
+#include "drv8847_s.h"
 
 #define PWM_PERIOD 5
 
@@ -98,7 +99,7 @@ void init_hw_drv8847(void) {
 
 }
 
-void init_hw_drvs8847(void){
+void init_hw_drv8847s(void){
     // Enable PORT clock source
     SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
     SIM->SCGC5 |= SIM_SCGC5_PORTC_MASK;
@@ -114,15 +115,16 @@ void init_hw_drvs8847(void){
 
     // Setting SDA(Mode), SCL(TRQ)
     SIM->SCGC4 |= SIM_SCGC4_I2C0_MASK;
-    PORT_SDA->PCR[PIN_SDA] |= PORT_PCR_MUX(MUX_ALT_4);
-    PORT_SCL->PCR[PIN_SCL] |= PORT_PCR_MUX(MUX_ALT_4);
-    DRVS8847_I2C->A1 = 0;
-    DRVS8847_I2C->F  = 0;
-    DRVS8847_I2C->C1 = 0;
-    DRVS8847_I2C->S  = 0xFFU;
-    DRVS8847_I2C->C2 = 0;
-    DRVS8847_I2C->F |= I2C_F_MULT(2) | I2C_F_ICR(0x03);
-    DRVS8847_I2C->C1 = I2C_C1_IICEN_MASK;
+    PORT_SDA->PCR[PIN_SDA] |= PORT_PCR_MUX(MUX_ALT_4) | PORT_PCR_ODE_MASK;
+    PORT_SCL->PCR[PIN_SCL] |= PORT_PCR_MUX(MUX_ALT_4) | PORT_PCR_ODE_MASK;
+    DRV8847S_I2C->A1 = 0;
+    DRV8847S_I2C->F  = 0;
+    DRV8847S_I2C->C1 = 0;
+    DRV8847S_I2C->S  = 0xFFU;
+    DRV8847S_I2C->C2 = 0;
+    DRV8847S_I2C->F |= I2C_F_MULT(2) | I2C_F_ICR(0x03);
+    DRV8847S_I2C->FLT |= I2C_FLT_FLT(5);
+    DRV8847S_I2C->C1 = I2C_C1_IICEN_MASK;
 
     // ===== Setting PWM for 1A 1B =====
     // Enable clock source
@@ -240,16 +242,12 @@ void init_hw_rs485(void) {
 
 }
 
-/*
-// Redefine printf to UART1
-int fputc(int ch, FILE *f){
-    while(!(RS485_UART->S1 & UART_S1_TDRE_MASK));
-    RS485_UART->D = (uint8_t)ch;
-    return ch;
+void board_init(void) {
+    init_hw_as5047d();
+#ifdef DRV8847
+    init_hw_drv8847();
+#else if DRV8847S
+    init_hw_drv8847s();
+#endif
+    init_hw_rs485();
 }
-
-int fgetc(FILE *f){
-	while(!(RS485_UART->S1 & UART_S1_RDRF_MASK));
-    return RS485_UART->D;
-}
-*/

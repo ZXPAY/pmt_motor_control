@@ -63,69 +63,13 @@ extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在ele_angle.c
 /* Define default N-step */
 #define N_STEP 1
 
-uint8_t i2c_set(uint8_t value);
-void i2c_send(uint8_t address, uint8_t regAdd, uint8_t value);
-uint8_t i2c_read(uint8_t address, uint8_t regAdd);
-void i2c_stop(void);
-
-
-uint8_t i2c_set(uint8_t value) {
-    DRVS8847_I2C->D = value;
-    while(!(DRVS8847_I2C->S & I2C_S_IICIF_MASK));
-    /* If Nack */
-    if(DRVS8847_I2C->S & I2C_S_RXAK_MASK) {
-        // RS485_trm("Nack ,%d\n", value);
-        DRVS8847_I2C->S |= I2C_S_IICIF_MASK;
-        return false;
-    }
-    // Clear I2C interrupt flag
-    DRVS8847_I2C->S |= I2C_S_IICIF_MASK;
-    return true;
-}
-void i2c_send(uint8_t address, uint8_t regAdd, uint8_t value) {
-    DRVS8847_I2C->C1 |= I2C_C1_MST_MASK | I2C_C1_TX_MASK | I2C_C1_TXAK_MASK;
-    if(i2c_set((address<<1)&(0xFE))) {
-        DRVS8847_I2C->C1 |= I2C_C1_MST_MASK | I2C_C1_TX_MASK | I2C_C1_TXAK_MASK;
-        if(i2c_set(regAdd)) {
-            i2c_set(value);
-        }
-    }
-    i2c_stop();
-}
-uint8_t i2c_read(uint8_t address, uint8_t regAdd) {
-    DRVS8847_I2C->C1 |= I2C_C1_MST_MASK | I2C_C1_TX_MASK;
-    if(i2c_set((address<<1)&(0xFE))) {
-        if(i2c_set(regAdd)) {
-
-        }
-    }
-
-    DRVS8847_I2C->C1 = I2C_C1_MST_MASK | I2C_C1_TXAK_MASK | I2C_C1_RSTA_MASK | I2C_C1_IICEN_MASK;
-    DRVS8847_I2C->D = (regAdd);
-    while(!(DRVS8847_I2C->S & I2C_S_IICIF_MASK));
-    DRVS8847_I2C->S |= I2C_S_IICIF_MASK;
-
-    DRVS8847_I2C->C1 = I2C_C1_MST_MASK | I2C_C1_TXAK_MASK | I2C_C1_RSTA_MASK | I2C_C1_IICEN_MASK;
-    while(!(DRVS8847_I2C->S & I2C_S_IICIF_MASK));
-    i2c_stop();
-
-    return DRVS8847_I2C->D;
-}
-void i2c_stop(void) {
-    DRVS8847_I2C->C1 = I2C_C1_IICEN_MASK;
-}
-
 /* Main code */
 int main (void) {
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
 
     /* Initilize hardware */
-    uart_init();
-    init_hw_as5047d();
-    // init_hw_drv8847();
-    init_hw_drvs8847();
-    init_hw_rs485();
+    board_init();
     enable_fpu();
 
     RS485_trm("initialize \n");
@@ -161,12 +105,6 @@ int main (void) {
     init_sangle(&sangle, as5047d.angle);
     init_cangle(&cangle, N_STEP, 0);
 
-    for(uint8_t ad=0;ad<0x80;ad++) {
-        i2c_send(ad, 0x01, 0x78);
-        hal_delay(1);
-    }
-    i2c_send(0x60, 0x01, 0x78);
-    i2c_read(0x60, 0);
     RS485_trm("start\n");
 
 
@@ -193,7 +131,8 @@ int main (void) {
 
         // RS485_trm(", %.3f, %.3f, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.i1, drv8847.i2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
         //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
-        // hal_delay(100);
+        RS485_trm("%x, %x, %x, %x\n", drv8847.drv->i2c_read(0), drv8847.drv->i2c_read(1), drv8847.drv->i2c_read(2), drv8847.drv->i2c_read(3));
+        hal_delay(100);
         cnt++;
     }
 

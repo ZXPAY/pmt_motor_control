@@ -90,7 +90,7 @@
 #define ADC_CH_R_SENSE1 0x11
 #define ADC_CH_R_SENSE2 0x17
 
-#define DRVS8847_I2C  I2C0
+#define DRV8847S_I2C  I2C0
 
 #define GPIO_SDA GPIOE
 #define PORT_SDA PORTE
@@ -160,16 +160,19 @@
 #define PORT_INT PORTD
 #define PIN_INT  4
 
-// initialize motor control IC
+/* initialize motor control IC */
 void init_hw_drv8847(void);
 
-// initialize motor control IC
-void init_hw_drvs8847(void);
+/* initialize motor control IC */
+void init_hw_drv8847s(void);
 
-// initialize AS5047D, encoder IC
+/* initialize AS5047D, encoder IC */
 void init_hw_as5047d(void);
 
-// initialize RS485
+/* initialize RS485 */
 void init_hw_rs485(void);
+
+/* board initialize */
+void board_init(void);
 
 #endif /* CONTROL_BOARD_V2_H */

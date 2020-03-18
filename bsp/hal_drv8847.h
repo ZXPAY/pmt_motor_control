@@ -5,28 +5,21 @@
 /* Define N step */
 #define N_STEP 16
 
-/* Define I2C address */
-#define DRVS8847_ADDRESS     0x60
-#define DRVS8847_IC1_CON     0x01
-#define DRVS8847_IC2_CON     0x02
-#define DRVS8847_SLR_STATUS  0x03
-#define DRVS8847_STATUS2     0x04
-
 /* ADC parameters */
 #define R_SENSE 0.15
 #define ADC_RES 65535
 #define ADC_REF 3.3
 
-#define DRV8847_STATUS_OK      0
-#define DRV8847_STATUS_FAULT   1
+#define DRV8847_STATUS_OK         0
+#define DRV8847_STATUS_FAULT      1
 
-#define DRV8847_MODE_TWO_PIN   0
-#define DRV8847_MODE_FOUR_PIN  1
-#define DRV8847_MODE_SLEEP     2
-#define DRV8847_MODE_OPERATION 3
+#define DRV8847_MODE_TWO_PIN      0
+#define DRV8847_MODE_FOUR_PIN     1
+#define DRV8847_MODE_SLEEP        2
+#define DRV8847_MODE_OPERATION    3
 
-#define DRV8847_TRQ_HALF       4
-#define DRV8847_TRQ_FULL       5
+#define DRV8847_TRQ_HALF          4
+#define DRV8847_TRQ_FULL          5
 
 /* Step motor direction, default is clockwise */
 
@@ -45,13 +38,15 @@ typedef struct _drv8847_io {
     uint16_t duty2;
     void (*sleep_low)(void);
     void (*sleep_high)(void);
-    void (*mode_low)(void);
-    void (*mode_high)(void);
-    void (*trq_low)(void);
-    void (*trq_high)(void);
+    void (*mode_4pin)(void);
+    void (*mode_2pin)(void);
+    void (*trq_full)(void);
+    void (*trq_half)(void);
+#ifdef DRV8847S
+    void (*i2c_write)(uint8_t regAdd, uint8_t trm_data);
+    uint8_t (*i2c_read)(uint8_t regAdd);
+#endif
     uint8_t (*get_fault)(void);
-    void (*clockwise)(void);
-    void (*counterclockwise)(void);
     void (*set_period1)(uint16_t period);
     void (*set_period2)(uint16_t period);
     void (*set_duty1)(uint16_t duty);
@@ -66,8 +61,6 @@ typedef struct _a4988 {
     float i2;
     uint8_t status;
     void (*init)(void);
-    void (*clockwise)(void);
-    void (*counterclockwise)(void);
     void (*setMode)(uint8_t mode);
     void (*setTorque)(uint8_t trq);
     void (*trigger)(void);
