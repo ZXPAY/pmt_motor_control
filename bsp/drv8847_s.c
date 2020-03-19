@@ -25,7 +25,8 @@ static void drv8847_set_period1(uint16_t period);
 static void drv8847_set_period2(uint16_t period);
 static void drv8847_set_duty1(uint16_t duty);
 static void drv8847_set_duty2(uint16_t duty);
-static void drv8847_Rsense_trig(void);
+static void drv8847_mcu_trig1A1B(void);
+static void drv8847_mcu_trig2A2B(void);
 
 #if DRV8847
 static void drv8847_mode_4pin(void);
@@ -84,7 +85,8 @@ drv8847_io_t drv8847_dri = {                       \
     .set_period2 = drv8847_set_period2,            \
     .set_duty1 = drv8847_set_duty1,                \
     .set_duty2 = drv8847_set_duty2,                \
-    .Rsense_trig = drv8847_Rsense_trig,            \
+    .mcu_trig1A1B = drv8847_mcu_trig1A1B,          \
+    .mcu_trig2A2B = drv8847_mcu_trig2A2B,          \
 };
 #endif
 
@@ -242,19 +244,14 @@ static void drv8847_set_duty2(uint16_t duty) {
     drv8847_dri.duty2 = duty;
 }
 
-static void drv8847_Rsense_trig(void) {
-    switch(drv8847_dri.ch) {
-        case ADC_CH_R_SENSE1:
-            ADC_R_SENSE->SC1[0] =  drv8847_dri.ch;
-            while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
-            drv8847_dri.v_r1 = ADC_R_SENSE->R[0];
-            drv8847_dri.ch = ADC_CH_R_SENSE2;
-            break;
-        case ADC_CH_R_SENSE2:
-            ADC_R_SENSE->SC1[0] = drv8847_dri.ch;
-            while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
-            drv8847_dri.v_r2 = ADC_R_SENSE->R[0];
-            drv8847_dri.ch = ADC_CH_R_SENSE1;
-            break;
-    }
+static void drv8847_mcu_trig1A1B(void) {
+    ADC_R_SENSE->SC1[0] =  ADC_CH_R_SENSE1;
+    while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
+    drv8847_dri.v_r1 = ADC_R_SENSE->R[0];
+}
+
+static void drv8847_mcu_trig2A2B(void) {
+    ADC_R_SENSE->SC1[0] =  ADC_CH_R_SENSE2;
+    while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
+    drv8847_dri.v_r2 = ADC_R_SENSE->R[0];
 }

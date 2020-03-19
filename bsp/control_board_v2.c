@@ -140,7 +140,7 @@ void init_hw_drv8847s(void){
     GPIO_1B->PDDR |= (1<<PIN_1B);
     FTM_1A1B->CNTIN = 0;
     SET_1A1B_PERIOD = PERIOD_COUNT;
-    SET_1A_DUTY = 30000;
+    SET_1A_DUTY = 15000;
     SET_1B_DUTY = 0;
     FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
@@ -158,17 +158,18 @@ void init_hw_drv8847s(void){
     FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
     FTM_2A2B->CNTIN = 0;
     SET_2A2B_PERIOD = PERIOD_COUNT;
-    SET_2A_DUTY = 30000;
-    SET_2B_DUTY = 0;
+    SET_2A_DUTY = 0;
+    SET_2B_DUTY = 30000;
 
     // Setting ADC0 for R sense
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_ADC0_MASK;
     PORT_R_SENSE1->PCR[PIN_R_SENSE1] &= ~PORT_PCR_MUX_MASK;
     PORT_R_SENSE2->PCR[PIN_R_SENSE2] &= ~PORT_PCR_MUX_MASK;
-    ADC_R_SENSE->CFG1 |= ADC_CFG1_MODE(3);   // 16 bit
-    ADC_R_SENSE->SC1[0] = ADC_CH_R_SENSE1;
-    ADC_R_SENSE->SC3 |= ADC_SC3_AVGE_MASK;
+    ADC_R_SENSE->CFG1 |= ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(1);   // 16 bit
+    // ADC_R_SENSE->CFG1 |= ADC_CFG1_ADLSMP_MASK;   // enable long conversion
+    // ADC_R_SENSE->CFG2 |= ADC_CFG2_ADLSTS(3);     // long conversion additional clock
+    ADC_R_SENSE->SC3 |= ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(1);   // average 8 samples
 
 }
 

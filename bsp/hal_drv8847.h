@@ -52,7 +52,8 @@ typedef struct _drv8847_io {
     void (*set_duty1)(uint16_t duty);
     void (*set_duty2)(uint16_t duty);
     void (*set_channel)(uint8_t ch);
-    void (*Rsense_trig)(void);
+    void (*mcu_trig1A1B)(void);
+    void (*mcu_trig2A2B)(void);
 }drv8847_io_t;
 
 typedef struct _a4988 {
@@ -63,7 +64,8 @@ typedef struct _a4988 {
     void (*init)(void);
     void (*setMode)(uint8_t mode);
     void (*setTorque)(uint8_t trq);
-    void (*trigger)(void);
+    void (*adc_trig1A1B)(void);
+    void (*adc_trig2A2B)(void);
     void (*update_current)(void);
 }drv8847_t;
 

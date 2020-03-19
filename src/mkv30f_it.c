@@ -6,6 +6,8 @@
  *
  */
 
+#define FTM_1A1B_Handler         FTM1_IRQHandler
+#define FTM_2A2B_Handler         FTM0_IRQHandler
 
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
@@ -39,10 +41,10 @@ extern pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
 /** @brief 2A 2B timer/PWM handler
  *
  */
-void FTM0_IRQHandler(void) {
-    // drv8847.trigger();
-    // drv8847.update_current();
-
+void FTM_2A2B_Handler(void) {
+    ENABLE_RS485_TRM();
+    drv8847.adc_trig2A2B();
+    DISABLE_RS485_TRM();
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
 }
@@ -50,9 +52,8 @@ void FTM0_IRQHandler(void) {
 /** @brief 1A 1B timer/PWM handler
  *
  */
-void FTM1_IRQHandler(void) {
-    // drv8847.trigger();
-    // drv8847.update_current();
+void FTM_1A1B_Handler(void) {
+    drv8847.adc_trig1A1B();
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;

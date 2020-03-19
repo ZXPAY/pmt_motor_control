@@ -6,7 +6,8 @@ extern drv8847_io_t drv8847_dri;
 static void drv8847_init(void);
 static void drv8847_setMode(uint8_t mode);
 static void drv8847_setTorque(uint8_t trq);
-static void drv8847_trigger(void);
+static void drv8847_adc_trig1A1B(void);
+static void drv8847_adc_trig2A2B(void);
 static void drv8847_update_current(void);
 
 drv8847_t drv8847 = {                              \
@@ -17,7 +18,8 @@ drv8847_t drv8847 = {                              \
     .init = drv8847_init,                          \
     .setMode = drv8847_setMode,                    \
     .setTorque = drv8847_setTorque,                \
-    .trigger = drv8847_trigger,                    \
+    .adc_trig1A1B = drv8847_adc_trig1A1B,          \
+    .adc_trig2A2B = drv8847_adc_trig2A2B,          \
     .update_current = drv8847_update_current,      \
 
 };
@@ -56,8 +58,12 @@ static void drv8847_setTorque(uint8_t trq) {
     }
 }
 
-static void drv8847_trigger(void) {
-    drv8847.drv->Rsense_trig();
+static void drv8847_adc_trig1A1B(void) {
+    drv8847.drv->mcu_trig1A1B();
+}
+
+static void drv8847_adc_trig2A2B(void) {
+    drv8847.drv->mcu_trig2A2B();
 }
 
 static void drv8847_update_current(void) {
