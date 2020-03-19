@@ -15,7 +15,7 @@
 #include "uart.h"
 
 #include "MKV30F12810.h"
-#include "control_board_v2.h"
+#include "control_board.h"
 
 #define MUL_VAL 4
 #define DIVADD_VAL 1

@@ -1,7 +1,7 @@
 #include "hal_as5047d.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
-#include "control_board_v2.h"
+#include "control_board.h"
 
 /* SPI2 pin below
  * MISO  PB14
@@ -27,15 +27,15 @@ as50474_dri_t as50474_dri = {                 \
 
 static void as5047d_write(uint16_t address, uint16_t value) {
     uint32_t spi_cmd = SPI_PUSHR_CTAS(0) | (1<<SPI_PUSHR_PCS_SHIFT);
-    
+
     // address parity should be even
     address &= ~(1<<14);    // bit14 0 is write, 1 is read
     if(as50474_dri.get_parity(address&0x3fff)) address |= 0x8000;
-    
+
     ENCODER_SPI->PUSHR = address | spi_cmd;
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
     ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
-    
+
     if(as50474_dri.get_parity(value&0x3fff)) value |= 0x8000;
     ENCODER_SPI->PUSHR = value | spi_cmd;
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
@@ -54,7 +54,7 @@ static uint16_t as5047d_read(uint16_t address) {
     ENCODER_SPI->PUSHR = 0x00 | spi_cmd;
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
     ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
-    
+
     uint16_t value = ENCODER_SPI->RXFR1;
     // flush RX FIFO
     ENCODER_SPI->MCR |= SPI_MCR_CLR_RXF_MASK;
@@ -67,10 +67,10 @@ static void as5047d_cs_high(void) {
 
             break;
         case CHIP_CS2:
-            
+
             break;
         case CHIP_CS3:
-            
+
             break;
     }
 }
@@ -81,10 +81,10 @@ static void as5047d_cs_low(void) {
 
             break;
         case CHIP_CS2:
-            
+
             break;
         case CHIP_CS3:
-            
+
             break;
     }
 }

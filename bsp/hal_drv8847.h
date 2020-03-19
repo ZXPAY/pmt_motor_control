@@ -1,3 +1,13 @@
+/**
+ * @file hal_drv8847.h
+ * @author Xiang-Guan Deng
+ * @brief DRV8847(S) HAL
+ * @date 2020.xx.xx
+ *
+ * DRV8847(S) HAL
+ * ADC conversion time : 6.8 us
+ */
+
 #ifndef HAL_DRV8847_H
 #define HAL_DRV8847_H
 #include <stdint.h>

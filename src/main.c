@@ -21,19 +21,19 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
 /* Define parameters */
-#define EXC_KI        0.01            /* 激磁角Ki回饋 */
-#define I_SVPWM_KP    1/360.0         /* 電流Kp回饋 */
-#define I_SVPWM_KI    0.1/360.0       /* 電流Ki回饋 */
-#define I_SVPWM_LOW   0.4             /* 電流下限 */
-#define I_SVPWM_HIGH  0.4             /* 電流上限 */
-#define STEP_C_THETA_LENGTH   1.0     /* 命令微步累加器角度轉換成長度增益 */
-#define STEP_S_THETA_LENGTH   1.0     /* 感測微步累加器角度轉換成長度增益 */
+#define EXC_KI                0.01         /* 激磁角Ki回饋 */
+#define I_SVPWM_KP            1/360.0      /* 電流Kp回饋 */
+#define I_SVPWM_KI            0.1/360.0    /* 電流Ki回饋 */
+#define I_SVPWM_LOW           0.4          /* 電流下限 */
+#define I_SVPWM_HIGH          0.4          /* 電流上限 */
+#define STEP_C_THETA_LENGTH   1.0          /* 命令微步累加器角度轉換成長度增益 */
+#define STEP_S_THETA_LENGTH   1.0          /* 感測微步累加器角度轉換成長度增益 */
 
 /* Include other library */
 #include "hal_tick.h"
 
 /* Include board support package */
-#include "control_board_v2.h"
+#include "control_board.h"
 #include "hal_as5047d.h"
 #include "hal_drv8847.h"
 #include "rs485.h"
@@ -114,11 +114,10 @@ int main (void) {
     uint32_t aa = 1000;
     uint32_t cnt = 0;
     while (true) {
-        as5047d.update();
-        // drv8847.trigger();
-
+        /* This will consume a lot of time */
         // drv8847.update_current();
 
+        as5047d.update();
         update_sangle(&sangle, as5047d.angle);
         cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
         cal_current_correct(&fb_exc_angle, &fb_current);
@@ -130,7 +129,7 @@ int main (void) {
 
         // RS485_trm(", %d, %d, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
         //                                             fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
-        RS485_trm("%.4f, %.4f\n", drv8847.drv->v_r1*3.3/65535/0.15, drv8847.drv->v_r2*3.3/65535/0.15);
+        // RS485_trm("%.4f, %.4f\n", drv8847.drv->v_r1*3.3/65535/0.15, drv8847.drv->v_r2*3.3/65535/0.15);
         hal_delay(100);
         aa += 1000;
         cnt++;

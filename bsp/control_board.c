@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "control_board_v2.h"
+#include "control_board.h"
 #include "cortex_m4.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
@@ -170,7 +170,6 @@ void init_hw_drv8847s(void){
     // ADC_R_SENSE->CFG1 |= ADC_CFG1_ADLSMP_MASK;   // enable long conversion
     // ADC_R_SENSE->CFG2 |= ADC_CFG2_ADLSTS(3);     // long conversion additional clock
     ADC_R_SENSE->SC3 |= ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(1);   // average 8 samples
-
 }
 
 /**

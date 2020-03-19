@@ -1,3 +1,13 @@
+/**
+ * @file hal_as5047d.h
+ * @author Xiang-Guan Deng
+ * @brief AS5047D HAL
+ * @date 2020.xx.xx
+ *
+ * AS5047D HAL
+ * Encoder resolution : 16 bits
+ */
+
 #ifndef HAL_AS5047D_H
 #define HAL_AS5047D_H
 #include <stdint.h>

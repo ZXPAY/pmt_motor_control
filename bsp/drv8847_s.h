@@ -1,3 +1,11 @@
+/**
+ * @file drv8847_s.h
+ * @author Xiang-Guan Deng
+ * @brief drv8847s i2c address, register definition
+ * @date 2020.xx.xx
+ *
+ */
+
 #ifndef DRV8847_S_H
 #define DRV8847_S_H
 

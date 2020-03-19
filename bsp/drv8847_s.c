@@ -1,7 +1,7 @@
 #include "hal_drv8847.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
-#include "control_board_v2.h"
+#include "control_board.h"
 #include "drv8847_s.h"
 
 /**

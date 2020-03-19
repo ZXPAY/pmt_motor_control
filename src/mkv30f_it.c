@@ -13,7 +13,7 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "hal_drv8847.h"
 #include "hal_tick.h"
-#include "control_board_v2.h"
+#include "control_board.h"
 #include "sin_cos_val_table.h"
 #include "uart.h"
 #include "rs485.h"
@@ -42,9 +42,8 @@ extern pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
  *
  */
 void FTM_2A2B_Handler(void) {
-    ENABLE_RS485_TRM();
     drv8847.adc_trig2A2B();
-    DISABLE_RS485_TRM();
+
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
 }

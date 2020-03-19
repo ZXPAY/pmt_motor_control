@@ -1,5 +1,13 @@
-#ifndef CONTROL_BOARD_V2_H
-#define CONTROL_BOARD_V2_H
+/**
+ * @file control_board.h
+ * @author Xiang-Guan Deng
+ * @brief Hardware setting
+ * @date 2020.xx.xx
+ *
+ */
+
+#ifndef CONTROL_BOARD_H
+#define CONTROL_BOARD_H
 
 // MUX alternative function
 #define MUX_ALT_0          0
@@ -175,4 +183,4 @@ void init_hw_rs485(void);
 /* board initialize */
 void board_init(void);
 
-#endif /* CONTROL_BOARD_V2_H */
+#endif /* CONTROL_BOARD_H */
