@@ -5,7 +5,7 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "drv8847_s.h"
 
-#define PWM_PERIOD 5
+#define PWM_PRESCALER 0
 
 /**
 * @brief DRV8847 pin map
@@ -62,7 +62,7 @@ void init_hw_drv8847(void) {
     SET_1A1B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_1A_DUTY = 0;
     SET_1B_DUTY = 0;
-    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
     // ===== Setting PWM for 2A 2B =====
     // Enable clock source
@@ -86,7 +86,7 @@ void init_hw_drv8847(void) {
     SET_2A2B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
     SET_2A_DUTY = 0;
     SET_2B_DUTY = 0;
-    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
     // Setting ADC0 for R sense
     // Enable clock source
@@ -142,7 +142,7 @@ void init_hw_drv8847s(void){
     SET_1A1B_PERIOD = PERIOD_COUNT;
     SET_1A_DUTY = 30000;
     SET_1B_DUTY = 0;
-    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
     // ===== Setting PWM for 2A 2B =====
     // Enable clock source
@@ -155,7 +155,7 @@ void init_hw_drv8847s(void){
     GPIO_2B->PDDR |= (1<<PIN_2B);
     PORT_2A->PCR[PIN_2A] |= PORT_PCR_MUX(MUX_ALT_4);
     GPIO_2A->PDDR |= (1<<PIN_2A);
-    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PERIOD) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
     FTM_2A2B->CNTIN = 0;
     SET_2A2B_PERIOD = PERIOD_COUNT;
     SET_2A_DUTY = 30000;
@@ -206,6 +206,8 @@ void init_hw_as5047d(void) {
 * RX1 : PTE17
 * TRIG : PTA4
 * INTERRUPT : PTD4
+*
+* Setting BPS 115200
 */
 void init_hw_rs485(void) {
     // Enable UART and GPIOD GPIOE clock source
@@ -225,8 +227,8 @@ void init_hw_rs485(void) {
     // TX1 and RX1, and enable RX interrupt
     PORT_TX1->PCR[PIN_TX1] |= PORT_PCR_MUX(MUX_ALT_3);
     PORT_RX1->PCR[PIN_RX1] |= PORT_PCR_MUX(MUX_ALT_3);
-    RS485_UART->BDL = UART_BDL_SBR(13);
-    RS485_UART->C4 |= UART_C4_BRFA(1);
+    RS485_UART->BDL = UART_BDL_SBR(39);
+    RS485_UART->C4 |= UART_C4_BRFA(2);
     RS485_UART->C2 |= UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_RIE_MASK;
 
 }

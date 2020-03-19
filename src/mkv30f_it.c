@@ -40,8 +40,8 @@ extern pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
  *
  */
 void FTM0_IRQHandler(void) {
-    drv8847.trigger();
-    drv8847.update_current();
+    // drv8847.trigger();
+    // drv8847.update_current();
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -51,8 +51,8 @@ void FTM0_IRQHandler(void) {
  *
  */
 void FTM1_IRQHandler(void) {
-    drv8847.trigger();
-    drv8847.update_current();
+    // drv8847.trigger();
+    // drv8847.update_current();
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;

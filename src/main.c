@@ -93,11 +93,10 @@ int main (void) {
     set_caccum_k(&c_accum, STEP_C_THETA_LENGTH);
     set_saccum_k(&s_accum, STEP_S_THETA_LENGTH);
 
-    // Initialize SysTick, setting slot 1 ms
-    SYST_RVR = 24000;
-    SYST_CSR = 0x07;
-    hal_delay(500);
+    /* SysTick initialize */
+    systick_init();
 
+    hal_delay(500);
     /* Initialize machanical angle */
     for(int i=0;i<16;i++) {
         as5047d.update();    // update encoder angle to be first machanical angle
@@ -107,6 +106,8 @@ int main (void) {
 
     RS485_trm("start\n");
 
+    SET_1A_DUTY = 15000;
+    SET_2B_DUTY = 15000;
 
     // Enable interrupt
     __enable_irqn(FTM0_IRQn);
@@ -116,6 +117,8 @@ int main (void) {
     uint32_t cnt = 0;
     while (true) {
         as5047d.update();
+        drv8847.trigger();
+        drv8847.update_current();
 
         update_sangle(&sangle, as5047d.angle);
         cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);

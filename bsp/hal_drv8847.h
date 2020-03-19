@@ -29,9 +29,9 @@ enum STEP_DIR{
 };
 
 typedef struct _drv8847_io {
-    uint8_t ch;
-    uint16_t v_r1;
-    uint16_t v_r2;
+    volatile uint8_t ch;
+    volatile uint16_t v_r1;
+    volatile uint16_t v_r2;
     uint16_t period1;
     uint16_t period2;
     uint16_t duty1;

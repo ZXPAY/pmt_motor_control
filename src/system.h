@@ -23,23 +23,8 @@ void system_clock_init(void);
 void system_clock_deinit(void);
 
 /**
- * @brief 初始化 system power
+ * @brief 初始化 systick clock
  */
-void system_power_init(void);
-
-/**
- * @brief 反初始化 system power
- */
-void system_power_deinit(void);
-
-/**
- * @brief 初始化 pinconnect
- */
-void pinconnect_init(void);
-
-/**
- * @brief 反初始化 pinconnect
- */
-void pinconnect_deinit(void);
+void systick_init(void);
 
 #endif  // SYSTEM_H
