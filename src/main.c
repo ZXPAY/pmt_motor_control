@@ -71,7 +71,7 @@ int main (void) {
     drv8847.init();
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value  */
-    init_sin_cos_table(PERIOD_COUNT, 2);
+    init_sin_cos_table(PERIOD_COUNT, N_STEP);
 
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
@@ -113,14 +113,10 @@ int main (void) {
         /* This will consume a lot of time */
         // drv8847.update_current();
 
-        if(cnt % 1000000 == 0) {
-            update_cangle(&cangle, get_cangle_inc(&adj_v));
-        }
-
         /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
         if(cnt %1000 == 0) {
             pit_flag = PIT_BUSY;
-            RS485_trm(", %d, %d, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+            RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
             pit_flag = PIT_OK;
         }
@@ -141,23 +137,14 @@ void HardFalut_Handler(void) {
 
 /* period : 5 ms */
 void PIT0_IRQHandler(void) {
-    if(pit_flag == PIT_OK) {
-        as5047d.update();
-        update_sangle(&sangle, as5047d.angle);
-        cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
-        cal_current_correct(&fb_exc_angle, &fb_current);
-        cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
-    }
+    as5047d.update();
+    update_sangle(&sangle, as5047d.angle);
+    cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
+    cal_current_correct(&fb_exc_angle, &fb_current);
+    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
 
-    /* clear flag */
-    PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
-}
-
-/* period : 5 s */
-void PIT1_IRQHandler(void) {
-    int32_t temp_sin = get_sin();
-    int32_t temp_cos = get_cos();
-    RS485_trm("===== update =====, %d, %d, %ld\n", temp_sin, temp_cos, as5047d.angle);
+    int32_t temp_sin = pwm12.pwm1;
+    int32_t temp_cos = pwm12.pwm2;
 
     if(temp_sin > 0) {
         SET_1A_DUTY = PERIOD_COUNT - temp_sin;
@@ -165,7 +152,6 @@ void PIT1_IRQHandler(void) {
     }
     else {
         SET_1A_DUTY = PERIOD_COUNT;
-
         SET_1B_DUTY = PERIOD_COUNT + temp_sin;
     }
     if(temp_cos > 0) {
@@ -176,6 +162,37 @@ void PIT1_IRQHandler(void) {
         SET_2B_DUTY = PERIOD_COUNT;
         SET_2A_DUTY = PERIOD_COUNT + temp_cos;
     }
+
+    /* clear flag */
+    PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
+}
+
+/* period : 5 s */
+void PIT1_IRQHandler(void) {
+    /* Test code */
+    // int32_t temp_sin = get_sin();
+    // int32_t temp_cos = get_cos();
+    // RS485_trm("===== update =====, %d, %d, %ld\n", temp_sin, temp_cos, as5047d.angle);
+
+    // if(temp_sin > 0) {
+    //     SET_1A_DUTY = PERIOD_COUNT - temp_sin;
+    //     SET_1B_DUTY = PERIOD_COUNT;
+    // }
+    // else {
+    //     SET_1A_DUTY = PERIOD_COUNT;
+
+    //     SET_1B_DUTY = PERIOD_COUNT + temp_sin;
+    // }
+    // if(temp_cos > 0) {
+    //     SET_2B_DUTY = PERIOD_COUNT - temp_cos;
+    //     SET_2A_DUTY = PERIOD_COUNT;
+    // }
+    // else {
+    //     SET_2B_DUTY = PERIOD_COUNT;
+    //     SET_2A_DUTY = PERIOD_COUNT + temp_cos;
+    // }
+
+    update_cangle(&cangle, get_cangle_inc(&adj_v));
 
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;

@@ -10,7 +10,7 @@
 #define CONTROL_CONFIG_H
 
 /* Define parameters */
-#define EXC_KI                0.0          /* 激磁角Ki回饋 */
+#define EXC_KI                0.1          /* 激磁角Ki回饋 */
 #define I_SVPWM_KP            1/360.0      /* 電流Kp回饋 */
 #define I_SVPWM_KI            0.0          /* 電流Ki回饋 */
 #define I_SVPWM_LOW           0.6          /* 電流下限 */

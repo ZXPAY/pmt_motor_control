@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "pi_current.h"
 
+#define DEGREE_TO_RADIAN      3.141593/180
+
 typedef struct _pwmAB_ {
     int32_t pwm1;
     int32_t pwm2;

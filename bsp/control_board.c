@@ -116,6 +116,7 @@ void init_hw_drv8847s(void){
     // DRV8847S_I2C->C1 = I2C_C1_IICEN_MASK;
 
     // ===== Setting PWM for 1A 1B =====
+    /* initial in zero degree sin(0) */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM1_MASK;
     FTM_1A1B->SC = 0;
@@ -129,11 +130,12 @@ void init_hw_drv8847s(void){
     GPIO_1B->PDDR |= (1<<PIN_1B);
     FTM_1A1B->CNTIN = 0;
     SET_1A1B_PERIOD = PERIOD_COUNT;
-    SET_1A_DUTY = PERIOD_COUNT - 0;
-    SET_1B_DUTY = PERIOD_COUNT - (PERIOD_COUNT>>1);
+    SET_1A_DUTY = PERIOD_COUNT;
+    SET_1B_DUTY = PERIOD_COUNT;
     FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
     // ===== Setting PWM for 2A 2B =====
+    /* initial in zero degree cos(0) */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
     FTM_2A2B->SC = 0;
@@ -147,8 +149,8 @@ void init_hw_drv8847s(void){
     FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
     FTM_2A2B->CNTIN = 0;
     SET_2A2B_PERIOD = PERIOD_COUNT;
-    SET_2A_DUTY = PERIOD_COUNT - (PERIOD_COUNT>>1);
-    SET_2B_DUTY = PERIOD_COUNT - 0;
+    SET_2A_DUTY = PERIOD_COUNT;
+    SET_2B_DUTY = 0;
 
     // Setting ADC0 for R sense
     // Enable clock source
@@ -232,8 +234,8 @@ void init_hw_pit(void) {
     /* enable timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 
-    /* reload PIT0 every 5 s (0.2 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[1].LDVAL = 72000000 * 5;
+    /* reload PIT0 every 1 s (1 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[1].LDVAL = 72000000 * 1;
     /* enable timer and enable interrupt */
     PIT->CHANNEL[1].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 }
