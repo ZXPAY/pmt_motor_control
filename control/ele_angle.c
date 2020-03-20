@@ -58,7 +58,8 @@ void update_sangle(sangle_t *angle, uint16_t enc_angle) {
         angle->ele_angle = 0;
         angle->err_count = 0;
     }
-    angle->ele_dangle = (float)angle->ele_angle*angle->K_degree;
+    /* 順時針為正 */
+    angle->ele_dangle = 360 - (float)angle->ele_angle*angle->K_degree;
 
     update_step_saccum(&s_accum, enc_angle);
 }

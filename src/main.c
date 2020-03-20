@@ -21,11 +21,11 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
 /* Define parameters */
-#define EXC_KI                0.01         /* 激磁角Ki回饋 */
+#define EXC_KI                0.0         /* 激磁角Ki回饋 */
 #define I_SVPWM_KP            1/360.0      /* 電流Kp回饋 */
-#define I_SVPWM_KI            0.1/360.0    /* 電流Ki回饋 */
-#define I_SVPWM_LOW           0.4          /* 電流下限 */
-#define I_SVPWM_HIGH          0.4          /* 電流上限 */
+#define I_SVPWM_KI            0.0    /* 電流Ki回饋 */
+#define I_SVPWM_LOW           0.6          /* 電流下限 */
+#define I_SVPWM_HIGH          0.6          /* 電流上限 */
 #define STEP_C_THETA_LENGTH   1.0          /* 命令微步累加器角度轉換成長度增益 */
 #define STEP_S_THETA_LENGTH   1.0          /* 感測微步累加器角度轉換成長度增益 */
 
@@ -82,7 +82,7 @@ int main (void) {
     drv8847.init();
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value  */
-    init_sin_cos_table(PERIOD_COUNT, N_STEP);
+    init_sin_cos_table(PERIOD_COUNT, 2);
 
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
@@ -117,20 +117,22 @@ int main (void) {
     __enable_irqn(FTM1_IRQn);
     __enable_irqn(UART1_RX_TX_IRQn);
     __enable_irqn(PIT0_IRQn);
+    __enable_irqn(PIT1_IRQn);
 
     uint32_t cnt = 0;
     while (true) {
         /* This will consume a lot of time */
         // drv8847.update_current();
 
-        if(cnt % 1000 == 0) {
+        if(cnt % 1000000 == 0) {
             update_cangle(&cangle, get_cangle_inc(&adj_v));
         }
 
-        if(cnt %100 == 0) {
+        /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
+        if(cnt %1000 == 0) {
             pit_flag = PIT_BUSY;
             RS485_trm(", %d, %d, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
             pit_flag = PIT_OK;
         }
 
@@ -161,3 +163,32 @@ void PIT0_IRQHandler(void) {
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }
+
+/* period : 5 s */
+void PIT1_IRQHandler(void) {
+    int32_t temp_sin = get_sin();
+    int32_t temp_cos = get_cos();
+    RS485_trm("===== update =====, %d, %d, %ld\n", temp_sin, temp_cos, as5047d.angle);
+
+    if(temp_sin > 0) {
+        SET_1A_DUTY = PERIOD_COUNT - temp_sin;
+        SET_1B_DUTY = PERIOD_COUNT;
+    }
+    else {
+        SET_1A_DUTY = PERIOD_COUNT;
+
+        SET_1B_DUTY = PERIOD_COUNT + temp_sin;
+    }
+    if(temp_cos > 0) {
+        SET_2B_DUTY = PERIOD_COUNT - temp_cos;
+        SET_2A_DUTY = PERIOD_COUNT;
+    }
+    else {
+        SET_2B_DUTY = PERIOD_COUNT;
+        SET_2A_DUTY = PERIOD_COUNT + temp_cos;
+    }
+
+    /* clear flag */
+    PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
+}
+

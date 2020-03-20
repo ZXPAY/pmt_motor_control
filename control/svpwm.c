@@ -30,8 +30,6 @@ void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_cu
         }
     }
 
-    pwmAB->pwma = (0.5 + i_a/Ia_MAX*0.5)*60000;
-    pwmAB->pwmb = (0.5 + i_b/Ib_MAX*0.5)*60000;
-    // pwmAB->pwma = i_a/Ia_MAX*60000;
-    // pwmAB->pwmb = i_b/Ib_MAX*60000;
+    pwmAB->pwm1 = (0.5 + i_a/Ia_MAX*0.5)*60000;
+    pwmAB->pwm2 = (0.5 + i_b/Ib_MAX*0.5)*60000; 
 }

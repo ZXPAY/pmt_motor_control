@@ -227,10 +227,15 @@ void init_hw_pit(void) {
     SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
-    /* reload every 5 ms (200 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    /* reload PIT0 every 5 ms (200 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
     PIT->CHANNEL[0].LDVAL = 72000000 / 200;
     /* enable timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
+
+    /* reload PIT0 every 5 s (0.2 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[1].LDVAL = 72000000 * 5;
+    /* enable timer and enable interrupt */
+    PIT->CHANNEL[1].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 }
 
 void board_init(void) {
