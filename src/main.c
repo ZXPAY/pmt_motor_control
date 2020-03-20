@@ -148,6 +148,7 @@ void HardFalut_Handler(void) {
     RS485_trm("Error occur\n");
 }
 
+/* period : 5 ms */
 void PIT0_IRQHandler(void) {
     if(pit_flag == PIT_OK) {
         as5047d.update();

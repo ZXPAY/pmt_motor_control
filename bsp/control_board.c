@@ -227,8 +227,8 @@ void init_hw_pit(void) {
     SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
-    /* reload every 5 ms, SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[0].LDVAL = 72000000 / 1000 / 5;
+    /* reload every 5 ms (200 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[0].LDVAL = 72000000 / 200;
     /* enable timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 }
