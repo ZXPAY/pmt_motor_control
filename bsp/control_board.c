@@ -43,39 +43,41 @@ void init_hw_drv8847(void) {
     GPIO_NFAULT->PDDR &= ~(1<<PIN_NFAULT);
 
     // ===== Setting PWM for 1A 1B =====
+    /* initial in zero degree sin(0) = 1A - 1B */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM1_MASK;
     FTM_1A1B->SC = 0;
     FTM_1A1B->MODE |= FTM_MODE_WPDIS_MASK;
     // Setting FTM1 CH0 and CH1 for 1A, 1B
-    FTM_1A1B->CONTROLS[CH_1A].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
-    FTM_1A1B->CONTROLS[CH_1B].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    FTM_1A1B->CONTROLS[CH_1A].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK;
+    FTM_1A1B->CONTROLS[CH_1B].CnSC =  FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK;
     PORT_1A->PCR[PIN_1A] |= PORT_PCR_MUX(MUX_ALT_3);
     GPIO_1A->PDDR |= (1<<PIN_1A);
     PORT_1B->PCR[PIN_1B] |= PORT_PCR_MUX(MUX_ALT_3);
     GPIO_1B->PDDR |= (1<<PIN_1B);
-    FTM_1A1B->CNTIN = 0;                     // start count
-    SET_1A1B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
-    SET_1A_DUTY = 0;
-    SET_1B_DUTY = 0;
     FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_1A1B->CNTIN = 0;
+    SET_1A1B_PERIOD = PERIOD_COUNT;
+    SET_1A_DUTY = PERIOD_COUNT;
+    SET_1B_DUTY = PERIOD_COUNT;
 
     // ===== Setting PWM for 2A 2B =====
+    /* initial in zero degree cos(0) = 2B - 2A */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
     FTM_2A2B->SC = 0;
     FTM_2A2B->MODE |= FTM_MODE_WPDIS_MASK;
-    FTM_2A2B->CONTROLS[CH_2B].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
-    FTM_2A2B->CONTROLS[CH_2A].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK;
+    FTM_2A2B->CONTROLS[CH_2B].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK;
+    FTM_2A2B->CONTROLS[CH_2A].CnSC |= FTM_CnSC_MSB_MASK | FTM_CnSC_ELSB_MASK | FTM_CnSC_ELSA_MASK;
     PORT_2B->PCR[PIN_2B] |= PORT_PCR_MUX(MUX_ALT_4);
     GPIO_2B->PDDR |= (1<<PIN_2B);
     PORT_2A->PCR[PIN_2A] |= PORT_PCR_MUX(MUX_ALT_4);
     GPIO_2A->PDDR |= (1<<PIN_2A);
-    FTM_2A2B->CNTIN = 0;
-    SET_2A2B_PERIOD = PERIOD_COUNT - 1;          // see manual p.794
-    SET_2A_DUTY = 0;
-    SET_2B_DUTY = 0;
     FTM_2A2B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
+    FTM_2A2B->CNTIN = 0;
+    SET_2A2B_PERIOD = PERIOD_COUNT;
+    SET_2A_DUTY = PERIOD_COUNT;
+    SET_2B_DUTY = 0;
 
     // Setting ADC0 for R sense
     // Enable clock source
@@ -113,10 +115,9 @@ void init_hw_drv8847s(void){
     DRV8847S_I2C->C2 = 0;
     DRV8847S_I2C->F |= I2C_F_MULT(2) | I2C_F_ICR(0x03);
     DRV8847S_I2C->FLT |= I2C_FLT_FLT(0xF);
-    // DRV8847S_I2C->C1 = I2C_C1_IICEN_MASK;
 
     // ===== Setting PWM for 1A 1B =====
-    /* initial in zero degree sin(0) */
+    /* initial in zero degree sin(0) = 1A - 1B */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM1_MASK;
     FTM_1A1B->SC = 0;
@@ -128,14 +129,14 @@ void init_hw_drv8847s(void){
     GPIO_1A->PDDR |= (1<<PIN_1A);
     PORT_1B->PCR[PIN_1B] |= PORT_PCR_MUX(MUX_ALT_3);
     GPIO_1B->PDDR |= (1<<PIN_1B);
+    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
     FTM_1A1B->CNTIN = 0;
     SET_1A1B_PERIOD = PERIOD_COUNT;
     SET_1A_DUTY = PERIOD_COUNT;
     SET_1B_DUTY = PERIOD_COUNT;
-    FTM_1A1B->SC = FTM_SC_CLKS(1) | FTM_SC_PS(PWM_PRESCALER) | FTM_SC_TOIE_MASK | FTM_SC_CPWMS_MASK;
 
     // ===== Setting PWM for 2A 2B =====
-    /* initial in zero degree cos(0) */
+    /* initial in zero degree cos(0) = 2B - 2A */
     // Enable clock source
     SIM->SCGC6 |= SIM_SCGC6_FTM0_MASK;
     FTM_2A2B->SC = 0;
@@ -229,14 +230,15 @@ void init_hw_pit(void) {
     SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
+
     /* reload PIT0 every 5 ms (200 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
     PIT->CHANNEL[0].LDVAL = 72000000 / 200;
-    /* enable timer and enable interrupt */
+    /* enable PIT0 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 
-    /* reload PIT0 every 1 s (1 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[1].LDVAL = 72000000 * 1;
-    /* enable timer and enable interrupt */
+    /* reload PIT1 every 0.1 s (10 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[1].LDVAL = 72000000 / 10;
+    /* enable PIT1 timer and enable interrupt */
     PIT->CHANNEL[1].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 }
 

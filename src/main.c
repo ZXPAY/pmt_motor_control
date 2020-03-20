@@ -49,8 +49,8 @@ adj_v_t adj_v;                          /* 相位調整限速器 */
 fb_exc_angle_t fb_exc_angle;            /* 激磁角回饋 */
 fb_current_t fb_current;                /* 電流回饋 */
 pwmAB_t pwm12;                          /* 1A1B 2A2B PWM */
-extern step_caccumulator_t c_accum;     /* 命令微步累加器, 在ele_angle.c內初始化 */
-extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在ele_angle.c內初始化 */
+extern step_caccumulator_t c_accum;     /* 命令微步累加器, 在control/ele_angle.c內初始化 */
+extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在control/ele_angle.c內初始化 */
 
 #define PIT_BUSY  1
 #define PIT_OK    0
@@ -70,7 +70,8 @@ int main (void) {
     as5047d.init();
     drv8847.init();
 
-    /* Initialize sin, cos table, call get_sin() and get_cos() to get current value  */
+    /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
+    /* Use in test */
     init_sin_cos_table(PERIOD_COUNT, N_STEP);
 
     /* Initialize add adjust calculator */
@@ -84,8 +85,8 @@ int main (void) {
     init_current_para(&fb_current, I_SVPWM_KP, I_SVPWM_KI, I_SVPWM_LOW, I_SVPWM_HIGH);
 
     /* Initialize step accumulator */
-    set_caccum_k(&c_accum, STEP_C_THETA_LENGTH);
-    set_saccum_k(&s_accum, STEP_S_THETA_LENGTH);
+    set_caccum_k(&c_accum, STEP_C_THETA_TO_LENGTH);
+    set_saccum_k(&s_accum, STEP_S_THETA_TO_LENGTH);
 
     /* SysTick initialize */
     systick_init();
@@ -99,7 +100,6 @@ int main (void) {
     init_cangle(&cangle, N_STEP, 0);
 
     RS485_trm("start\n");
-
 
     // Enable interrupt
     __enable_irqn(FTM0_IRQn);
@@ -167,30 +167,32 @@ void PIT0_IRQHandler(void) {
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }
 
-/* period : 5 s */
+/* period : 0.1 s */
 void PIT1_IRQHandler(void) {
     /* Test code */
-    // int32_t temp_sin = get_sin();
-    // int32_t temp_cos = get_cos();
-    // RS485_trm("===== update =====, %d, %d, %ld\n", temp_sin, temp_cos, as5047d.angle);
+    /*
+    int32_t temp_sin = get_sin();
+    int32_t temp_cos = get_cos();
+    RS485_trm("===== update =====, %ld, %ld, %ld\n", temp_sin, temp_cos, as5047d.angle);
 
-    // if(temp_sin > 0) {
-    //     SET_1A_DUTY = PERIOD_COUNT - temp_sin;
-    //     SET_1B_DUTY = PERIOD_COUNT;
-    // }
-    // else {
-    //     SET_1A_DUTY = PERIOD_COUNT;
+    if(temp_sin > 0) {
+        SET_1A_DUTY = PERIOD_COUNT - temp_sin;
+        SET_1B_DUTY = PERIOD_COUNT;
+    }
+    else {
+        SET_1A_DUTY = PERIOD_COUNT;
 
-    //     SET_1B_DUTY = PERIOD_COUNT + temp_sin;
-    // }
-    // if(temp_cos > 0) {
-    //     SET_2B_DUTY = PERIOD_COUNT - temp_cos;
-    //     SET_2A_DUTY = PERIOD_COUNT;
-    // }
-    // else {
-    //     SET_2B_DUTY = PERIOD_COUNT;
-    //     SET_2A_DUTY = PERIOD_COUNT + temp_cos;
-    // }
+        SET_1B_DUTY = PERIOD_COUNT + temp_sin;
+    }
+    if(temp_cos > 0) {
+        SET_2B_DUTY = PERIOD_COUNT - temp_cos;
+        SET_2A_DUTY = PERIOD_COUNT;
+    }
+    else {
+        SET_2B_DUTY = PERIOD_COUNT;
+        SET_2A_DUTY = PERIOD_COUNT + temp_cos;
+    }
+    */
 
     update_cangle(&cangle, get_cangle_inc(&adj_v));
 

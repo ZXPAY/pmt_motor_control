@@ -12,9 +12,6 @@
 #define HAL_DRV8847_H
 #include <stdint.h>
 
-/* Define N step */
-#define N_STEP 16
-
 /* ADC parameters */
 #define R_SENSE                   0.15
 #define ADC_RES                   65535

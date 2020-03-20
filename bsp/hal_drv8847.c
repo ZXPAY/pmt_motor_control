@@ -1,6 +1,8 @@
 #include "hal_drv8847.h"
 #define NOP_DELAY(void)  for(uint32_t i=0;i<STEP_PULSE_COUNT;i++) __asm("nop")
 
+#define ADC_VALUE_TO_CURRENT      ADC_REF/ADC_RES/R_SENSE
+
 extern drv8847_io_t drv8847_dri;
 
 static void drv8847_init(void);
@@ -67,6 +69,6 @@ static void drv8847_adc_trig2A2B(void) {
 }
 
 static void drv8847_update_current(void) {
-    drv8847.i1 = drv8847.drv->v_r1*ADC_REF/ADC_RES/R_SENSE;
-    drv8847.i2 = drv8847.drv->v_r2*ADC_REF/ADC_RES/R_SENSE;
+    drv8847.i1 = drv8847.drv->v_r1*ADC_VALUE_TO_CURRENT;
+    drv8847.i2 = drv8847.drv->v_r2*ADC_VALUE_TO_CURRENT;
 }
