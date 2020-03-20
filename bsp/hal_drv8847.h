@@ -16,9 +16,9 @@
 #define N_STEP 16
 
 /* ADC parameters */
-#define R_SENSE 0.15
-#define ADC_RES 65535
-#define ADC_REF 3.3
+#define R_SENSE                   0.15
+#define ADC_RES                   65535
+#define ADC_REF                   3.3
 
 #define DRV8847_STATUS_OK         0
 #define DRV8847_STATUS_FAULT      1

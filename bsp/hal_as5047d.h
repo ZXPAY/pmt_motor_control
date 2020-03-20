@@ -12,22 +12,22 @@
 #define HAL_AS5047D_H
 #include <stdint.h>
 
-#define CHIP_CS1    1
-#define CHIP_CS2    2
-#define CHIP_CS3    3
+#define CHIP_CS1          1
+#define CHIP_CS2          2
+#define CHIP_CS3          3
 
-#define PROG          0x0003
-#define CORDICMAG     0x3FFD
-#define DIAAGC        0x3FFC
-#define ANGLECOM      0x3FFF
-#define ANGLE         0x3FFE
-#define ERRFL         0x0001
-#define ZPOSM         0x0016
-#define ZPOSL         0x0017
-#define SETTINGS2     0x0019
-#define SETTINGS1     0x0018
-#define ABIBIN        0b0000000000100000  // Select Binary
-#define ABIRES        0b0000000111000000  // select resolution 2048
+#define PROG              0x0003
+#define CORDICMAG         0x3FFD
+#define DIAAGC            0x3FFC
+#define ANGLECOM          0x3FFF
+#define ANGLE             0x3FFE
+#define ERRFL             0x0001
+#define ZPOSM             0x0016
+#define ZPOSL             0x0017
+#define SETTINGS2         0x0019
+#define SETTINGS1         0x0018
+#define ABIBIN            0b0000000000100000  // Select Binary
+#define ABIRES            0b0000000111000000  // select resolution 2048
 
 typedef struct __as5047d_dri {
     uint8_t CHIP_SELECT;

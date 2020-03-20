@@ -63,6 +63,11 @@ extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在ele_angle.c
 /* Define default N-step */
 #define N_STEP 1
 
+#define PIT_BUSY  1
+#define PIT_OK    0
+volatile uint8_t pit_flag = PIT_OK;
+
+
 /* Main code */
 int main (void) {
     setbuf(stdout, NULL);
@@ -111,29 +116,26 @@ int main (void) {
     __enable_irqn(FTM0_IRQn);
     __enable_irqn(FTM1_IRQn);
     __enable_irqn(UART1_RX_TX_IRQn);
+    __enable_irqn(PIT0_IRQn);
 
     uint32_t cnt = 0;
     while (true) {
         /* This will consume a lot of time */
         // drv8847.update_current();
 
-        as5047d.update();
-        update_sangle(&sangle, as5047d.angle);
-        cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
-        cal_current_correct(&fb_exc_angle, &fb_current);
-        cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
-
-        if(cnt % 10000 == 0) {
+        if(cnt % 1000 == 0) {
             update_cangle(&cangle, get_cangle_inc(&adj_v));
         }
 
-        if(cnt %1000 == 0) {
+        if(cnt %100 == 0) {
+            pit_flag = PIT_BUSY;
             RS485_trm(", %d, %d, %d, %.3f, %.3f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwma, pwm12.pwmb);
+            pit_flag = PIT_OK;
         }
 
         // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
-        RS485_trm("%x\n", drv8847.drv->i2c_read(0));
+        // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
 
         cnt++;
     }
@@ -144,4 +146,17 @@ int main (void) {
 
 void HardFalut_Handler(void) {
     RS485_trm("Error occur\n");
+}
+
+void PIT0_IRQHandler(void) {
+    if(pit_flag == PIT_OK) {
+        as5047d.update();
+        update_sangle(&sangle, as5047d.angle);
+        cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
+        cal_current_correct(&fb_exc_angle, &fb_current);
+        cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
+    }
+
+    /* clear flag */
+    PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }
