@@ -5,7 +5,7 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "drv8847_s.h"
 
-#define PWM_PRESCALER 0
+#define PWM_PRESCALER 1
 
 /**
 * @brief DRV8847 pin map
@@ -123,7 +123,7 @@ void init_hw_drv8847s(void){
     DRV8847S_I2C->S  = 0xFFU;
     DRV8847S_I2C->C2 = 0;
     DRV8847S_I2C->F |= I2C_F_MULT(2) | I2C_F_ICR(0x03);
-    DRV8847S_I2C->FLT |= I2C_FLT_FLT(5);
+    DRV8847S_I2C->FLT |= I2C_FLT_FLT(0x2);
     DRV8847S_I2C->C1 = I2C_C1_IICEN_MASK;
 
     // ===== Setting PWM for 1A 1B =====

@@ -133,7 +133,7 @@ int main (void) {
         }
 
         // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
-        // hal_delay(100);
+        RS485_trm("%x\n", drv8847.drv->i2c_read(0));
 
         cnt++;
     }

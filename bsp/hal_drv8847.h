@@ -39,6 +39,7 @@ enum STEP_DIR{
 };
 
 typedef struct _drv8847_io {
+    uint8_t status;
     volatile uint8_t ch;
     volatile uint16_t v_r1;
     volatile uint16_t v_r2;

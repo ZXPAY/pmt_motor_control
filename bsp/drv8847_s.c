@@ -34,21 +34,23 @@ static void drv8847_mode_2pin(void);
 static void drv8847_trq_full(void);
 static void drv8847_trq_half(void);
 drv8847_io_t drv8847_dri = {                       \
+    .status = I2C_STATUS_OK,                       \
     .ch = ADC_CH_R_SENSE1,                         \
     .v_r1 = 0,                                     \
     .v_r2 = 0,                                     \
     .sleep_low = drv8847_sleep_low,                \
     .sleep_high = drv8847_sleep_high,              \
-    .mode_4pin = drv8847_mode_4pin,                 \
+    .mode_4pin = drv8847_mode_4pin,                \
     .mode_2pin = drv8847_mode_2pin,                \
-    .trq_full = drv8847_trq_full,                   \
+    .trq_full = drv8847_trq_full,                  \
     .trq_half = drv8847_trq_half,                  \
     .get_fault = drv8847_get_fault,                \
     .set_period1 = drv8847_set_period1,            \
     .set_period2 = drv8847_set_period2,            \
     .set_duty1 = drv8847_set_duty1,                \
     .set_duty2 = drv8847_set_duty2,                \
-    .Rsense_trig = drv8847_Rsense_trig,            \
+    .mcu_trig1A1B = drv8847_mcu_trig1A1B,          \
+    .mcu_trig2A2B = drv8847_mcu_trig2A2B,          \
 };
 
 #else if DRV8847S
@@ -69,6 +71,7 @@ static void drv8847s_trq_full(void);
 static void drv8847s_trq_half(void);
 
 drv8847_io_t drv8847_dri = {                       \
+    .status = I2C_STATUS_OK,                       \
     .ch = ADC_CH_R_SENSE1,                         \
     .v_r1 = 0,                                     \
     .v_r2 = 0,                                     \
@@ -136,7 +139,13 @@ static void stop_tansmission(void) {
 }
 
 static void wait_tansmission(void) {
-    while(!(DRV8847S_I2C->S & I2C_S_IICIF_MASK));
+    uint32_t timeout_cnt = 0;
+    while(!(DRV8847S_I2C->S & I2C_S_IICIF_MASK)) {
+        if((timeout_cnt++) > TIMEOUT_CNT_MAX) {
+            drv8847_dri.status = I2C_STATUS_TIMEOUT;
+            break;
+        }
+    }
     DRV8847S_I2C->S |= I2C_S_IICIF_MASK;
 }
 
@@ -146,7 +155,13 @@ static void send_byte(uint8_t data) {
 }
 
 static uint8_t get_byte(void) {
-    while(!(DRV8847S_I2C->S & I2C_S_SRW_MASK));
+    uint32_t timeout_cnt = 0;
+    while(!(DRV8847S_I2C->S & I2C_S_SRW_MASK)) {
+        if((timeout_cnt++) > TIMEOUT_CNT_MAX) {
+            drv8847_dri.status = I2C_STATUS_TIMEOUT;
+            break;
+        }
+    }
     DRV8847S_I2C->S |= I2C_S_SRW_MASK;
     return DRV8847S_I2C->D;
 }
@@ -159,15 +174,15 @@ void i2c_write(uint8_t regAdd, uint8_t trm_data) {
     /* Start */
     start_tansmission();
     send_byte(((DRV8847S_ADDRESS << 1U) & 0xFE));
-    if(!is_ack()) {stop_tansmission(); return;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return;}
 
     /* point to hardware register address */
     send_byte(regAdd);
-    if(!is_ack()) {stop_tansmission(); return;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return;}
 
     /* write data to hardware register address */
     send_byte(trm_data);
-    if(!is_ack()) {stop_tansmission(); return;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return;}
 
     stop_tansmission();
 }
@@ -176,16 +191,16 @@ uint8_t i2c_read(uint8_t regAdd) {
     /* Start */
     start_tansmission();
     send_byte(((DRV8847S_ADDRESS << 1U) & 0xFE));
-    if(!is_ack()) {stop_tansmission(); return 0;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return 0;}
 
     /* point to hardware register address */
     send_byte(regAdd);
-    if(!is_ack()) {stop_tansmission(); return 0;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return 0;}
 
     /* repeat start to read hardware register */
     repeat_start_tansmission();
     send_byte(((DRV8847S_ADDRESS << 1U) | 0x01));
-    if(!is_ack()) {stop_tansmission(); return 0;}
+    if(!is_ack()) {stop_tansmission(); drv8847_dri.status = I2C_STATUS_NACK; return 0;}
 
     enter_receive_mode();
     uint8_t rec_data = get_byte();
