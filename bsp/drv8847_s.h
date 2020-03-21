@@ -32,6 +32,6 @@
 #define I2C_STATUS_TIMEOUT     1
 #define I2C_STATUS_NACK        2
 
-#define TIMEOUT_CNT_MAX        1000000
+#define DRV8847S_TIMEOUT_MS    500
 
 #endif /* DRV8847_S_H */

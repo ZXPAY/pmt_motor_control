@@ -40,10 +40,6 @@ typedef struct _drv8847_io {
     volatile uint8_t ch;
     volatile uint16_t v_r1;
     volatile uint16_t v_r2;
-    uint16_t period1;
-    uint16_t period2;
-    uint16_t duty1;
-    uint16_t duty2;
     void (*sleep_low)(void);
     void (*sleep_high)(void);
     void (*mode_4pin)(void);
@@ -55,11 +51,6 @@ typedef struct _drv8847_io {
     uint8_t (*i2c_read)(uint8_t regAdd);
 #endif
     uint8_t (*get_fault)(void);
-    void (*set_period1)(uint16_t period);
-    void (*set_period2)(uint16_t period);
-    void (*set_duty1)(uint16_t duty);
-    void (*set_duty2)(uint16_t duty);
-    void (*set_channel)(uint8_t ch);
     void (*mcu_trig1A1B)(void);
     void (*mcu_trig2A2B)(void);
 }drv8847_io_t;

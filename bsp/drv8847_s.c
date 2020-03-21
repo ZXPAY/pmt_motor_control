@@ -3,6 +3,7 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "control_board.h"
 #include "drv8847_s.h"
+#include "hal_tick.h"
 
 /**
 * @brief DRV8847 pin map
@@ -21,10 +22,6 @@
 static void drv8847_sleep_low(void);
 static void drv8847_sleep_high(void);
 static uint8_t drv8847_get_fault(void);
-static void drv8847_set_period1(uint16_t period);
-static void drv8847_set_period2(uint16_t period);
-static void drv8847_set_duty1(uint16_t duty);
-static void drv8847_set_duty2(uint16_t duty);
 static void drv8847_mcu_trig1A1B(void);
 static void drv8847_mcu_trig2A2B(void);
 
@@ -45,10 +42,6 @@ drv8847_io_t drv8847_dri = {                       \
     .trq_full = drv8847_trq_full,                  \
     .trq_half = drv8847_trq_half,                  \
     .get_fault = drv8847_get_fault,                \
-    .set_period1 = drv8847_set_period1,            \
-    .set_period2 = drv8847_set_period2,            \
-    .set_duty1 = drv8847_set_duty1,                \
-    .set_duty2 = drv8847_set_duty2,                \
     .mcu_trig1A1B = drv8847_mcu_trig1A1B,          \
     .mcu_trig2A2B = drv8847_mcu_trig2A2B,          \
 };
@@ -84,10 +77,6 @@ drv8847_io_t drv8847_dri = {                       \
     .i2c_write = i2c_write,                        \
     .i2c_read = i2c_read,                          \
     .get_fault = drv8847_get_fault,                \
-    .set_period1 = drv8847_set_period1,            \
-    .set_period2 = drv8847_set_period2,            \
-    .set_duty1 = drv8847_set_duty1,                \
-    .set_duty2 = drv8847_set_duty2,                \
     .mcu_trig1A1B = drv8847_mcu_trig1A1B,          \
     .mcu_trig2A2B = drv8847_mcu_trig2A2B,          \
 };
@@ -139,13 +128,10 @@ static void stop_tansmission(void) {
 }
 
 static void wait_tansmission(void) {
-    uint32_t timeout_cnt = 0;
-    while(!(DRV8847S_I2C->S & I2C_S_IICIF_MASK)) {
-        if((timeout_cnt++) > TIMEOUT_CNT_MAX) {
-            drv8847_dri.status = I2C_STATUS_TIMEOUT;
-            break;
-        }
-    }
+    timeout_set_ms(DRV8847S_TIMEOUT_MS);
+    while((!(DRV8847S_I2C->S & I2C_S_IICIF_MASK)) && (!is_timeout()));
+    if(is_timeout()) drv8847_dri.status = I2C_STATUS_TIMEOUT;
+    /* Clear flag */
     DRV8847S_I2C->S |= I2C_S_IICIF_MASK;
 }
 
@@ -155,13 +141,10 @@ static void send_byte(uint8_t data) {
 }
 
 static uint8_t get_byte(void) {
-    uint32_t timeout_cnt = 0;
-    while(!(DRV8847S_I2C->S & I2C_S_SRW_MASK)) {
-        if((timeout_cnt++) > TIMEOUT_CNT_MAX) {
-            drv8847_dri.status = I2C_STATUS_TIMEOUT;
-            break;
-        }
-    }
+    timeout_set_ms(DRV8847S_TIMEOUT_MS);
+    while((!(DRV8847S_I2C->S & I2C_S_SRW_MASK)) && (!is_timeout()));
+    if(is_timeout()) drv8847_dri.status = I2C_STATUS_TIMEOUT;
+    /* Clear flag */
     DRV8847S_I2C->S |= I2C_S_SRW_MASK;
     return DRV8847S_I2C->D;
 }
@@ -240,23 +223,6 @@ static void drv8847s_trq_half(void) {
 
 static uint8_t drv8847_get_fault(void) {
     return (GPIO_NFAULT->PDIR & (1<<PIN_NFAULT)) >> PIN_NFAULT;
-}
-
-static void drv8847_set_period1(uint16_t period) {
-    drv8847_dri.period1 = period;
-    FTM_1A1B->MOD = period;
-}
-
-static void drv8847_set_period2(uint16_t period) {
-    drv8847_dri.period2 = period;
-}
-
-static void drv8847_set_duty1(uint16_t duty) {
-    drv8847_dri.duty1 = duty;
-}
-
-static void drv8847_set_duty2(uint16_t duty) {
-    drv8847_dri.duty2 = duty;
 }
 
 static void drv8847_mcu_trig1A1B(void) {

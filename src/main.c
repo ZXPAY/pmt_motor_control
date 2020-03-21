@@ -88,10 +88,9 @@ int main (void) {
     set_caccum_k(&c_accum, STEP_C_THETA_TO_LENGTH);
     set_saccum_k(&s_accum, STEP_S_THETA_TO_LENGTH);
 
-    /* SysTick initialize */
-    systick_init();
-
+    __enable_irqn(PIT2_IRQn);
     hal_delay(500);
+
     /* Initialize machanical angle */
     for(int i=0;i<16;i++) {
         as5047d.update();    // update encoder angle to be first machanical angle
@@ -101,12 +100,16 @@ int main (void) {
 
     RS485_trm("start\n");
 
+    /* SysTick initialize */
+    systick_init();
+
     // Enable interrupt
     __enable_irqn(FTM0_IRQn);
     __enable_irqn(FTM1_IRQn);
     __enable_irqn(UART1_RX_TX_IRQn);
     __enable_irqn(PIT0_IRQn);
     __enable_irqn(PIT1_IRQn);
+
 
     uint32_t cnt = 0;
     while (true) {
@@ -123,6 +126,7 @@ int main (void) {
 
         // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
         // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
+
 
         cnt++;
     }
@@ -199,4 +203,5 @@ void PIT1_IRQHandler(void) {
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
 }
+
 

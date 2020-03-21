@@ -12,12 +12,9 @@
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "hal_drv8847.h"
-#include "hal_tick.h"
 #include "control_board.h"
-#include "sin_cos_val_table.h"
 #include "uart.h"
 #include "rs485.h"
-#include "svpwm.h"
 
 extern drv8847_t drv8847;
 
@@ -35,9 +32,6 @@ extern drv8847_t drv8847;
 * Rsense2 : ADC0_SE23
 */
 
-volatile int8_t sign1, sign2;
-extern int fg2;
-extern pwmAB_t pwm12;                   /* 1A1B 2A2B PWM */
 /** @brief 2A 2B timer/PWM handler
  *
  */
@@ -74,5 +68,5 @@ void UART1_RX_TX_IRQHandler(void) {
  *
  */
 void SysTick_Handler(void) {
-    inc_tick();
+
 }

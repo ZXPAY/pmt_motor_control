@@ -240,6 +240,12 @@ void init_hw_pit(void) {
     PIT->CHANNEL[1].LDVAL = 72000000 / 10;
     /* enable PIT1 timer and enable interrupt */
     PIT->CHANNEL[1].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
+
+    /* Below PIT use in timeout */
+    /* reload PIT2 every 1 ms (1000 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[2].LDVAL = 72000000 / 1000;
+    /* enable PIT2 timer and enable interrupt */
+    PIT->CHANNEL[2].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 }
 
 void board_init(void) {
