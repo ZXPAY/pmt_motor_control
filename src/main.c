@@ -126,7 +126,7 @@ int main (void) {
 
         // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
         // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
-
+        if(cnt % 300 == 0) update_cangle(&cangle, get_cangle_inc(&adj_v));
 
         cnt++;
     }
@@ -198,7 +198,7 @@ void PIT1_IRQHandler(void) {
     }
     */
 
-    update_cangle(&cangle, get_cangle_inc(&adj_v));
+    // update_cangle(&cangle, get_cangle_inc(&adj_v));
 
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;

@@ -1,4 +1,5 @@
 #include "adj_velocity.h"
+#include "control_config.h"
 
 void init_cangle_inc(adj_v_t *adj_v) {
     adj_v->add = 0;

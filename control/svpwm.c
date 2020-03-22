@@ -8,10 +8,10 @@
 
 void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_current) {
     /* 由角差I回饋 和 電流PI回饋計算SVPWM */
-    // float i_a = fb_current->i_svpwm*sin(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
-    // float i_b = fb_current->i_svpwm*cos(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
-    float i_a = sin(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
-    float i_b = cos(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
+    // float ia_svpwm = fb_current->i_svpwm*sin(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
+    // float ib_svpwm = fb_current->i_svpwm*cos(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
+    float ia = sin(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
+    float ib = cos(fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN);
 
     /* 設定i_a、i_b上下界 */
     // if(i_a > 0) {
@@ -35,8 +35,12 @@ void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_cu
     //     }
     // }
 
-    // pwmAB->pwm1 = i_a/Ia_MAX*PERIOD_COUNT;
-    // pwmAB->pwm2 = i_b/Ib_MAX*PERIOD_COUNT;
-    pwmAB->pwm1 = i_a*PERIOD_COUNT;
-    pwmAB->pwm2 = i_b*PERIOD_COUNT;
+    // pwmAB->pwm1 = (0.5+ia_svpwm/Ia_MAX*0.5) * PERIOD_COUNT;
+    // pwmAB->pwm2 = (0.5+ib_svpwm/Ib_MAX*0.5) * PERIOD_COUNT;
+
+    // pwmAB->pwm1 = ia_svpwm/Ia_MAX*PERIOD_COUNT;
+    // pwmAB->pwm2 = ib_svpwm/Ib_MAX*PERIOD_COUNT;
+
+    pwmAB->pwm1 = ia*PERIOD_COUNT;
+    pwmAB->pwm2 = ib*PERIOD_COUNT;
 }

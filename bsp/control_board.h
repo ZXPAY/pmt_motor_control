@@ -10,18 +10,18 @@
 #define CONTROL_BOARD_H
 
 // MUX alternative function
-#define MUX_ALT_0          0
-#define MUX_ALT_1          1
-#define MUX_ALT_2          2
-#define MUX_ALT_3          3
-#define MUX_ALT_4          4
-#define MUX_ALT_5          5
-#define MUX_ALT_6          6
-#define MUX_ALT_7          7
+#define MUX_ALT_0              0
+#define MUX_ALT_1              1
+#define MUX_ALT_2              2
+#define MUX_ALT_3              3
+#define MUX_ALT_4              4
+#define MUX_ALT_5              5
+#define MUX_ALT_6              6
+#define MUX_ALT_7              7
 
-#define PCR_PULL_EN    1
-#define PCR_PULL_DOWN  1
-#define PCR_PULL_UP    1
+#define PCR_PULL_EN            1
+#define PCR_PULL_DOWN          1
+#define PCR_PULL_UP            1
 
 /**
 * @brief DRV8847 pin map
@@ -61,7 +61,7 @@
 #define CH_2A                  1
 
 /* Define for setting period and duty cycle */
-#define PERIOD_COUNT           750
+#define PERIOD_COUNT           2000
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV

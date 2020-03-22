@@ -17,9 +17,6 @@
 #define SM_RUNNING      2
 #define SM_OVERFLOW     3
 
-/* Define maximum velocity */
-#define ADJ_MAX         5
-
 /**
  *  @brief Adjust velocity parameter, state structure
  *  @ingroup
