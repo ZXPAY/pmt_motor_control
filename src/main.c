@@ -116,16 +116,11 @@ int main (void) {
         // drv8847.update_current();
 
         /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-        if(cnt %1000 == 0) {
-            pit_flag = PIT_BUSY;
-            RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-            pit_flag = PIT_OK;
-        }
+
 
         // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
         // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
-        if(cnt % 300 == 0) update_cangle(&cangle, get_cangle_inc(&adj_v));
+        if(cnt % 5000 == 0) update_cangle(&cangle, get_cangle_inc(&adj_v));
 
         cnt++;
     }
@@ -146,17 +141,14 @@ void PIT0_IRQHandler(void) {
     cal_current_correct(&fb_exc_angle, &fb_current);
     cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
 
-    int32_t temp_sin = pwm12.pwm1;
-    int32_t temp_cos = pwm12.pwm2;
-    SET_PHASEA_DUTY((temp_sin+PERIOD_COUNT)>>1);
-    SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
-
+    SET_PHASEA_DUTY(pwm12.pwm1);
+    SET_PHASEB_DUTY(pwm12.pwm2);
 
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }
 
-/* period : 0.1 s */
+/* period : 0.01 s */
 void PIT1_IRQHandler(void) {
     /* Test code */
     /*
@@ -166,10 +158,11 @@ void PIT1_IRQHandler(void) {
 
     SET_PHASEA_DUTY((temp_sin+PERIOD_COUNT)>>1);
     SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
-
-    update_cangle(&cangle, get_cangle_inc(&adj_v));
     */
-   
+
+    RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
+
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
 }
