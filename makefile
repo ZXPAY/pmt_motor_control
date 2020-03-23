@@ -4,6 +4,7 @@ PROJECT	= motor_control
 ### Processor type and Thumb(-2) mode for CSRC/ASRC files (YES or NO)
 CPU      = cortex-m4
 PLATFORM = MKV30F128
+DEVICE = MKV30F128XXX10
 THUMB    = YES
 
 ### Source files and search directories
@@ -113,6 +114,16 @@ LDFLAGS += -u _printf_float -u _scanf_float
 ALL_CFLAGS  = -mcpu=$(CPU) $(THUMBIW) -I. $(CFLAGS)
 ALL_ASFLAGS = -mcpu=$(CPU) $(THUMBIW) -I. -x assembler-with-cpp $(ASFLAGS)
 
+## JLINK
+JLINK_OPT  = -device $(DEVICE)
+JLINK_OPT += -if SWD
+JLINK_OPT += -speed 4000
+JLINK_OPT += -autoconnect 1
+
+DOT_JLINK_FILE  = .jlink
+DOT_JLINK_TEXT  = "r\n"
+DOT_JLINK_TEXT += "loadfile $(PROJECT).hex\n"
+DOT_JLINK_TEXT += "exit"
 
 # Default target.
 all: build size
@@ -208,6 +219,18 @@ clean:
 	@echo
 	rm -f -r $(OBJDIR) | exit 0
 
+# Downlaod to device
+download:
+	@echo start download...
+	@echo -e $(DOT_JLINK_TEXT) > $(DOT_JLINK_FILE)
+	Jlink $(JLINK_OPT) -CommanderScript $(DOT_JLINK_FILE)
+
+# Collect data
+collect:
+	@echo start collect data
+	python ./tool/rec_data.py
+	python ./tool/plot_data.py
+	@echo Done !
 
 # Include the dependency files.
 -include $(shell mkdir $(OBJDIR) 2>/dev/null) $(wildcard $(OBJDIR)/*.d)

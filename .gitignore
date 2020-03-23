@@ -1,5 +1,7 @@
 .vscode
 
+*.jlink
+
 *.lst
 *.sym
 

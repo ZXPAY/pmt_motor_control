@@ -65,10 +65,14 @@
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV
+#define SET_PHASEA_DUTY(duty)  FTM_1A1B->CONTROLS[CH_1A].CnV = duty; \
+                               FTM_1A1B->CONTROLS[CH_1B].CnV = duty;
 
 #define SET_2A2B_PERIOD        FTM_2A2B->MOD
 #define SET_2B_DUTY            FTM_2A2B->CONTROLS[CH_2B].CnV
 #define SET_2A_DUTY            FTM_2A2B->CONTROLS[CH_2A].CnV
+#define SET_PHASEB_DUTY(duty)  FTM_2A2B->CONTROLS[CH_2B].CnV = duty; \
+                               FTM_2A2B->CONTROLS[CH_2A].CnV = duty;
 
 #define GPIO_MODE              GPIOE
 #define PORT_MODE              PORTE

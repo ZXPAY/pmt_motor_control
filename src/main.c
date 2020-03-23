@@ -110,7 +110,6 @@ int main (void) {
     __enable_irqn(PIT0_IRQn);
     __enable_irqn(PIT1_IRQn);
 
-
     uint32_t cnt = 0;
     while (true) {
         /* This will consume a lot of time */
@@ -149,23 +148,9 @@ void PIT0_IRQHandler(void) {
 
     int32_t temp_sin = pwm12.pwm1;
     int32_t temp_cos = pwm12.pwm2;
+    SET_PHASEA_DUTY((temp_sin+PERIOD_COUNT)>>1);
+    SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
 
-    if(temp_sin > 0) {
-        SET_1A_DUTY = PERIOD_COUNT - temp_sin;
-        SET_1B_DUTY = PERIOD_COUNT;
-    }
-    else {
-        SET_1A_DUTY = PERIOD_COUNT;
-        SET_1B_DUTY = PERIOD_COUNT + temp_sin;
-    }
-    if(temp_cos > 0) {
-        SET_2B_DUTY = PERIOD_COUNT - temp_cos;
-        SET_2A_DUTY = PERIOD_COUNT;
-    }
-    else {
-        SET_2B_DUTY = PERIOD_COUNT;
-        SET_2A_DUTY = PERIOD_COUNT + temp_cos;
-    }
 
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
@@ -179,27 +164,12 @@ void PIT1_IRQHandler(void) {
     int32_t temp_cos = get_cos();
     RS485_trm("===== update =====, %ld, %ld, %ld\n", temp_sin, temp_cos, as5047d.angle);
 
-    if(temp_sin > 0) {
-        SET_1A_DUTY = PERIOD_COUNT - temp_sin;
-        SET_1B_DUTY = PERIOD_COUNT;
-    }
-    else {
-        SET_1A_DUTY = PERIOD_COUNT;
+    SET_PHASEA_DUTY((temp_sin+PERIOD_COUNT)>>1);
+    SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
 
-        SET_1B_DUTY = PERIOD_COUNT + temp_sin;
-    }
-    if(temp_cos > 0) {
-        SET_2B_DUTY = PERIOD_COUNT - temp_cos;
-        SET_2A_DUTY = PERIOD_COUNT;
-    }
-    else {
-        SET_2B_DUTY = PERIOD_COUNT;
-        SET_2A_DUTY = PERIOD_COUNT + temp_cos;
-    }
+    update_cangle(&cangle, get_cangle_inc(&adj_v));
     */
-
-    // update_cangle(&cangle, get_cangle_inc(&adj_v));
-
+   
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
 }
