@@ -52,10 +52,7 @@ pwmAB_t pwm12;                          /* 1A1B 2A2B PWM */
 extern step_caccumulator_t c_accum;     /* 命令微步累加器, 在control/ele_angle.c內初始化 */
 extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在control/ele_angle.c內初始化 */
 
-#define PIT_BUSY  1
-#define PIT_OK    0
-volatile uint8_t pit_flag = PIT_OK;
-
+volatile uint32_t presc_cnt = 0;
 
 /* Main code */
 int main (void) {
@@ -72,7 +69,7 @@ int main (void) {
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
-    init_sin_cos_table(PERIOD_COUNT, N_STEP);
+    // init_sin_cos_table(PERIOD_COUNT, N_STEP);
 
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
@@ -112,17 +109,8 @@ int main (void) {
 
     uint32_t cnt = 0;
     while (true) {
-        /* This will consume a lot of time */
-        // drv8847.update_current();
-
-        /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-
-
-        // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
-        // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
-        if(cnt % 5000 == 0) update_cangle(&cangle, get_cangle_inc(&adj_v));
-
         cnt++;
+        /* idle */
     }
 
 
@@ -160,8 +148,15 @@ void PIT1_IRQHandler(void) {
     SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
     */
 
+    /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
+
+    /* 1 s update command angle */
+    if(presc_cnt % 200 == 0) {
+        update_cangle(&cangle, get_cangle_inc(&adj_v));
+    }
+    presc_cnt++;
 
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;

@@ -228,8 +228,7 @@ download:
 # Collect data
 collect:
 	@echo start collect data
-	python ./tool/rec_data.py
-	python ./tool/plot_data.py
+	@python ./tool/rec_data.py
 	@echo Done !
 
 # Include the dependency files.
