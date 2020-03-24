@@ -6,7 +6,7 @@
 
 /* RS485 transmit macro */
 #define RS485_trm(format, args...)  ENABLE_RS485_TRM();                    \
-                                    printf("\r[RS485] "format, ##args);    \
+                                    printf("[RS485] "format, ##args);    \
                                     DISABLE_RS485_TRM();                   \
 
 

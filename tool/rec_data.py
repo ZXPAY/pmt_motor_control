@@ -9,10 +9,10 @@ from plot_data import plot_data
 delat_t = 0.01
 now = datetime.now()
 # date_time = now.strftime("%m_%d_%H_%M_%S")
-date_time = "0"
+date_time = "_0"
 raw_data_file_name = 'raw_data_' + date_time + '.txt'
 
-GRAB_DATA_SIZE = 1000
+GRAB_DATA_SIZE = 5000
 DATA_DIR = 'data'
 try:
     os.mkdir(DATA_DIR)
@@ -25,13 +25,16 @@ cnt = 0
 temp_str = ''
 ser.flush()
 
+# Erase
 f = open(DATA_DIR + "/" + raw_data_file_name, "w")
 f.close()
+# Open
 f = open(DATA_DIR + "/" + raw_data_file_name, "ab")
 while cnt < (GRAB_DATA_SIZE):
     raw_data = ser.readline()
     if len(raw_data.decode("utf-8").split(",")) == 13:
-        f.write(raw_data)
+        # print(raw_data)
+        f.write(raw_data[0:-1])
 
         cnt += 1
         if cnt % 100 == 0:

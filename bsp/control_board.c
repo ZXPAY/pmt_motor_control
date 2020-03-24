@@ -232,8 +232,8 @@ void init_hw_pit(void) {
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
 
-    /* reload PIT0 every 5 ms (200 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[0].LDVAL = 72000000 / 200;
+    /* reload PIT0 every 1 ms (1000 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[0].LDVAL = 72000000 / 1000;
     /* enable PIT0 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 
