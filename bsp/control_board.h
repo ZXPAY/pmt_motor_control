@@ -172,6 +172,8 @@
 #define PORT_INT              PORTD
 #define PIN_INT               4
 
+#define SEND_BUFF_SIZE        20
+
 /* initialize motor control IC */
 void init_hw_drv8847(void);
 
@@ -183,6 +185,10 @@ void init_hw_as5047d(void);
 
 /* initialize RS485 */
 void init_hw_rs485(void);
+
+void init_rs485_txdma(void);
+void enable_rs485_txdma(void);
+void disable_rs485_txdma(void);
 
 /* initialize PIT */
 void init_hw_pit(void);

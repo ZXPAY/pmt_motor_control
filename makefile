@@ -9,11 +9,12 @@ THUMB    = YES
 
 ### Source files and search directories
 CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c
-HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c
+HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c dma_uart.c
 HAL_CSRC	= hal_as5047d.c hal_drv8847.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
-CSRC   += main.c
+# CSRC   += main.c
 # CSRC   += test_timeout.c
+CSRC   += test_dma_transmit.c
 ASRC	= fpu.S
 CSRCARM	=
 ASRCARM	=

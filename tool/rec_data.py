@@ -9,7 +9,7 @@ from plot_data import plot_data
 delat_t = 0.01
 now = datetime.now()
 # date_time = now.strftime("%m_%d_%H_%M_%S")
-date_time = "_0"
+date_time = "_1"
 raw_data_file_name = 'raw_data_' + date_time + '.txt'
 
 GRAB_DATA_SIZE = 5000

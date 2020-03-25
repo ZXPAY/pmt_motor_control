@@ -41,6 +41,7 @@ static void drv8847_setMode(uint8_t mode) {
             drv8847_dri.sleep_high();
             break;
     }
+    drv8847.status = drv8847.drv->status;
 }
 
 static void drv8847_init(void) {
@@ -58,6 +59,7 @@ static void drv8847_setTorque(uint8_t trq) {
             drv8847_dri.trq_full();
             break;
     }
+    drv8847.status = drv8847.drv->status;
 }
 
 static void drv8847_adc_trig1A1B(void) {

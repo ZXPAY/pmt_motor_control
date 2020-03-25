@@ -11,12 +11,14 @@
 /* Include C standard library */
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 /* Include hardware library */
 #include "uart.h"
 #include "system.h"
 #include "cortex_m4.h"
 #include "fpu.h"
+#include "drv8847_s.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "control_config.h"
@@ -62,10 +64,15 @@ int main (void) {
     /* Initilize hardware */
     board_init();
     enable_fpu();
+    __enable_irqn(PIT2_IRQn);
 
-    RS485_trm("initialize \n");
+    RS485_trm("initialize ...\r\n");
     as5047d.init();
     drv8847.init();
+    if(drv8847.status == I2C_STATUS_TIMEOUT) {
+        RS485_trm("DRV8847S Timeout !!! \r\n");
+        hal_delay(1000);
+    }
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
@@ -85,7 +92,6 @@ int main (void) {
     set_caccum_k(&c_accum, STEP_C_THETA_TO_LENGTH);
     set_saccum_k(&s_accum, STEP_S_THETA_TO_LENGTH);
 
-    __enable_irqn(PIT2_IRQn);
     hal_delay(500);
 
     /* Initialize machanical angle */
@@ -121,7 +127,7 @@ void HardFalut_Handler(void) {
     RS485_trm("Error occur\n");
 }
 
-/* period : 5 ms */
+/* period : 1 ms */
 void PIT0_IRQHandler(void) {
     as5047d.update();
     update_sangle(&sangle, as5047d.angle);
@@ -136,6 +142,7 @@ void PIT0_IRQHandler(void) {
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }
 
+
 /* period : 0.01 s */
 void PIT1_IRQHandler(void) {
     /* Test code */
@@ -149,9 +156,14 @@ void PIT1_IRQHandler(void) {
     */
 
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
+    // ENABLE_RS485_TRM();
+    // sprintf(send_buff, ", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+    //                                                 fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
+    // memset(send_buff, 0, SEND_BUFF_SIZE);
+    // DISABLE_RS485_TRM();
+
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-
     /* 1 s update command angle */
     if(presc_cnt % 100 == 0) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));

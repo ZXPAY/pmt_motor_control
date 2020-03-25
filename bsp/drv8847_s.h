@@ -28,10 +28,10 @@
 #define IC1_MODE_PARALLEL      (2<<IC1_MODE_POS)
 #define IC1_MODE_INDEPENDENT   (3<<IC1_MODE_POS)
 
-#define I2C_STATUS_OK          0
-#define I2C_STATUS_TIMEOUT     1
-#define I2C_STATUS_NACK        2
+#define I2C_STATUS_OK          10
+#define I2C_STATUS_TIMEOUT     11
+#define I2C_STATUS_NACK        12
 
-#define DRV8847S_TIMEOUT_MS    500
+#define DRV8847S_TIMEOUT_MS    100
 
 #endif /* DRV8847_S_H */

@@ -202,6 +202,7 @@ void init_hw_as5047d(void) {
 *
 * Setting BPS 115200
 */
+
 void init_hw_rs485(void) {
     // Enable UART and GPIOD GPIOE clock source
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
@@ -223,8 +224,39 @@ void init_hw_rs485(void) {
     RS485_UART->BDL = UART_BDL_SBR(39);
     RS485_UART->C4 |= UART_C4_BRFA(2);
     RS485_UART->C2 |= UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_RIE_MASK;
+    disable_rs485_txdma();
 
+    init_rs485_txdma();
 }
+
+void init_rs485_txdma(void) {
+    /* Enable DMA clock */
+    SIM->SCGC6 |= SIM_SCGC6_DMAMUX_MASK;
+    /* set UART1 tx as DMA source */
+    DMAMUX->CHCFG[0] |= DMAMUX_CHCFG_SOURCE(5) | DMAMUX_CHCFG_ENBL_MASK;
+    DMA0->ERQ = 0;
+    DMA0->INT = 0xFFFFFFFFU;
+    DMA0->ERR = 0xFFFFFFFFU;
+    DMA0->CR &= ~(DMA_CR_ERCA_MASK | DMA_CR_HOE_MASK | DMA_CR_CLM_MASK | DMA_CR_EDBG_MASK);
+    DMA0->CR |= DMA_CR_HOE_MASK;
+
+    /* Enable auto disable request feature */
+    DMA0->TCD[0].CSR |= DMA_CSR_DREQ_MASK;
+    /* Enable major interrupt */
+    DMA0->TCD[0].CSR |= DMA_CSR_INTMAJOR_MASK;
+}
+
+void enable_rs485_txdma(void) {
+    DMA0->SERQ = DMA_SERQ_SERQ(0);
+    RS485_UART->C5 |= UART_C5_TDMAS_MASK;
+    RS485_UART->C2 |= UART_C2_TIE_MASK;
+}
+
+void disable_rs485_txdma(void) {
+    RS485_UART->C5 &= ~UART_C5_TDMAS_MASK;
+    RS485_UART->C2 &= ~UART_C2_TIE_MASK;
+}
+
 
 void init_hw_pit(void) {
     /* enable clock source */
