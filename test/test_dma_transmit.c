@@ -30,6 +30,7 @@
 #include "control_board.h"
 #include "hal_as5047d.h"
 #include "hal_drv8847.h"
+#include "tick.h"
 #include "rs485.h"
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
@@ -45,20 +46,11 @@ int main (void) {
     setbuf(stdin, NULL);
 
     /* Initilize hardware */
-    board_init();
-    enable_fpu();
+    init_hw_rs485();
+    init_hw_tick();
+    init_tick();
+    enable_tick();
     __enable_irqn(PIT2_IRQn);
-
-    as5047d.init();
-    drv8847.init();
-    drv8847.setMode(DRV8847_MODE_SLEEP);
-    if(drv8847.status == I2C_STATUS_TIMEOUT) {
-        RS485_trm("DRV8847S Timeout !!! \r\n");
-        hal_delay(1000);
-    }
-
-    /* SysTick initialize */
-    systick_init();
     hal_delay(50);
 
     // Enable interrupt
@@ -72,7 +64,7 @@ int main (void) {
 
         /* idle */
         if(fgg == 0) {
-            c = sprintf(send_buf, "Hello World \n");
+            c = sprintf((char *)send_buf, "Hello World \n");
             DMA0->TCD[0].SOFF = 1;     /* 8 bits */
             DMA0->TCD[0].DOFF = 0;     /* 8 bits */
             DMA0->TCD[0].SADDR = (uint32_t)&send_buf[0];
