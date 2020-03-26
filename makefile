@@ -82,7 +82,7 @@ endif
 
 
 # Flags for C files
-CFLAGS += -DDRV8847S
+CFLAGS += -DDRV8847S -DUSE_UART_DMA
 CFLAGS += -std=$(CSTD)
 CFLAGS += -g$(DEBUG)
 CFLAGS += -O$(OPTIMIZE)
