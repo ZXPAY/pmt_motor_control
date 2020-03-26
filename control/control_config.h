@@ -10,7 +10,7 @@
 #define CONTROL_CONFIG_H
 
 /* Define parameters */
-#define EXC_KI                   0.5          /* 激磁角Ki回饋 */
+#define EXC_KI                   0.1          /* 激磁角Ki回饋 */
 #define I_SVPWM_KP               1000         /* 電流Kp回饋 */
 #define I_SVPWM_KI               1000         /* 電流Ki回饋 */
 #define I_SVPWM_LOW              0.6          /* 電流下限 */
@@ -22,7 +22,7 @@
 #define ADJ_MAX     10
 
 /* Define default N-step */
-#define N_STEP      64
+#define N_STEP      1
 
 
 

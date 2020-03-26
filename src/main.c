@@ -30,6 +30,7 @@
 #include "control_board.h"
 #include "hal_as5047d.h"
 #include "hal_drv8847.h"
+#include "tick.h"
 #include "rs485.h"
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
@@ -64,9 +65,9 @@ int main (void) {
     /* Initilize hardware */
     board_init();
     enable_fpu();
-    __enable_irqn(PIT2_IRQn);
+    enable_tick();
 
-    RS485_trm("initialize ...\r\n");
+    RS485_trm("initialize hardware ...\r\n");
     as5047d.init();
     drv8847.init();
     if(drv8847.status == I2C_STATUS_TIMEOUT) {
@@ -101,15 +102,15 @@ int main (void) {
     init_sangle(&sangle, as5047d.angle);
     init_cangle(&cangle, N_STEP, 0);
 
-    RS485_trm("start\n");
 
     /* SysTick initialize */
     systick_init();
+    RS485_trm("start \r\n");
+    hal_delay(100);
 
     // Enable interrupt
     __enable_irqn(FTM0_IRQn);
     __enable_irqn(FTM1_IRQn);
-    __enable_irqn(UART1_RX_TX_IRQn);
     __enable_irqn(PIT0_IRQn);
     __enable_irqn(PIT1_IRQn);
 
@@ -127,7 +128,7 @@ void HardFalut_Handler(void) {
     RS485_trm("Error occur\n");
 }
 
-/* period : 1 ms */
+/* period : 2 ms */
 void PIT0_IRQHandler(void) {
     as5047d.update();
     update_sangle(&sangle, as5047d.angle);
@@ -143,7 +144,8 @@ void PIT0_IRQHandler(void) {
 }
 
 
-/* period : 0.01 s */
+/* period : 10 ms */
+/* Do experiment, print whole words need 7 ms => choose 100 Hz */
 void PIT1_IRQHandler(void) {
     /* Test code */
     /*
@@ -156,22 +158,18 @@ void PIT1_IRQHandler(void) {
     */
 
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-    // ENABLE_RS485_TRM();
-    // sprintf(send_buff, ", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-    //                                                 fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-    // memset(send_buff, 0, SEND_BUFF_SIZE);
-    // DISABLE_RS485_TRM();
-
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
+    // RS485_trm("Hello World !!!\r\n");
     /* 1 s update command angle */
-    if(presc_cnt % 100 == 0) {
+    if(presc_cnt % 10 == 0) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
     }
     presc_cnt++;
 
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
+
 }
 
 

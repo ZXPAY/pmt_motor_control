@@ -46,13 +46,10 @@ int main (void) {
     init_hw_tick();
     init_tick();
     enable_tick();
-    __enable_irqn(PIT2_IRQn);
     hal_delay(50);
 
     // Enable interrupt
     __enable_irqn(UART1_RX_TX_IRQn);
-    __enable_irqn(DMA0_IRQn);
-
 
     uint32_t cnt = 0;
     while (true) {

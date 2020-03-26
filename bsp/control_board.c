@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "control_board.h"
 #include "cortex_m4.h"
+#include "tick.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "drv8847_s.h"
@@ -224,9 +225,14 @@ void init_hw_rs485(void) {
     RS485_UART->BDL = UART_BDL_SBR(39);
     RS485_UART->C4 |= UART_C4_BRFA(2);
     RS485_UART->C2 |= UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_RIE_MASK;
-    disable_rs485_txdma();
 
+    __enable_irqn(UART1_RX_TX_IRQn);
+
+#ifdef USE_UART_DMA
+    disable_rs485_txdma();
     init_rs485_txdma();
+    __enable_irqn(DMA0_IRQn);
+#endif
 }
 
 void init_rs485_txdma(void) {
@@ -253,6 +259,7 @@ void enable_rs485_txdma(void) {
 }
 
 void disable_rs485_txdma(void) {
+    DMA0->CERQ = DMA_CERQ_CERQ_MASK;
     RS485_UART->C5 &= ~UART_C5_TDMAS_MASK;
     RS485_UART->C2 &= ~UART_C2_TIE_MASK;
 }
@@ -264,8 +271,8 @@ void init_hw_pit(void) {
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
 
-    /* reload PIT0 every 1 ms (1000 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[0].LDVAL = 72000000 / 1000;
+    /* reload PIT0 every 2 ms (500 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
+    PIT->CHANNEL[0].LDVAL = 72000000 / 500;
     /* enable PIT0 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 

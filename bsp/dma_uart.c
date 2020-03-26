@@ -19,11 +19,16 @@ void rs485_send_edma(size_t buf_sz) {
         DMA0->TCD[0].NBYTES_MLNO = 1;                    /* 1 byte */
         DMA0->TCD[0].CITER_ELINKYES = buf_sz;
         DMA0->TCD[0].BITER_ELINKYES = buf_sz;
+        ENABLE_RS485_TRM();
         enable_rs485_txdma();
     }
     else {
         dma_er = DMA_MISS_DATA;
     }
+}
+
+uint8_t get_dma_status(void) {
+    return dma_fg;
 }
 
 uint8_t get_dma_error(void) {
@@ -35,7 +40,7 @@ void clear_dma_error(void) {
 }
 
 /* DMA interrupt */
-void RS485_Handler(void) {
+void RS485_DMA_Handler(void) {
     /* Clear flag */
     DMA0->INT |= DMA_INT_INT0_MASK;
 
@@ -48,6 +53,8 @@ void RS485_Handler(void) {
         /* Fail */
         dma_fg = DMA_IDLE_BUT_FAIL;
     }
+    disable_rs485_txdma();
+    RS485_UART->C2 |= UART_C2_TCIE_MASK;
 }
 
 #endif /* USE_UART_DMA */

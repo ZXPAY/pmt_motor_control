@@ -172,7 +172,7 @@
 #define PORT_INT              PORTD
 #define PIN_INT               4
 
-#define SEND_BUFF_SIZE        20
+#define SEND_BUFF_SIZE        128
 
 /* initialize motor control IC */
 void init_hw_drv8847(void);

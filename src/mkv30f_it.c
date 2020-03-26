@@ -58,10 +58,22 @@ void FTM_1A1B_Handler(void) {
 uint8_t buf[200];
 uint8_t cc = 0;
 void UART1_RX_TX_IRQHandler(void) {
-    // Data receive
-    buf[cc] = RS485_UART->D;
-    cc++;
-    if(cc == 200) {cc = 0;}
+    /* Read and clear hardware register automatically */
+    uint8_t uart_status = RS485_UART->S1;
+
+    /* Transmit complete */
+    if(uart_status & UART_S1_TC_MASK) {
+        DISABLE_RS485_TRM();
+        RS485_UART->C2 &= ~UART_C2_TCIE_MASK;
+    }
+
+    /* Receive data */
+    if(uart_status & UART_S1_RDRF_MASK) {
+        // Data receive
+        buf[cc] = RS485_UART->D;
+        cc++;
+        if(cc == 200) {cc = 0;}
+    }
 }
 
 /** brief TODO
