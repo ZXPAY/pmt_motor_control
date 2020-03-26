@@ -128,6 +128,11 @@ DOT_JLINK_TEXT  = "r\n"
 DOT_JLINK_TEXT += "loadfile $(PROJECT).hex\n"
 DOT_JLINK_TEXT += "exit"
 
+# Data size receive
+sz := 1000
+# Save file name marker
+mk := "pmt"
+
 # Default target.
 all: build size
 
@@ -231,7 +236,7 @@ download:
 # Collect data
 collect:
 	@echo start collect data
-	@python ./tool/rec_data.py
+	@python ./tool/rec_data.py -sz $(sz) -mk $(mk)
 	@echo Done !
 
 # Include the dependency files.

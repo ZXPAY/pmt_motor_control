@@ -5,14 +5,23 @@ from datetime import datetime
 from mypickle import save2pickle, load_pickle
 from handle_data import handle_data
 from plot_data import plot_data
+import argparse
 
 delat_t = 0.01
 now = datetime.now()
-# date_time = now.strftime("%m_%d_%H_%M_%S")
-date_time = "_3"
-raw_data_file_name = 'raw_data_' + date_time + '.txt'
+default_file_marker = now.strftime("%m_%d_%H_%M_%S")
 
-GRAB_DATA_SIZE = 1000
+parser = argparse.ArgumentParser()
+parser.add_argument("-sz", "--size", help="Receive data size you want", default=1000, type=int)
+parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
+args = parser.parse_args()
+
+file_marker = args.marker
+GRAB_DATA_SIZE = args.size
+raw_data_file_name = 'raw_data_' + file_marker + '.txt'
+print('Write to file: ' + raw_data_file_name)
+print('Grab data size: ' + str(GRAB_DATA_SIZE))
+
 DATA_DIR = 'data'
 try:
     os.mkdir(DATA_DIR)
@@ -51,7 +60,7 @@ ser.close()
 
 # Handle the data
 print("Handle data ...")
-handle_data(DATA_DIR, raw_data_file_name, date_time)
-plot_data(DATA_DIR, date_time, delat_t)
+handle_data(DATA_DIR, raw_data_file_name, file_marker)
+plot_data(DATA_DIR, file_marker, delat_t)
 
 
