@@ -109,10 +109,11 @@ int main (void) {
     hal_delay(100);
 
     // Enable interrupt
-    __enable_irqn(FTM0_IRQn);
-    __enable_irqn(FTM1_IRQn);
-    __enable_irqn(PIT0_IRQn);
-    __enable_irqn(PIT1_IRQn);
+    ENABLE_PHA_INT();
+    ENABLE_PHB_INT();
+    ENABLE_CORR_INT();
+    ENABLE_PRINT_INT();
+    __enable_irqn(HardFault_IRQn);
 
     uint32_t cnt = 0;
     while (true) {
@@ -125,7 +126,8 @@ int main (void) {
 }
 
 void HardFalut_Handler(void) {
-    RS485_trm("Error occur\n");
+    RS485_trm("Hardware error occur\r\n");
+    while(true);
 }
 
 /* period : 2 ms */
@@ -160,7 +162,6 @@ void PIT1_IRQHandler(void) {
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-    // RS485_trm("Hello World !!!\r\n");
     /* 1 s update command angle */
     if(presc_cnt % 10 == 0) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
@@ -169,7 +170,6 @@ void PIT1_IRQHandler(void) {
 
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
-
 }
 
 

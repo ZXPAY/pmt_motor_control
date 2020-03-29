@@ -9,6 +9,10 @@
 #ifndef CONTROL_BOARD_H
 #define CONTROL_BOARD_H
 
+/* Define system clock freqency */
+#define SYS_CLOCK_FREQ         72000000U
+
+
 // MUX alternative function
 #define MUX_ALT_0              0
 #define MUX_ALT_1              1
@@ -67,12 +71,14 @@
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV
 #define SET_PHASEA_DUTY(duty)  FTM_1A1B->CONTROLS[CH_1A].CnV = duty; \
                                FTM_1A1B->CONTROLS[CH_1B].CnV = duty;
+#define ENABLE_PHA_INT()       __enable_irqn(FTM1_IRQn);
 
 #define SET_2A2B_PERIOD        FTM_2A2B->MOD
 #define SET_2B_DUTY            FTM_2A2B->CONTROLS[CH_2B].CnV
 #define SET_2A_DUTY            FTM_2A2B->CONTROLS[CH_2A].CnV
 #define SET_PHASEB_DUTY(duty)  FTM_2A2B->CONTROLS[CH_2B].CnV = duty; \
                                FTM_2A2B->CONTROLS[CH_2A].CnV = duty;
+#define ENABLE_PHB_INT()       __enable_irqn(FTM0_IRQn);
 
 #define GPIO_MODE              GPIOE
 #define PORT_MODE              PORTE
@@ -90,24 +96,28 @@
 #define PORT_NSLEEP            PORTC
 #define PIN_NSLEEP             3
 
-#define GPIO_R_SENSE1          GPIOE
-#define PORT_R_SENSE1          PORTE
-#define PIN_R_SENSE1           24
+#define GPIO_PHA               GPIOE
+#define PORT_PHA               PORTE
+#define PIN_PHA                24
 
-#define GPIO_R_SENSE2          GPIOE
-#define PORT_R_SENSE2          PORTE
-#define PIN_R_SENSE2           23
+#define GPIO_PHB               GPIOE
+#define PORT_PHB               PORTE
+#define PIN_PHB                23
 
-#define ADC_R_SENSE            ADC0
-#define ADC_CH_R_SENSE1        0x11
-#define ADC_CH_R_SENSE2        0x17
+/* Use the same ADC hardware setting  */
+#define ADC_PHA                ADC0
+#define ADC_PHB                ADC0
+#define ADC_PHAB               ADC0
+
+#define ADC_CH_PHA             0x11
+#define ADC_CH_PHB             0x17
 
 #define DRV8847S_I2C           I2C0
 
 #define GPIO_SDA               GPIOE
 #define PORT_SDA               PORTE
 #define PIN_SDA                18
-
+    
 #define GPIO_SCL               GPIOE
 #define PORT_SCL               PORTE
 #define PIN_SCL                19
@@ -148,13 +158,9 @@
 */
 #define RS485_UART            UART1
 
-#define GPIO_CTR1             GPIOD
-#define PORT_CTR1             PORTD
-#define PIN_CTR1              7
-
-#define GPIO_CTR2             GPIOD
-#define PORT_CTR2             PORTD
-#define PIN_CTR2              6
+#define GPIO_RS485_CTR        GPIOD
+#define PORT_RS485_CTR        PORTD
+#define PIN_RS485_CTR         7
 
 #define GPIO_TX1              GPIOE
 #define PORT_TX1              PORTE
@@ -164,21 +170,25 @@
 #define PORT_RX1              PORTE
 #define PIN_RX1               17
 
-#define GPIO_TRIG             GPIOA
-#define PORT_TRIG             PORTA
-#define PIN_TRIG              4
-
-#define GPIO_INT              GPIOD
-#define PORT_INT              PORTD
-#define PIN_INT               4
+#define ENABLE_RS485_INT()    __enable_irqn(UART1_RX_TX_IRQn)
+#define RS485_INT_HANDLER     UART1_RX_TX_IRQHandler
+#define ENABLE_DMA_INT()      __enable_irqn(DMA0_IRQn);
 
 #define SEND_BUFF_SIZE        128
 
-/* initialize motor control IC */
-void init_hw_drv8847(void);
+
+/**
+ * @brief Correction period handle
+ * Correction period : 2 ms (500 Hz)
+ * Print period : 10 ms (100 Hz)
+ */
+#define CORRECTION_FREQ       500
+#define PERIOD_PRINT_FREQ     100
+#define ENABLE_CORR_INT()     __enable_irqn(PIT0_IRQn)
+#define ENABLE_PRINT_INT()    __enable_irqn(PIT1_IRQn)
 
 /* initialize motor control IC */
-void init_hw_drv8847s(void);
+void init_hw_drv8847_s(void);
 
 /* initialize AS5047D, encoder IC */
 void init_hw_as5047d(void);

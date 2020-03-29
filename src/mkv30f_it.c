@@ -57,7 +57,7 @@ void FTM_1A1B_Handler(void) {
  */
 uint8_t buf[200];
 uint8_t cc = 0;
-void UART1_RX_TX_IRQHandler(void) {
+void RS485_INT_HANDLER(void) {
     /* Read and clear hardware register automatically */
     uint8_t uart_status = RS485_UART->S1;
 

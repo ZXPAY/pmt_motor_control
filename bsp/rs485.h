@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "control_board.h"
 
-#define ENABLE_RS485_TRM()    GPIO_CTR1->PSOR |= (1<<PIN_CTR1)
-#define DISABLE_RS485_TRM()   GPIO_CTR1->PCOR |= (1<<PIN_CTR1)
+#define ENABLE_RS485_TRM()    GPIO_RS485_CTR->PSOR |= (1<<PIN_RS485_CTR)
+#define DISABLE_RS485_TRM()   GPIO_RS485_CTR->PCOR |= (1<<PIN_RS485_CTR)
 
 extern char send_buf[SEND_BUFF_SIZE];
 

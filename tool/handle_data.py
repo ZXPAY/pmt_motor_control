@@ -1,6 +1,8 @@
 import numpy as np
 from mypickle import save2pickle, load_pickle
 
+# define PWM PERIOD COUNT
+PERIOD_COUNT = 2000
 para_index = {'title': 0, 'i1': 1, 'i2': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
                 'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwm1': 10, 'pwm2': 11}
 
@@ -44,6 +46,13 @@ def handle_data(DATA_DIR, file_name, pickle_last_nm):
             print("Warning !!! List size not match !!!, ", cnt)
             print(data_list)
 
+    # Change PWM to duty 0~1
+    pwm1 = pwm1 / PERIOD_COUNT
+    pwm2 = pwm2 / PERIOD_COUNT
+
+    # Handle current positive or negative by decide PWM duty
+    # i1 = i1 * (((pwm1 >= 0.5) * -1) + (pwm1 < 0.5))
+    # i2 = i2 * (((pwm2 >= 0.5) * -1) + (pwm2 < 0.5))
 
     save2pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle', i1*3.3/65535/0.15)
     save2pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle', i2*3.3/65535/0.15)
@@ -58,5 +67,23 @@ def handle_data(DATA_DIR, file_name, pickle_last_nm):
     save2pickle(DATA_DIR+'/pwm2'+pickle_last_nm+'.pickle', pwm2)
 
 
+if __name__ == "__main__":
+    DATA_DIR = "data"
+    pickle_last_nm = "_4"
 
+    i1 = load_pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle')
+    i2 = load_pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle')
+    pwm1 = load_pickle(DATA_DIR+'/pwm1'+pickle_last_nm+'.pickle')
+    pwm2 = load_pickle(DATA_DIR+'/pwm2'+pickle_last_nm+'.pickle')
+
+    i1a = (((pwm1 < 0.5) * -1) + (pwm1 >= 0.5))
+    i2a = (((pwm2 < 0.5) * -1) + (pwm2 >= 0.5))
+    print(np.sum(i1a==0))
+
+    import matplotlib.pyplot as plt
+    plt.plot(i1*i1a)
+    plt.plot(i2*i2a)
+    plt.legend(['i1', 'i2'])
+    # plt.plot(pwm1/np.max(pwm1))
+    plt.show()
 

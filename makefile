@@ -14,6 +14,7 @@ HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c 
 HAL_CSRC	= hal_as5047d.c hal_drv8847.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
 CSRC   += main.c
+# CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
 ASRC	= fpu.S
@@ -83,6 +84,7 @@ endif
 
 
 # Flags for C files
+# CFLAGS += -DDRV8847
 CFLAGS += -DDRV8847S
 ifeq ($(UART_DMA),YES)
 CFLAGS += -DUSE_UART_DMA
@@ -94,7 +96,6 @@ CFLAGS += $(addprefix -W,$(WARNINGS))
 CFLAGS += $(addprefix -I,$(INCDIRS))
 CFLAGS += $(addprefix -D,$(DEFS))
 CFLAGS += -ffunction-sections -fdata-sections -fno-builtin
-# CFLAGS += -mhard-float -mfloat-abi=hard
 CFLAGS += -Wp,-MM,-MP,-MT,$(OBJDIR)/$(*F).o,-MF,$(OBJDIR)/$(*F).d
 
 

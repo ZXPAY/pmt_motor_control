@@ -32,7 +32,7 @@ static void drv8847_trq_full(void);
 static void drv8847_trq_half(void);
 drv8847_io_t drv8847_dri = {                       \
     .status = I2C_STATUS_OK,                       \
-    .ch = ADC_CH_R_SENSE1,                         \
+    .ch = ADC_CH_PHA,                              \
     .v_r1 = 0,                                     \
     .v_r2 = 0,                                     \
     .sleep_low = drv8847_sleep_low,                \
@@ -65,7 +65,7 @@ static void drv8847s_trq_half(void);
 
 drv8847_io_t drv8847_dri = {                       \
     .status = I2C_STATUS_OK,                       \
-    .ch = ADC_CH_R_SENSE1,                         \
+    .ch = ADC_CH_PHA,                              \
     .v_r1 = 0,                                     \
     .v_r2 = 0,                                     \
     .sleep_low = drv8847_sleep_low,                \
@@ -226,13 +226,13 @@ static uint8_t drv8847_get_fault(void) {
 }
 
 static void drv8847_mcu_trig1A1B(void) {
-    ADC_R_SENSE->SC1[0] =  ADC_CH_R_SENSE1;
-    while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
-    drv8847_dri.v_r1 = ADC_R_SENSE->R[0];
+    ADC_PHA->SC1[0] = ADC_CH_PHA;
+    while(!(ADC_PHA->SC1[0]&ADC_SC1_COCO_MASK));
+    drv8847_dri.v_r1 = ADC_PHA->R[0];
 }
 
 static void drv8847_mcu_trig2A2B(void) {
-    ADC_R_SENSE->SC1[0] =  ADC_CH_R_SENSE2;
-    while(!(ADC_R_SENSE->SC1[0]&ADC_SC1_COCO_MASK));
-    drv8847_dri.v_r2 = ADC_R_SENSE->R[0];
+    ADC_PHB->SC1[0] =  ADC_CH_PHB;
+    while(!(ADC_PHB->SC1[0]&ADC_SC1_COCO_MASK));
+    drv8847_dri.v_r2 = ADC_PHB->R[0];
 }
