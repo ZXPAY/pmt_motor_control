@@ -51,8 +51,8 @@ def handle_data(DATA_DIR, file_name, pickle_last_nm):
     pwm2 = pwm2 / PERIOD_COUNT
 
     # Handle current positive or negative by decide PWM duty
-    # i1 = i1 * (((pwm1 >= 0.5) * -1) + (pwm1 < 0.5))
-    # i2 = i2 * (((pwm2 >= 0.5) * -1) + (pwm2 < 0.5))
+    i1 = i1 * (((pwm1 < 0.5) * -1) + (pwm1 > 0.5))
+    i2 = i2 * (((pwm2 < 0.5) * -1) + (pwm2 > 0.5))
 
     save2pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle', i1*3.3/65535/0.15)
     save2pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle', i2*3.3/65535/0.15)
