@@ -65,13 +65,14 @@
 #define CH_2A                  1
 
 /* Define for setting period and duty cycle */
-#define PERIOD_COUNT           2000
+#define PERIOD_COUNT           1000
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV
 #define SET_PHASEA_DUTY(duty)  FTM_1A1B->CONTROLS[CH_1A].CnV = duty; \
                                FTM_1A1B->CONTROLS[CH_1B].CnV = duty;
 #define ENABLE_PHA_INT()       __enable_irqn(FTM1_IRQn);
+#define DISABLE_PHA_INT()      __disable_irqn(FTM1_IRQn);
 
 #define SET_2A2B_PERIOD        FTM_2A2B->MOD
 #define SET_2B_DUTY            FTM_2A2B->CONTROLS[CH_2B].CnV
@@ -79,6 +80,7 @@
 #define SET_PHASEB_DUTY(duty)  FTM_2A2B->CONTROLS[CH_2B].CnV = duty; \
                                FTM_2A2B->CONTROLS[CH_2A].CnV = duty;
 #define ENABLE_PHB_INT()       __enable_irqn(FTM0_IRQn);
+#define DISABLE_PHB_INT()      __disable_irqn(FTM0_IRQn);
 
 #define GPIO_MODE              GPIOE
 #define PORT_MODE              PORTE
@@ -109,18 +111,21 @@
 #define ADC_PHB                ADC0
 #define ADC_PHAB               ADC0
 
-#define ADC_CH_PHA             0x11
-#define ADC_CH_PHB             0x17
+#define ADC_CH_PHA             0x11 | ADC_SC1_AIEN_MASK
+#define ADC_CH_PHB             0x17 | ADC_SC1_AIEN_MASK
 
 #define DRV8847S_I2C           I2C0
 
 #define GPIO_SDA               GPIOE
 #define PORT_SDA               PORTE
 #define PIN_SDA                18
-    
+
 #define GPIO_SCL               GPIOE
 #define PORT_SCL               PORTE
 #define PIN_SCL                19
+
+#define ENABLE_ADC_PHAB_INT()  __enable_irqn(ADC0_IRQn);
+#define ADC_PHAB_Handler       ADC0_IRQHandler
 
 /**
 * @brief AS5047D pin map

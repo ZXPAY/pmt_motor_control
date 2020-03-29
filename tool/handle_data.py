@@ -2,7 +2,7 @@ import numpy as np
 from mypickle import save2pickle, load_pickle
 
 # define PWM PERIOD COUNT
-PERIOD_COUNT = 2000
+PERIOD_COUNT = 1000
 para_index = {'title': 0, 'i1': 1, 'i2': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
                 'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwm1': 10, 'pwm2': 11}
 

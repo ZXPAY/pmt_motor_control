@@ -58,41 +58,42 @@ int main (void) {
     RS485_trm("start \r\n");
     ENABLE_PHA_INT();
     ENABLE_PHB_INT();
+    ENABLE_ADC_PHAB_INT();
     while (true) {
         /* duty 0 % */
         SET_PHASEA_DUTY(0);
         SET_PHASEB_DUTY(0);
-        hal_delay(5);
-        RS485_trm("0 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
         hal_delay(100);
+        RS485_trm("0 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        hal_delay(1000);
 
         /* duty 25 % */
-        SET_PHASEA_DUTY(500);
-        SET_PHASEB_DUTY(500);
-        hal_delay(5);
-        RS485_trm("25 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        SET_PHASEA_DUTY(250);
+        SET_PHASEB_DUTY(250);
         hal_delay(100);
+        RS485_trm("25 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        hal_delay(1000);
 
         /* duty 50 % */
-        SET_PHASEA_DUTY(1000);
-        SET_PHASEB_DUTY(1000);
-        hal_delay(5);
-        RS485_trm("50 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        SET_PHASEA_DUTY(500);
+        SET_PHASEB_DUTY(500);
         hal_delay(100);
+        RS485_trm("50 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        hal_delay(1000);
 
         /* duty 75 % */
-        SET_PHASEA_DUTY(1500);
-        SET_PHASEB_DUTY(1500);
-        hal_delay(5);
-        RS485_trm("75 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        SET_PHASEA_DUTY(750);
+        SET_PHASEB_DUTY(750);
         hal_delay(100);
+        RS485_trm("75 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        hal_delay(1000);
 
         /* duty 100 % */
-        SET_PHASEA_DUTY(2000);
-        SET_PHASEB_DUTY(2000);
-        hal_delay(5);
-        RS485_trm("100 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        SET_PHASEA_DUTY(1000);
+        SET_PHASEB_DUTY(1000);
         hal_delay(100);
+        RS485_trm("100 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
+        hal_delay(1000);
 
     }
 

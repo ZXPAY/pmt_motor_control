@@ -113,6 +113,7 @@ int main (void) {
     ENABLE_PHB_INT();
     ENABLE_CORR_INT();
     ENABLE_PRINT_INT();
+    ENABLE_ADC_PHAB_INT();
     __enable_irqn(HardFault_IRQn);
 
     uint32_t cnt = 0;
@@ -163,7 +164,7 @@ void PIT1_IRQHandler(void) {
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
     /* 1 s update command angle */
-    if(presc_cnt % 10 == 0) {
+    if(presc_cnt % 2 == 0) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
     }
     presc_cnt++;
