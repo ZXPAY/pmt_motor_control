@@ -9,9 +9,11 @@
 #ifndef CONTROL_BOARD_H
 #define CONTROL_BOARD_H
 
+#include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
+#include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
+
 /* Define system clock freqency */
 #define SYS_CLOCK_FREQ         72000000U
-
 
 // MUX alternative function
 #define MUX_ALT_0              0
@@ -65,7 +67,8 @@
 #define CH_2A                  1
 
 /* Define for setting period and duty cycle */
-#define PERIOD_COUNT           1000
+/* PWM frequency = 40K, PERIOD_COUNT = SYS_CLOCK_FREQ / 40K */
+#define PERIOD_COUNT           SYS_CLOCK_FREQ / 40000
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV
@@ -189,8 +192,6 @@
  */
 #define CORRECTION_FREQ       500
 #define PERIOD_PRINT_FREQ     100
-#define ENABLE_CORR_INT()     __enable_irqn(PIT0_IRQn)
-#define ENABLE_PRINT_INT()    __enable_irqn(PIT1_IRQn)
 
 /* initialize motor control IC */
 void init_hw_drv8847_s(void);

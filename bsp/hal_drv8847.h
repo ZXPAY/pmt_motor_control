@@ -53,6 +53,7 @@ typedef struct _drv8847_io {
     uint8_t (*get_fault)(void);
     void (*mcu_trig1A1B)(void);
     void (*mcu_trig2A2B)(void);
+    void (*handle)(void);
 }drv8847_io_t;
 
 typedef struct _a4988 {

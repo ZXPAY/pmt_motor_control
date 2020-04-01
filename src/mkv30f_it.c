@@ -11,6 +11,7 @@
 
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
+#include "freqdiv.h"
 #include "cortex_m4.h"
 #include "hal_drv8847.h"
 #include "control_board.h"
@@ -34,17 +35,14 @@ volatile uint8_t fff = 0;
 * Rsense2 : ADC0_SE23
 */
 
-volatile uint32_t ccc = 0;
-volatile uint8_t fg = 0;
+extern freq_div_t freq_div_pwmA;
+extern freq_div_t freq_div_pwmB;
+
 /** @brief 2A 2B timer/PWM handler
  *
  */
 void FTM_2A2B_Handler(void) {
-    if(ccc > 3000) {
-        fg = 1;
-        drv8847.adc_trig2A2B();
-        ccc = 0;
-    }
+    freq_div_handle(&freq_div_pwmA);
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -55,14 +53,13 @@ void FTM_2A2B_Handler(void) {
  *
  */
 void FTM_1A1B_Handler(void) {
-    ccc++;
-    if(ccc == 1500) {
-        fg = 2;
-        drv8847.adc_trig1A1B();
-    }
+    freq_div_handle(&freq_div_pwmB);
+
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;
 }
+
+
 
 /** brief TODO
  *
@@ -89,12 +86,7 @@ void RS485_INT_HANDLER(void) {
 }
 
 void ADC0_IRQHandler(void) {
-    if(fg == 1) {
-        drv8847.drv->v_r2 = ADC_PHA->R[0];
-    }
-    else if(fg == 2) {
-        drv8847.drv->v_r1 = ADC_PHA->R[0];
-    }
+    drv8847.drv->handle();
 }
 
 /** brief TODO

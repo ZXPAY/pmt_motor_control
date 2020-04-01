@@ -24,6 +24,7 @@ static void drv8847_sleep_high(void);
 static uint8_t drv8847_get_fault(void);
 static void drv8847_mcu_trig1A1B(void);
 static void drv8847_mcu_trig2A2B(void);
+static void drv8847_adc_handle(void);
 
 #if DRV8847
 static void drv8847_mode_4pin(void);
@@ -79,6 +80,7 @@ drv8847_io_t drv8847_dri = {                       \
     .get_fault = drv8847_get_fault,                \
     .mcu_trig1A1B = drv8847_mcu_trig1A1B,          \
     .mcu_trig2A2B = drv8847_mcu_trig2A2B,          \
+    .handle = drv8847_adc_handle,                  \
 };
 #endif
 
@@ -227,12 +229,21 @@ static uint8_t drv8847_get_fault(void) {
 
 static void drv8847_mcu_trig1A1B(void) {
     ADC_PHA->SC1[0] = ADC_CH_PHA;
-    // while(!(ADC_PHA->SC1[0]&ADC_SC1_COCO_MASK));
-    // drv8847_dri.v_r1 = ADC_PHA->R[0];
+    drv8847_dri.ch = ADC_CH_PHA;
 }
 
 static void drv8847_mcu_trig2A2B(void) {
     ADC_PHB->SC1[0] =  ADC_CH_PHB;
-    // while(!(ADC_PHB->SC1[0]&ADC_SC1_COCO_MASK));
-    // drv8847_dri.v_r2 = ADC_PHB->R[0];
+    drv8847_dri.ch = ADC_CH_PHB;
+}
+
+static void drv8847_adc_handle(void) {
+    switch(drv8847_dri.ch) {
+        case ADC_CH_PHA:
+            drv8847_dri.v_r1 = ADC_PHA->R[0];
+            break;
+        case ADC_CH_PHB:
+            drv8847_dri.v_r2 = ADC_PHB->R[0];
+            break;
+    }
 }
