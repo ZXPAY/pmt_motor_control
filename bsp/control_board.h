@@ -68,7 +68,7 @@
 
 /* Define for setting period and duty cycle */
 /* PWM frequency = 40K, PERIOD_COUNT = SYS_CLOCK_FREQ / 40K */
-#define PERIOD_COUNT           SYS_CLOCK_FREQ / 40000
+#define PERIOD_COUNT           SYS_CLOCK_FREQ / 40000 / 2
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV

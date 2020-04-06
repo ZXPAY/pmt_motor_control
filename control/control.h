@@ -1,3 +1,11 @@
+/**
+ * @file control.h
+ * @author Xiang-Guan Deng
+ * @brief Control initialize and control handle implement
+ * @date 2020.xx.xx
+ *
+ */
+
 #ifndef CONTROL_H
 #define CONTROL_H
 

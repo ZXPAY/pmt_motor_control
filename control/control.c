@@ -20,6 +20,8 @@
 #include "svpwm.h"
 #include "step_accumulator.h"
 
+#include "cortex_m4.h"
+
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 

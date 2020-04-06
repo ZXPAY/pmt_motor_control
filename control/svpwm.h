@@ -1,3 +1,12 @@
+/**
+ * @file svpwm.h
+ * @author Xiang-Guan Deng
+ * @brief Calculate SVPWM
+ * @date 2020.xx.xx
+ *
+ * 兩相SVPWM功能方塊，計算出控制的PWM duty值
+ */
+
 #ifndef SVPWM_H
 #define SVPWM_H
 

@@ -62,6 +62,7 @@ static void drv8847_setTorque(uint8_t trq) {
     drv8847.status = drv8847.drv->status;
 }
 
+#include "rs485.h"
 static void drv8847_adc_trig1A1B(void) {
     drv8847.drv->mcu_trig1A1B();
 }

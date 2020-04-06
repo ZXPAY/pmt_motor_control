@@ -86,8 +86,8 @@ endif
 # Flags for C files
 # CFLAGS += -DDRV8847
 CFLAGS += -DDRV8847S
-# CFLAGS += -DEXI_ANGLE_I     # disable exi angle I controller
-CFLAGS += -DDISABLE_I_PI    # disable current PI controller
+# CFLAGS += -DDISABLE_EXI_ANGLE_I     # disable exi angle I controller
+# CFLAGS += -DDISABLE_I_PI            # disable current PI controller
 ifeq ($(UART_DMA),YES)
 CFLAGS += -DUSE_UART_DMA
 endif
@@ -201,25 +201,25 @@ size:
 $(COBJ) : $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $< :
-	$(CC) -c $(THUMBFLAG) $(ALL_CFLAGS) $< -o $@
+	@$(CC) -c $(THUMBFLAG) $(ALL_CFLAGS) $< -o $@
 
 # Compile: create object files from C source files. ARM-only
 $(COBJARM) : $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $< :
-	$(CC) -c $(ALL_CFLAGS) $< -o $@
+	@$(CC) -c $(ALL_CFLAGS) $< -o $@
 
 # Assemble: create object files from assembler source files. ARM or Thumb(-2)
 $(AOBJ) : $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $< :
-	$(CC) -c $(THUMBFLAG) $(ALL_ASFLAGS) $< -o $@
+	@$(CC) -c $(THUMBFLAG) $(ALL_ASFLAGS) $< -o $@
 
 # Assemble: create object files from assembler source files. ARM-only
 $(AOBJARM) : $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $< :
-	$(CC) -c $(ALL_ASFLAGS) $< -o $@
+	@$(CC) -c $(ALL_ASFLAGS) $< -o $@
 
 # Show the detail of elf file
 detail: $(PROJECT).elf

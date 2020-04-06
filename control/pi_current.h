@@ -4,7 +4,7 @@
  * @brief Adjust the stepper motor velocity
  * @date 2020.xx.xx
  *
- * 電流回饋
+ * 電流PI回饋功能方塊
  */
 
 #ifndef PI_CURRENT_H

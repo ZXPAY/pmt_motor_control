@@ -99,7 +99,7 @@ void init_hw_drv8847_s(void){
     PORT_PHA->PCR[PIN_PHA] &= ~PORT_PCR_MUX_MASK;
     PORT_PHB->PCR[PIN_PHB] &= ~PORT_PCR_MUX_MASK;
     ADC_PHAB->CFG1 |= ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(1) | ADC_CFG1_ADLSMP_MASK;  // 16 bit
-    ADC_PHAB->SC3 |= ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(2);   // average 8 samples
+    ADC_PHAB->SC3 |= ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);   // average 8 samples
 }
 
 /**

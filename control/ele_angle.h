@@ -5,7 +5,7 @@
  * @date 2020.xx.xx
  *
  * Encoder resolutio: 16 bits
- * 感測電子角與命令電子角轉換
+ * C電子角累進器和S電子角除餘器實作
  */
 
 #ifndef ELE_ANGLE_H

@@ -1,3 +1,11 @@
+/**
+ * @file freqdiv.h
+ * @author Xiang-Guan Deng
+ * @brief PWM frequnecy divider
+ * @date 2020.xx.xx
+ *
+ * 除頻功能方塊，將PWM除頻後執行
+ */
 #ifndef FREQ_DIV_H
 #define FREQ_DIV_H
 
