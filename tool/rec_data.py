@@ -27,7 +27,7 @@ try:
     os.mkdir(DATA_DIR)
 except:
     pass
-ser = serial.Serial("COM21", 115200)
+ser = serial.Serial("COM6", 115200)
 
 
 cnt = 0

@@ -86,6 +86,8 @@ endif
 # Flags for C files
 # CFLAGS += -DDRV8847
 CFLAGS += -DDRV8847S
+# CFLAGS += -DEXI_ANGLE_I     # disable exi angle I controller
+CFLAGS += -DDISABLE_I_PI    # disable current PI controller
 ifeq ($(UART_DMA),YES)
 CFLAGS += -DUSE_UART_DMA
 endif
@@ -235,10 +237,16 @@ download:
 	Jlink $(JLINK_OPT) -CommanderScript $(DOT_JLINK_FILE)
 
 # Collect data
-collect:
+clt:
 	@echo start collect data
 	@python ./tool/rec_data.py -sz $(sz) -mk $(mk)
 	@echo Done !
+
+# Collect data help
+clt_help:
+	@echo Collect help
+	@echo Example below:
+	@echo make clt sz={data size} mk={save file mark}
 
 # Include the dependency files.
 -include $(shell mkdir $(OBJDIR) 2>/dev/null) $(wildcard $(OBJDIR)/*.d)
