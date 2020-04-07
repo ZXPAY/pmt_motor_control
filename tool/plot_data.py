@@ -28,6 +28,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     plt.figure(figsize=(20, 12))
     plt.plot(t, i1)
     plt.plot(t, i2)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('A', fontsize=24)
     plt.title('phase A B current', fontsize=28)
@@ -38,6 +39,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, angle)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('angle coding', fontsize=24)
     plt.title('angle coding', fontsize=28)
@@ -48,6 +50,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     plt.figure(figsize=(20, 12))
     plt.plot(t, sele_dangle)
     plt.plot(t, cele_dangle)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('degree', fontsize=24)
     plt.title('command and sensor eletrical degree', fontsize=28)
@@ -57,7 +60,20 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     plt.savefig(FIG_DIR + '/scele_dangle' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
+    plt.plot(t, cele_dangle)
     plt.plot(t, th_svpwm)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24)
+    plt.ylabel('degree', fontsize=24)
+    plt.title('command and th_svpwm eletrical degree', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(['command', 'theta svpwm'], fontsize=20)
+    plt.savefig(FIG_DIR + '/s_svpwm_ele_dangle' + pickle_last_nm + '.png')
+
+    plt.figure(figsize=(20, 12))
+    plt.plot(t, th_svpwm)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('degree', fontsize=24)
     plt.title('theta svpwm', fontsize=28)
@@ -67,6 +83,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, i_svpwm)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('A', fontsize=24)
     plt.title('i svpwm', fontsize=28)
@@ -76,6 +93,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_er)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('degree', fontsize=24)
     plt.title('theta error', fontsize=28)
@@ -85,6 +103,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_cum)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('degree', fontsize=24)
     plt.title('theta error accumulate', fontsize=28)
@@ -94,6 +113,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm1)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('duty', fontsize=24)
     plt.title('1A1B PWM', fontsize=28)
@@ -103,6 +123,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm2)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('duty', fontsize=24)
     plt.title('2A2B PWM', fontsize=28)
@@ -113,6 +134,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm1)
     plt.plot(t, pwm2)
+    plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('duty', fontsize=24)
     plt.title('1A1B 2A2B PWM', fontsize=28)
@@ -121,6 +143,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     plt.legend(['pwm1', 'pwm2'], fontsize=20)
     plt.savefig(FIG_DIR + '/pwm1_pwm2' + pickle_last_nm + '.png')
 
+    print("Data size is ", i1.shape[0])
     print("===== sensor ele angle =====")
     print("max: ", np.max(sele_dangle))
     print("min: ", np.min(sele_dangle))
@@ -137,6 +160,7 @@ def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
     print("mean: ", np.mean(th_er))
     print("machanical angle res: ", np.max(th_er)*1.8/90, np.min(th_er)*1.8/90)
     print("N_STEP: ", 1.8/(np.max(th_er)*1.8/90), 1.8/(np.min(th_er)*1.8/90))
+    print("sum er: ", np.sum(np.abs(th_er)))
 
     print("===== theta cum =====")
     print("max: ", np.max(th_cum))

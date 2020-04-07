@@ -16,20 +16,20 @@
 #define abs_int(X) ((X < 0)? (-X) : (X))
 #endif
 
-#define MAX_ELETRICAL_ROTOR_ANGLE  50
-#define MAX_ENCODER_VALUE          16384
-#define HALF_ENCODER_VALUE         8192
+#define MAX_ELETRICAL_ROTOR_ANGLE        50
+#define MAX_ENCODER_VALUE                16384
+#define HALF_ENCODER_VALUE               8192
 // 327.68
-#define ENC_PER_ELE_ANGLE_L        327
-#define ENC_PER_ELE_ANGLE_H        328
-#define ENC_PER_ELE_ANGLE_UP       32
-#define ENC_PER_ELE_ANGLE_UP_THR   -50
-#define ENC_PER_ELE_ANGLE_DW       68
-#define ENC_PER_ELE_ANGLE_DW_THR   50
-#define EMC_PER_ELE_AMGLE_COUNT    100   // per 100 error counters, plus or minus 1 count
+#define ENC_PER_ELE_ANGLE_L              327
+#define ENC_PER_ELE_ANGLE_H              328
+#define ENC_PER_ELE_ANGLE_UP             32
+#define ENC_PER_ELE_ANGLE_UP_THR         -50
+#define ENC_PER_ELE_ANGLE_DW             68
+#define ENC_PER_ELE_ANGLE_DW_THR         50
+#define EMC_PER_ELE_AMGLE_COUNT          100   // per 100 error counters, plus or minus 1 count
 
-#define FULL_STEPS_NUM             200
-#define SENSOR2DEGREE              360.0/327.68
+#define FULL_STEPS_NUM                   200
+#define SENSOR2DEGREE                    360.0/327.68
 
 /* Define sensor angle type */
 typedef struct _sangle_ {

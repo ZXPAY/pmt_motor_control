@@ -7,6 +7,11 @@ PLATFORM = MKV30F128
 DEVICE = MKV30F128XXX10
 THUMB    = YES
 UART_DMA = YES
+CONTROL_DEF  = DRV8847S
+# Enable exite angle I controller
+CONTROL_DEF += ENABLE_EXI_ANGLE_I
+# Enable current PI controller
+# CONTROL_DEF += ENABLE_CURRENT_PI
 
 ### Source files and search directories
 CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c control.c freqdiv.c
@@ -43,7 +48,7 @@ MATHLIB	= -lm
 LIBS	=
 LIBDIRS	=
 INCDIRS	= platform/$(PLATFORM) bsp src control
-DEFS	=
+DEFS	= $(CONTROL_DEF)
 ADEFS	=
 
 ### Warning contorls
@@ -84,10 +89,6 @@ endif
 
 
 # Flags for C files
-# CFLAGS += -DDRV8847
-CFLAGS += -DDRV8847S
-# CFLAGS += -DDISABLE_EXI_ANGLE_I     # disable exi angle I controller
-# CFLAGS += -DDISABLE_I_PI            # disable current PI controller
 ifeq ($(UART_DMA),YES)
 CFLAGS += -DUSE_UART_DMA
 endif
@@ -201,25 +202,25 @@ size:
 $(COBJ) : $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $< :
-	@$(CC) -c $(THUMBFLAG) $(ALL_CFLAGS) $< -o $@
+	$(CC) -c $(THUMBFLAG) $(ALL_CFLAGS) $< -o $@
 
 # Compile: create object files from C source files. ARM-only
 $(COBJARM) : $(OBJDIR)/%.o : %.c
 	@echo
 	@echo $< :
-	@$(CC) -c $(ALL_CFLAGS) $< -o $@
+	$(CC) -c $(ALL_CFLAGS) $< -o $@
 
 # Assemble: create object files from assembler source files. ARM or Thumb(-2)
 $(AOBJ) : $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $< :
-	@$(CC) -c $(THUMBFLAG) $(ALL_ASFLAGS) $< -o $@
+	$(CC) -c $(THUMBFLAG) $(ALL_ASFLAGS) $< -o $@
 
 # Assemble: create object files from assembler source files. ARM-only
 $(AOBJARM) : $(OBJDIR)/%.o : %.S
 	@echo
 	@echo $< :
-	@$(CC) -c $(ALL_ASFLAGS) $< -o $@
+	$(CC) -c $(ALL_ASFLAGS) $< -o $@
 
 # Show the detail of elf file
 detail: $(PROJECT).elf

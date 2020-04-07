@@ -13,9 +13,9 @@ void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki) {
 
 void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e_cdegree) {
     fb_exc_angle->th_er = e_sdegree - e_cdegree;     /* 計算C電子角(命令) 與 S電子角誤差(感測) (度度量) */
-    if(abs_float(fb_exc_angle->th_er) > 180) {
+    if(abs_float(fb_exc_angle->th_er) >= 180) {
         /* e_sdegree - e_cdegree > 180 */
-        if(fb_exc_angle->th_er > 0) {
+        if(fb_exc_angle->th_er >= 0) {
             /* 馬達落後 */
             fb_exc_angle->th_er = -(360 - e_sdegree + e_cdegree);
         }
@@ -28,18 +28,18 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     fb_exc_angle->th_cum += fb_exc_angle->th_er;     /* 累計誤差 */
 
     /* 限制上下界 */
-    if(fb_exc_angle->th_cum > fb_exc_angle->cum_limit) fb_exc_angle->th_cum  =  fb_exc_angle->cum_limit;
-    if(fb_exc_angle->th_cum < -fb_exc_angle->cum_limit) fb_exc_angle->th_cum = -fb_exc_angle->cum_limit;
+    if(fb_exc_angle->th_cum >= fb_exc_angle->cum_limit) fb_exc_angle->th_cum  =  fb_exc_angle->cum_limit;
+    if(fb_exc_angle->th_cum <= -fb_exc_angle->cum_limit) fb_exc_angle->th_cum = -fb_exc_angle->cum_limit;
 
-#ifndef DISABLE_EXI_ANGLE_I
+#ifdef ENABLE_EXI_ANGLE_I
     /* 計算 theta_svpwm 值 (角差I回饋) */
     fb_exc_angle->th_esvpwm = e_cdegree - fb_exc_angle->pid.ki*fb_exc_angle->th_cum;
 #else
     fb_exc_angle->th_esvpwm = e_cdegree;
 #endif
     // /* theta svpwm to positive */
-    // if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
-    // if(fb_exc_angle->th_esvpwm < -360) fb_exc_angle->th_esvpwm += 360;
+    if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
+    if(fb_exc_angle->th_esvpwm < -360) fb_exc_angle->th_esvpwm += 360;
 
     fb_exc_angle->last_er = fb_exc_angle->th_er;
 }
