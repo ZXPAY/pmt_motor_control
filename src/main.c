@@ -76,8 +76,8 @@ int main (void) {
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
     freq_div_add(&freq_div_pwmA, 10, (void *)control_handle, NULL, 0);
-    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 5);
-    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 15);
+    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 0);
+    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 10);
 
     /* SysTick initialize */
     systick_init();

@@ -6,13 +6,21 @@
 
 void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, __attribute__((unused))fb_current_t *fb_current) {
     float temp_ang = fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN;
+    float ia_svpwm;
+    float ib_svpwm;
 #ifdef ENABLE_CURRENT_PI
     /* 由角差I回饋 和 電流PI回饋計算SVPWM */
-    float ia_svpwm = (-fb_current->i_svpwm)*sinf(temp_ang);
-    float ib_svpwm = (-fb_current->i_svpwm)*cosf(temp_ang);
+    if(fb_current->i_svpwm < 0) {
+        ia_svpwm = (-fb_current->i_svpwm)*1.667*sinf(temp_ang);
+        ib_svpwm = (-fb_current->i_svpwm)*1.667*cosf(temp_ang);
+    }
+    else {
+        ia_svpwm = (fb_current->i_svpwm)*1.667*sinf(temp_ang);
+        ib_svpwm = (fb_current->i_svpwm)*1.667*cosf(temp_ang);
+    }
 #else
-    float ia_svpwm = sinf(temp_ang);
-    float ib_svpwm = cosf(temp_ang);
+    ia_svpwm = sinf(temp_ang);
+    ib_svpwm = cosf(temp_ang);
 #endif
     pwmAB->pwm1 = ((int32_t)(ia_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
     pwmAB->pwm2 = ((int32_t)(ib_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
