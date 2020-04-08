@@ -41,9 +41,9 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
             sangle->poles -= MAX_ELETRICAL_ROTOR_ANGLE;
         }
     }
-    else if(sangle->ele_angle < 1) {
+    else if(sangle->ele_angle < -ENC_PER_ELE_ANGLE_L) {
         sangle->ele_angle += ENC_PER_ELE_ANGLE_H;
-        sangle->err_count -= ENC_PER_ELE_ANGLE_DW;
+        sangle->err_count -= ENC_PER_ELE_ANGLE_UP;
         if(sangle->err_count < ENC_PER_ELE_ANGLE_UP_THR) {
             sangle->ele_angle--;
             sangle->err_count += EMC_PER_ELE_AMGLE_COUNT;
@@ -54,12 +54,15 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
         }
     }
     // reset the angle
-    if(abs_int(sangle->mach_angle - sangle->init_mach_angle) < 2) {
+    if(abs_int(sangle->mach_angle - sangle->init_mach_angle) == 0) {
         sangle->ele_angle = 0;
         sangle->err_count = 0;
     }
     /* 順時針為正 */
-    sangle->ele_dangle = 360 - (float)sangle->ele_angle * sangle->K_degree;
+    sangle->ele_dangle = (float)sangle->ele_angle * sangle->K_degree;
+    if(sangle->ele_dangle < 0) {
+        sangle->ele_dangle = -sangle->ele_dangle;
+    }
 
     update_step_saccum(&s_accum, enc_angle);
 }

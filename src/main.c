@@ -63,7 +63,7 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    drv8847.setMode(DRV8847_MODE_SLEEP);
+    // drv8847.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
@@ -76,8 +76,8 @@ int main (void) {
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
     freq_div_add(&freq_div_pwmA, 10, (void *)control_handle, NULL, 0);
-    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 0);
-    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 10);
+    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 5);
+    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 15);
 
     /* SysTick initialize */
     systick_init();
