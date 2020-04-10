@@ -42,7 +42,9 @@ extern freq_div_t freq_div_pwmB;
  *
  */
 void FTM_2A2B_Handler(void) {
+    ENABLE_TEST1();
     freq_div_handle(&freq_div_pwmA);
+    DISABLE_TEST1();
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -53,7 +55,9 @@ void FTM_2A2B_Handler(void) {
  *
  */
 void FTM_1A1B_Handler(void) {
+    ENABLE_TEST2();
     freq_div_handle(&freq_div_pwmB);
+    DISABLE_TEST2();
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;
@@ -87,7 +91,6 @@ void RS485_INT_HANDLER(void) {
 
 void ADC0_IRQHandler(void) {
     drv8847.drv->handle();
-    DISABLE_TEST1();
 }
 
 /** brief TODO

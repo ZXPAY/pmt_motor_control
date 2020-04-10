@@ -229,7 +229,6 @@ static uint8_t drv8847_get_fault(void) {
 }
 
 static void drv8847_mcu_trig1A1B(void) {
-    ENABLE_TEST1();
     ADC_PHA->SC1[0] = ADC_CH_PHA;
     drv8847_dri.ch = ADC_CH_PHA;
 }
