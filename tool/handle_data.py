@@ -1,13 +1,26 @@
 import numpy as np
+from datetime import datetime
 from mypickle import save2pickle, load_pickle
+from plot_data import plot_data
+import argparse
 
-# define PWM PERIOD COUNT
-PERIOD_COUNT = 1000
-para_index = {'title': 0, 'i1': 1, 'i2': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
-                'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwm1': 10, 'pwm2': 11}
+if __name__ == "__main__":
+    delat_t = 0.01
+    now = datetime.now()
+    default_file_marker = now.strftime("%m_%d_%H_%M_%S")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
+    args = parser.parse_args()
 
-def handle_data(file_name, pickle_last_nm):
-    f = open("data" + "/" + file_name, "r")
+    file_marker = args.marker
+
+    # define PWM PERIOD COUNT
+    PERIOD_COUNT = 1000
+    para_index = {'title': 0, 'i1': 1, 'i2': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
+                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwm1': 10, 'pwm2': 11}
+
+    print("Handle data ...")
+    f = open("data" + "/" + 'raw_data_' + file_marker + '.txt', "r")
     raw_data = f.readlines()
     f.close()
     data_length = len(raw_data)
@@ -55,35 +68,18 @@ def handle_data(file_name, pickle_last_nm):
     i1 = (3.3 * i1 / 65535.0 - 1.65) / 20 / 0.1
     i2 = (3.3 * i2 / 65535.0 - 1.65) / 20 / 0.1
 
-    save2pickle("data"+'/i1_'+pickle_last_nm+'.pickle', i1)
-    save2pickle("data"+'/i2_'+pickle_last_nm+'.pickle', i2)
-    save2pickle("data"+'/angle_'+pickle_last_nm+'.pickle', angle)
-    save2pickle("data"+'/sele_dangle_'+pickle_last_nm+'.pickle', sele_dangle)
-    save2pickle("data"+'/cele_dangle_'+pickle_last_nm+'.pickle', cele_dangle)
-    save2pickle("data"+'/th_svpwm_'+pickle_last_nm+'.pickle', th_svpwm)
-    save2pickle("data"+'/i_svpwm_'+pickle_last_nm+'.pickle', i_svpwm)
-    save2pickle("data"+'/th_er_'+pickle_last_nm+'.pickle', th_er)
-    save2pickle("data"+'/th_cum_'+pickle_last_nm+'.pickle', th_cum)
-    save2pickle("data"+'/pwm1_'+pickle_last_nm+'.pickle', pwm1)
-    save2pickle("data"+'/pwm2_'+pickle_last_nm+'.pickle', pwm2)
+    print("Saving data to pickle file ...")
+    save2pickle("data"+'/i1_'+file_marker+'.pickle', i1)
+    save2pickle("data"+'/i2_'+file_marker+'.pickle', i2)
+    save2pickle("data"+'/angle_'+file_marker+'.pickle', angle)
+    save2pickle("data"+'/sele_dangle_'+file_marker+'.pickle', sele_dangle)
+    save2pickle("data"+'/cele_dangle_'+file_marker+'.pickle', cele_dangle)
+    save2pickle("data"+'/th_svpwm_'+file_marker+'.pickle', th_svpwm)
+    save2pickle("data"+'/i_svpwm_'+file_marker+'.pickle', i_svpwm)
+    save2pickle("data"+'/th_er_'+file_marker+'.pickle', th_er)
+    save2pickle("data"+'/th_cum_'+file_marker+'.pickle', th_cum)
+    save2pickle("data"+'/pwm1_'+file_marker+'.pickle', pwm1)
+    save2pickle("data"+'/pwm2_'+file_marker+'.pickle', pwm2)
 
-
-if __name__ == "__main__":
-    pickle_last_nm = "_4"
-
-    i1 = load_pickle("data"+'/i1'+pickle_last_nm+'.pickle')
-    i2 = load_pickle("data"+'/i2'+pickle_last_nm+'.pickle')
-    pwm1 = load_pickle("data"+'/pwm1'+pickle_last_nm+'.pickle')
-    pwm2 = load_pickle("data"+'/pwm2'+pickle_last_nm+'.pickle')
-
-    i1a = (((pwm1 < 0.5) * -1) + (pwm1 >= 0.5))
-    i2a = (((pwm2 < 0.5) * -1) + (pwm2 >= 0.5))
-    print(np.sum(i1a==0))
-
-    import matplotlib.pyplot as plt
-    plt.plot(i1*i1a)
-    plt.plot(i2*i2a)
-    plt.legend(['i1', 'i2'])
-    # plt.plot(pwm1/np.max(pwm1))
-    plt.show()
-
+    print("Saving figure ...")
+    plot_data(file_marker, delat_t)

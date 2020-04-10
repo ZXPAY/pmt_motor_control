@@ -33,8 +33,14 @@
 #include "tick.h"
 #include "rs485.h"
 
+#include "freqdiv.h"
+
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
+
+/* not use these object */
+freq_div_t freq_div_pwmA;
+freq_div_t freq_div_pwmB;
 
 /* Main code */
 int main (void) {

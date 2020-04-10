@@ -11,17 +11,17 @@ def plot_data(pickle_last_nm, DELTA_T):
     except:
         pass
 
-    i1 = load_pickle("data"+'/i1'+pickle_last_nm+'.pickle')
-    i2 = load_pickle("data"+'/i2'+pickle_last_nm+'.pickle')
-    angle = load_pickle("data"+'/angle'+pickle_last_nm+'.pickle')
-    sele_dangle = load_pickle("data"+'/sele_dangle'+pickle_last_nm+'.pickle')
-    cele_dangle = load_pickle("data"+'/cele_dangle'+pickle_last_nm+'.pickle')
-    th_svpwm = load_pickle("data"+'/th_svpwm'+pickle_last_nm+'.pickle')
-    i_svpwm = load_pickle("data"+'/i_svpwm'+pickle_last_nm+'.pickle')
-    th_er = load_pickle("data"+'/th_er'+pickle_last_nm+'.pickle')
-    th_cum = load_pickle("data"+'/th_cum'+pickle_last_nm+'.pickle')
-    pwm1 = load_pickle("data"+'/pwm1'+pickle_last_nm+'.pickle')
-    pwm2 = load_pickle("data"+'/pwm2'+pickle_last_nm+'.pickle')
+    i1 = load_pickle("data"+'/i1_'+pickle_last_nm+'.pickle')
+    i2 = load_pickle("data"+'/i2_'+pickle_last_nm+'.pickle')
+    angle = load_pickle("data"+'/angle_'+pickle_last_nm+'.pickle')
+    sele_dangle = load_pickle("data"+'/sele_dangle_'+pickle_last_nm+'.pickle')
+    cele_dangle = load_pickle("data"+'/cele_dangle_'+pickle_last_nm+'.pickle')
+    th_svpwm = load_pickle("data"+'/th_svpwm_'+pickle_last_nm+'.pickle')
+    i_svpwm = load_pickle("data"+'/i_svpwm_'+pickle_last_nm+'.pickle')
+    th_er = load_pickle("data"+'/th_er_'+pickle_last_nm+'.pickle')
+    th_cum = load_pickle("data"+'/th_cum_'+pickle_last_nm+'.pickle')
+    pwm1 = load_pickle("data"+'/pwm1_'+pickle_last_nm+'.pickle')
+    pwm2 = load_pickle("data"+'/pwm2_'+pickle_last_nm+'.pickle')
 
     t = np.linspace(0, i1.shape[0]-1, i1.shape[0]) * DELTA_T
 
@@ -35,7 +35,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['i1', 'i2'], fontsize=20)
-    plt.savefig(FIG_DIR + '/i1_i2' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/i1_i2_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, angle)
@@ -45,7 +45,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('angle coding', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/angle' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/angle_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, sele_dangle)
@@ -57,7 +57,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['sensor', 'command'], fontsize=20)
-    plt.savefig(FIG_DIR + '/scele_dangle' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/scele_dangle_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, cele_dangle)
@@ -69,7 +69,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['command', 'theta svpwm'], fontsize=20)
-    plt.savefig(FIG_DIR + '/s_svpwm_ele_dangle' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/s_svpwm_ele_dangle_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_svpwm)
@@ -79,7 +79,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('theta svpwm', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/th_svpwm' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/th_svpwm_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, i_svpwm)
@@ -89,7 +89,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('i svpwm', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/i_svpwm' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/i_svpwm_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_er)
@@ -99,7 +99,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('theta error', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/th_er' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/th_er_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_cum)
@@ -109,7 +109,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('theta error accumulate', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/th_cum' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/th_cum_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm1)
@@ -119,7 +119,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('1A1B PWM', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/pwm1' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/pwm1_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm2)
@@ -129,7 +129,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.title('2A2B PWM', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/pwm2' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/pwm2_' + pickle_last_nm + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwm1)
@@ -141,7 +141,7 @@ def plot_data(pickle_last_nm, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['pwm1', 'pwm2'], fontsize=20)
-    plt.savefig(FIG_DIR + '/pwm1_pwm2' + pickle_last_nm + '.png')
+    plt.savefig(FIG_DIR + '/pwm1_pwm2_' + pickle_last_nm + '.png')
 
     print("Data size is ", i1.shape[0])
     print("===== sensor ele angle =====")

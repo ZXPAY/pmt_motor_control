@@ -16,6 +16,7 @@
 #include "system.h"
 #include "cortex_m4.h"
 #include "fpu.h"
+#include "drv8847_s.h"
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "control_config.h"
@@ -29,8 +30,14 @@
 #include "hal_drv8847.h"
 #include "rs485.h"
 
+#include "freqdiv.h"
+
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
+
+/* not use these object */
+freq_div_t freq_div_pwmA;
+freq_div_t freq_div_pwmB;
 
 #define TIMEOUT_MS    100
 
@@ -42,9 +49,14 @@ int main() {
     board_init();
     enable_fpu();
 
-    RS485_trm("initialize \n");
+    RS485_trm("initialize hardware ...\r\n");
     as5047d.init();
     drv8847.init();
+    if(drv8847.status == I2C_STATUS_TIMEOUT) {
+        RS485_trm("DRV8847S Timeout !!! \r\n");
+        hal_delay(1000);
+    }
+    drv8847.setMode(DRV8847_MODE_SLEEP);
 
     timeout_set_ms(TIMEOUT_MS);
     RS485_trm("Test timeout ms : %d\n", TIMEOUT_MS);

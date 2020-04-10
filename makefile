@@ -19,8 +19,8 @@ CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c si
 HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c dma_uart.c
 HAL_CSRC	= hal_as5047d.c hal_drv8847.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
-# CSRC   += main.c
-CSRC   += test_adc.c
+CSRC   += main.c
+# CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
 ASRC	= fpu.S
@@ -137,6 +137,8 @@ DOT_JLINK_TEXT += "exit"
 sz := 1000
 # Save file name marker
 mk := "pmt"
+# Receive data factor size
+len := 13
 
 # Default target.
 all: build size
@@ -241,14 +243,16 @@ download:
 # Collect data
 clt:
 	@echo start collect data
-	@python ./tool/rec_data.py -sz $(sz) -mk $(mk)
+	@python ./tool/rec_data.py -sz $(sz) -mk $(mk) -len $(len)
+	@echo Handle collect data
+	@python ./tool/handle_data.py -mk $(mk)
 	@echo Done !
 
 # Collect data help
 clt_help:
 	@echo Collect help
 	@echo Example below:
-	@echo make clt sz={data size} mk={save file mark}
+	@echo make clt sz={data size} mk={save file mark} len={receive data kinds}
 
 # Include the dependency files.
 -include $(shell mkdir $(OBJDIR) 2>/dev/null) $(wildcard $(OBJDIR)/*.d)
