@@ -6,8 +6,8 @@ PERIOD_COUNT = 1000
 para_index = {'title': 0, 'i1': 1, 'i2': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
                 'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwm1': 10, 'pwm2': 11}
 
-def handle_data(DATA_DIR, file_name, pickle_last_nm):
-    f = open(DATA_DIR + "/" + file_name, "r")
+def handle_data(file_name, pickle_last_nm):
+    f = open("data" + "/" + file_name, "r")
     raw_data = f.readlines()
     f.close()
     data_length = len(raw_data)
@@ -51,30 +51,30 @@ def handle_data(DATA_DIR, file_name, pickle_last_nm):
     pwm2 = pwm2 / PERIOD_COUNT
 
     # Handle current positive or negative by decide PWM duty
-    i1 = i1 * (((pwm1 < 0.5) * -1) + (pwm1 > 0.5))
-    i2 = i2 * (((pwm2 < 0.5) * -1) + (pwm2 > 0.5))
+    # 20 is gain (AD8206), 0.1 is current sense resistor
+    i1 = (3.3 * i1 / 65535.0 - 1.65) / 20 / 0.1
+    i2 = (3.3 * i2 / 65535.0 - 1.65) / 20 / 0.1
 
-    save2pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle', i1*3.3/65535/0.15)
-    save2pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle', i2*3.3/65535/0.15)
-    save2pickle(DATA_DIR+'/angle'+pickle_last_nm+'.pickle', angle)
-    save2pickle(DATA_DIR+'/sele_dangle'+pickle_last_nm+'.pickle', sele_dangle)
-    save2pickle(DATA_DIR+'/cele_dangle'+pickle_last_nm+'.pickle', cele_dangle)
-    save2pickle(DATA_DIR+'/th_svpwm'+pickle_last_nm+'.pickle', th_svpwm)
-    save2pickle(DATA_DIR+'/i_svpwm'+pickle_last_nm+'.pickle', i_svpwm)
-    save2pickle(DATA_DIR+'/th_er'+pickle_last_nm+'.pickle', th_er)
-    save2pickle(DATA_DIR+'/th_cum'+pickle_last_nm+'.pickle', th_cum)
-    save2pickle(DATA_DIR+'/pwm1'+pickle_last_nm+'.pickle', pwm1)
-    save2pickle(DATA_DIR+'/pwm2'+pickle_last_nm+'.pickle', pwm2)
+    save2pickle("data"+'/i1_'+pickle_last_nm+'.pickle', i1)
+    save2pickle("data"+'/i2_'+pickle_last_nm+'.pickle', i2)
+    save2pickle("data"+'/angle_'+pickle_last_nm+'.pickle', angle)
+    save2pickle("data"+'/sele_dangle_'+pickle_last_nm+'.pickle', sele_dangle)
+    save2pickle("data"+'/cele_dangle_'+pickle_last_nm+'.pickle', cele_dangle)
+    save2pickle("data"+'/th_svpwm_'+pickle_last_nm+'.pickle', th_svpwm)
+    save2pickle("data"+'/i_svpwm_'+pickle_last_nm+'.pickle', i_svpwm)
+    save2pickle("data"+'/th_er_'+pickle_last_nm+'.pickle', th_er)
+    save2pickle("data"+'/th_cum_'+pickle_last_nm+'.pickle', th_cum)
+    save2pickle("data"+'/pwm1_'+pickle_last_nm+'.pickle', pwm1)
+    save2pickle("data"+'/pwm2_'+pickle_last_nm+'.pickle', pwm2)
 
 
 if __name__ == "__main__":
-    DATA_DIR = "data"
     pickle_last_nm = "_4"
 
-    i1 = load_pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle')
-    i2 = load_pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle')
-    pwm1 = load_pickle(DATA_DIR+'/pwm1'+pickle_last_nm+'.pickle')
-    pwm2 = load_pickle(DATA_DIR+'/pwm2'+pickle_last_nm+'.pickle')
+    i1 = load_pickle("data"+'/i1'+pickle_last_nm+'.pickle')
+    i2 = load_pickle("data"+'/i2'+pickle_last_nm+'.pickle')
+    pwm1 = load_pickle("data"+'/pwm1'+pickle_last_nm+'.pickle')
+    pwm2 = load_pickle("data"+'/pwm2'+pickle_last_nm+'.pickle')
 
     i1a = (((pwm1 < 0.5) * -1) + (pwm1 >= 0.5))
     i2a = (((pwm2 < 0.5) * -1) + (pwm2 >= 0.5))

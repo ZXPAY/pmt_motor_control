@@ -5,23 +5,23 @@ import os
 import numpy as np
 
 FIG_DIR = "figure"
-def plot_data(DATA_DIR, pickle_last_nm, DELTA_T):
+def plot_data(pickle_last_nm, DELTA_T):
     try:
         os.mkdir(FIG_DIR)
     except:
         pass
 
-    i1 = load_pickle(DATA_DIR+'/i1'+pickle_last_nm+'.pickle')
-    i2 = load_pickle(DATA_DIR+'/i2'+pickle_last_nm+'.pickle')
-    angle = load_pickle(DATA_DIR+'/angle'+pickle_last_nm+'.pickle')
-    sele_dangle = load_pickle(DATA_DIR+'/sele_dangle'+pickle_last_nm+'.pickle')
-    cele_dangle = load_pickle(DATA_DIR+'/cele_dangle'+pickle_last_nm+'.pickle')
-    th_svpwm = load_pickle(DATA_DIR+'/th_svpwm'+pickle_last_nm+'.pickle')
-    i_svpwm = load_pickle(DATA_DIR+'/i_svpwm'+pickle_last_nm+'.pickle')
-    th_er = load_pickle(DATA_DIR+'/th_er'+pickle_last_nm+'.pickle')
-    th_cum = load_pickle(DATA_DIR+'/th_cum'+pickle_last_nm+'.pickle')
-    pwm1 = load_pickle(DATA_DIR+'/pwm1'+pickle_last_nm+'.pickle')
-    pwm2 = load_pickle(DATA_DIR+'/pwm2'+pickle_last_nm+'.pickle')
+    i1 = load_pickle("data"+'/i1'+pickle_last_nm+'.pickle')
+    i2 = load_pickle("data"+'/i2'+pickle_last_nm+'.pickle')
+    angle = load_pickle("data"+'/angle'+pickle_last_nm+'.pickle')
+    sele_dangle = load_pickle("data"+'/sele_dangle'+pickle_last_nm+'.pickle')
+    cele_dangle = load_pickle("data"+'/cele_dangle'+pickle_last_nm+'.pickle')
+    th_svpwm = load_pickle("data"+'/th_svpwm'+pickle_last_nm+'.pickle')
+    i_svpwm = load_pickle("data"+'/i_svpwm'+pickle_last_nm+'.pickle')
+    th_er = load_pickle("data"+'/th_er'+pickle_last_nm+'.pickle')
+    th_cum = load_pickle("data"+'/th_cum'+pickle_last_nm+'.pickle')
+    pwm1 = load_pickle("data"+'/pwm1'+pickle_last_nm+'.pickle')
+    pwm2 = load_pickle("data"+'/pwm2'+pickle_last_nm+'.pickle')
 
     t = np.linspace(0, i1.shape[0]-1, i1.shape[0]) * DELTA_T
 

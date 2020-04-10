@@ -75,6 +75,8 @@ void control_handle(void) {
     cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
 
     /* update duty cycle */
+    /* 0 => 1A is high, 1B is low */
+    /* 0 => 2B is high, 2A is low */
     SET_PHASEA_DUTY(pwm12.pwm1);
     SET_PHASEB_DUTY(pwm12.pwm2);
 }

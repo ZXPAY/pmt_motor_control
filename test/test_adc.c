@@ -25,6 +25,7 @@
 
 /* Include other library */
 #include "hal_tick.h"
+#include "freqdiv.h"
 
 /* Include board support package */
 #include "control_board.h"
@@ -35,6 +36,15 @@
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
+
+freq_div_t freq_div_pwmA;
+freq_div_t freq_div_pwmB;
+
+#define DUTY0
+#define DUTY25
+#define DUTY50
+#define DUTY75
+#define DUTY100
 
 /* Main code */
 int main (void) {
@@ -53,6 +63,13 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
+    // drv8847.setMode(DRV8847_MODE_SLEEP);
+
+    /* Initialize freqency divider */
+    freq_div_init(&freq_div_pwmA);
+    freq_div_init(&freq_div_pwmB);
+    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 0);
+    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 10);
 
     hal_delay(100);
     RS485_trm("start \r\n");
@@ -60,40 +77,50 @@ int main (void) {
     ENABLE_PHB_INT();
     ENABLE_ADC_PHAB_INT();
     while (true) {
-        /* duty 0 % */
-        SET_PHASEA_DUTY(0);
-        SET_PHASEB_DUTY(0);
-        hal_delay(100);
-        RS485_trm("0 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
-        hal_delay(1000);
+        #ifdef DUTY0
+            /* duty 0 % */
+            SET_PHASEA_DUTY(0);
+            SET_PHASEB_DUTY(0);
+            hal_delay(100);
+            RS485_trm(", 0, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            hal_delay(1000);
+        #endif
 
-        /* duty 25 % */
-        SET_PHASEA_DUTY(250);
-        SET_PHASEB_DUTY(250);
-        hal_delay(100);
-        RS485_trm("25 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
-        hal_delay(1000);
+        #ifdef DUTY25
+            /* duty 25 % */
+            SET_PHASEA_DUTY(PERIOD_COUNT>>2);
+            SET_PHASEB_DUTY(PERIOD_COUNT>>2);
+            hal_delay(100);
+            RS485_trm(", 25, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            hal_delay(1000);
+        #endif
 
-        /* duty 50 % */
-        SET_PHASEA_DUTY(500);
-        SET_PHASEB_DUTY(500);
-        hal_delay(100);
-        RS485_trm("50 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
-        hal_delay(1000);
+        #ifdef DUTY50
+            /* duty 50 % */
+            SET_PHASEA_DUTY(PERIOD_COUNT>>1);
+            SET_PHASEB_DUTY(PERIOD_COUNT>>1);
+            hal_delay(100);
+            RS485_trm(", 50, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            hal_delay(1000);
+        #endif
 
-        /* duty 75 % */
-        SET_PHASEA_DUTY(750);
-        SET_PHASEB_DUTY(750);
-        hal_delay(100);
-        RS485_trm("75 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
-        hal_delay(1000);
+        #ifdef DUTY75
+            /* duty 75 % */
+            SET_PHASEA_DUTY(PERIOD_COUNT - (PERIOD_COUNT>>2));
+            SET_PHASEB_DUTY(PERIOD_COUNT - (PERIOD_COUNT>>2));
+            hal_delay(100);
+            RS485_trm(", 75, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            hal_delay(1000);
+        #endif
 
-        /* duty 100 % */
-        SET_PHASEA_DUTY(1000);
-        SET_PHASEB_DUTY(1000);
-        hal_delay(100);
-        RS485_trm("100 : %ld, %ld\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2);
-        hal_delay(1000);
+        #ifdef DUTY100
+            /* duty 100 % */
+            SET_PHASEA_DUTY(PERIOD_COUNT);
+            SET_PHASEB_DUTY(PERIOD_COUNT);
+            hal_delay(100);
+            RS485_trm(", 100, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            hal_delay(1000);
+        #endif
 
     }
 

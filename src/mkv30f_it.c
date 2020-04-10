@@ -87,6 +87,7 @@ void RS485_INT_HANDLER(void) {
 
 void ADC0_IRQHandler(void) {
     drv8847.drv->handle();
+    DISABLE_TEST1();
 }
 
 /** brief TODO

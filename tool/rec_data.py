@@ -10,14 +10,17 @@ import argparse
 delat_t = 0.01
 now = datetime.now()
 default_file_marker = now.strftime("%m_%d_%H_%M_%S")
+default_len = 13
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-sz", "--size", help="Receive data size you want", default=1000, type=int)
 parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
+parser.add_argument("-len", "--length", help="Comma \",\" split length, example \"1,2,3\" is three", default=default_len, type=int)
 args = parser.parse_args()
 
 file_marker = args.marker
 GRAB_DATA_SIZE = args.size
+COMMA_DATA_LEN = args.length
 raw_data_file_name = 'raw_data_' + file_marker + '.txt'
 print('Write to file: ' + raw_data_file_name)
 print('Grab data size: ' + str(GRAB_DATA_SIZE))
@@ -43,7 +46,7 @@ while cnt < (GRAB_DATA_SIZE):
     raw_data = ser.readline()
     # print(raw_data)
     try:
-        if len(raw_data.decode("utf-8").split(",")) == 13:
+        if len(raw_data.decode("utf-8").split(",")) == COMMA_DATA_LEN:
             # print(raw_data)
             f.write(raw_data[0:-1])
 
@@ -60,7 +63,7 @@ ser.close()
 
 # Handle the data
 print("Handle data ...")
-handle_data(DATA_DIR, raw_data_file_name, file_marker)
-plot_data(DATA_DIR, file_marker, delat_t)
+# handle_data(raw_data_file_name, file_marker)
+# plot_data(file_marker, delat_t)
 
 

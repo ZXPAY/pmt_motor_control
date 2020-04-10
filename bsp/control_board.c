@@ -98,7 +98,7 @@ void init_hw_drv8847_s(void){
     SIM->SCGC6 |= SIM_SCGC6_ADC0_MASK;
     PORT_PHA->PCR[PIN_PHA] &= ~PORT_PCR_MUX_MASK;
     PORT_PHB->PCR[PIN_PHB] &= ~PORT_PCR_MUX_MASK;
-    ADC_PHAB->CFG1 |= ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(1) | ADC_CFG1_ADLSMP_MASK;  // 16 bit
+    ADC_PHAB->CFG1 |= ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(1);  // 16 bit
     ADC_PHAB->SC3 |= ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);   // average 32 samples
 }
 
@@ -129,6 +129,24 @@ void init_hw_as5047d(void) {
 }
 
 /**
+* @brief test pin map
+* Test1 : PTD6
+* Test2 : PTD4
+*/
+void init_test_pin(void) {
+    /* TEST1 and TEST2 pin as output, default is LOW */
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+    PORT_TEST1->PCR[PIN_TEST1] |= PORT_PCR_MUX(MUX_ALT_1);
+    GPIO_TEST1->PDDR |= (1<<PIN_TEST1);
+    DISABLE_TEST1();
+    ENABLE_TEST1();
+    PORT_TEST2->PCR[PIN_TEST2] |= PORT_PCR_MUX(MUX_ALT_1);
+    GPIO_TEST2->PDDR |= (1<<PIN_TEST2);
+    DISABLE_TEST2();
+}
+
+
+/**
 * @brief RS485 pin map
 * CTR1 : PTD1
 * CTR2 : PTD2
@@ -139,7 +157,6 @@ void init_hw_as5047d(void) {
 *
 * Setting BPS 115200
 */
-
 void init_hw_rs485(void) {
     // Enable UART and GPIOD GPIOE clock source
     SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
@@ -215,6 +232,7 @@ void init_hw_pit(void) {
 }
 
 void board_init(void) {
+    init_test_pin();
     init_hw_as5047d();
     init_hw_drv8847_s();
     init_hw_rs485();

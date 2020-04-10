@@ -11,9 +11,9 @@
 #define CONTROL_CONFIG_H
 
 /* Define parameters */
-#define EXC_KI                   0.005                                /* 激磁角Ki回饋 */
-#define I_SVPWM_LOW              -0.6                                 /* 電流下限 */
-#define I_SVPWM_HIGH             0.6                                  /* 電流上限 */
+#define EXC_KI                   0.001                                /* 激磁角Ki回饋 */
+#define I_SVPWM_LOW              -0.65                                 /* 電流下限 */
+#define I_SVPWM_HIGH             0.65                                  /* 電流上限 */
 #define I_SVPWM_MEAN             (-I_SVPWM_LOW + I_SVPWM_HIGH) / 2    /* 電流平均值 */
 #define I_SVPWM_KP               I_SVPWM_MEAN / 1000                  /* 電流Kp回饋 */
 #define I_SVPWM_KI               I_SVPWM_MEAN / 10000                 /* 電流Ki回饋 */

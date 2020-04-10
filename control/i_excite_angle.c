@@ -1,5 +1,5 @@
 #include "i_excite_angle.h"
-
+#include "rs485.h"
 void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki) {
     fb_exc_angle->pid.kp = 0;
     fb_exc_angle->pid.ki = ki;
@@ -17,11 +17,11 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
         /* e_sdegree - e_cdegree > 180 */
         if(fb_exc_angle->th_er >= 0) {
             /* 馬達落後 */
-            fb_exc_angle->th_er = -(360 - e_sdegree + e_cdegree);
+            fb_exc_angle->th_er -= 360;
         }
         else {
             /* 馬達領先 */
-            fb_exc_angle->th_er = (360 - e_cdegree + e_sdegree);
+            fb_exc_angle->th_er += 360;
         }
     }
 
@@ -39,7 +39,15 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
 #endif
     // /* theta svpwm to positive */
     if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
-    if(fb_exc_angle->th_esvpwm < -360) fb_exc_angle->th_esvpwm += 360;
+
+    if(abs_float(fb_exc_angle->th_esvpwm - e_sdegree) > 90) {
+        if(e_cdegree > e_sdegree) {
+            fb_exc_angle->th_esvpwm -= 2;
+        }
+        else {
+            fb_exc_angle->th_esvpwm += 2;
+        }
+    }
 
     fb_exc_angle->last_er = fb_exc_angle->th_er;
 }

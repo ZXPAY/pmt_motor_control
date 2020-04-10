@@ -72,16 +72,16 @@
 #define SET_1A1B_PERIOD        FTM_1A1B->MOD
 #define SET_1A_DUTY            FTM_1A1B->CONTROLS[CH_1A].CnV
 #define SET_1B_DUTY            FTM_1A1B->CONTROLS[CH_1B].CnV
-#define SET_PHASEA_DUTY(duty)  FTM_1A1B->CONTROLS[CH_1A].CnV = duty; \
-                               FTM_1A1B->CONTROLS[CH_1B].CnV = duty;
+#define SET_PHASEA_DUTY(duty)  SET_1A_DUTY = duty; \
+                               SET_1B_DUTY = duty;
 #define ENABLE_PHA_INT()       __enable_irqn(FTM1_IRQn);
 #define DISABLE_PHA_INT()      __disable_irqn(FTM1_IRQn);
 
 #define SET_2A2B_PERIOD        FTM_2A2B->MOD
 #define SET_2B_DUTY            FTM_2A2B->CONTROLS[CH_2B].CnV
 #define SET_2A_DUTY            FTM_2A2B->CONTROLS[CH_2A].CnV
-#define SET_PHASEB_DUTY(duty)  FTM_2A2B->CONTROLS[CH_2B].CnV = duty; \
-                               FTM_2A2B->CONTROLS[CH_2A].CnV = duty;
+#define SET_PHASEB_DUTY(duty)  SET_2B_DUTY = duty; \
+                               SET_2A_DUTY = duty;
 #define ENABLE_PHB_INT()       __enable_irqn(FTM0_IRQn);
 #define DISABLE_PHB_INT()      __disable_irqn(FTM0_IRQn);
 
@@ -184,6 +184,22 @@
 
 #define SEND_BUFF_SIZE        128
 
+/**
+* @brief test pin map
+* Test1 : PTD6
+* Test2 : PTD4
+*/
+#define GPIO_TEST1            GPIOD
+#define PORT_TEST1            PORTD
+#define PIN_TEST1             6
+#define ENABLE_TEST1()        GPIO_TEST1->PSOR |= (1<<PIN_TEST1);
+#define DISABLE_TEST1()       GPIO_TEST1->PCOR |= (1<<PIN_TEST1);
+
+#define GPIO_TEST2            GPIOD
+#define PORT_TEST2            PORTD
+#define PIN_TEST2             4
+#define ENABLE_TEST2()        GPIO_TEST2->PSOR |= (1<<PIN_TEST2);
+#define DISABLE_TEST2()       GPIO_TEST2->PCOR |= (1<<PIN_TEST2);
 
 /**
  * @brief Correction period handle
@@ -199,9 +215,11 @@ void init_hw_drv8847_s(void);
 /* initialize AS5047D, encoder IC */
 void init_hw_as5047d(void);
 
+/* initialize test pin */
+void init_test_pin(void);
+
 /* initialize RS485 */
 void init_hw_rs485(void);
-
 void init_rs485_txdma(void);
 void enable_rs485_txdma(void);
 void disable_rs485_txdma(void);
