@@ -76,12 +76,17 @@ void init_cangle(cangle_t *cangle, uint16_t N_step, int16_t init_ele_angle) {
 
 void update_cangle(cangle_t *cangle, int16_t th_inc) {
     cangle->ele_angle += th_inc;
-    if(cangle->ele_angle > cangle->ele_limit) cangle->ele_angle = 0;
+    if(cangle->ele_angle > 0) {
+        if(cangle->ele_angle > cangle->ele_limit) cangle->ele_angle = 0;
+    }
+    else {
+        if(cangle->ele_angle < -cangle->ele_limit) cangle->ele_angle = 0;
+    }
 
     cangle->ele_dangle = (float)cangle->ele_angle * cangle->K_degree;
-    /* Constrain angle */
-    if(cangle->ele_dangle > 360.0) {cangle->ele_dangle = 0;}
-    if(cangle->ele_dangle < -360.0) {cangle->ele_dangle = 0;}
+
+    /* Let angle to 0~360 */
+    if(cangle->ele_dangle < 0) {cangle->ele_dangle += 360;}
 
     /* command angle accumlate */
     update_step_caccum(&c_accum, th_inc);
