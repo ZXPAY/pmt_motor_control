@@ -89,7 +89,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('th_svpwm minus command eletrical degree', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_c_ele_dangle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_cele_dangle_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, i_svpwm)

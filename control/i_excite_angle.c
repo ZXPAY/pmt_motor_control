@@ -17,7 +17,7 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     /* th_er > 0 領先, th_er < 0 落後 */
     fb_exc_angle->th_er = e_sdegree - e_cdegree;
     if(abs_float(fb_exc_angle->th_er) >= 180) {
-        if(fb_exc_angle->th_er >= 0) {
+        if(e_sdegree > e_cdegree) {
             /* 馬達落後 */
             fb_exc_angle->th_er -= 360;
         }

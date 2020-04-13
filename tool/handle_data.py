@@ -49,15 +49,11 @@ if __name__ == "__main__":
 
     cnt = 0
     c1 = 0
-    c2 = 0
-    conf_cnt1 = 0
-    conf_cnt2 = 0
     dc = 0
     dc_cnt = 0
     rpc_fg = 0
-    ds = 0
-    ds_cnt = 0
-    rps_fg = 0
+    CONF_CNT = 10
+    a = []
     for data in raw_data:
         data_list = data.split(',')
         if len(data_list) == 13:
@@ -69,36 +65,22 @@ if __name__ == "__main__":
             if cnt > 0:
                 dc = cele_dangle[cnt] - cele_dangle[cnt-1]
                 ds = sele_dangle[cnt] - sele_dangle[cnt-1]
-            if abs(dc) > 180 and dc_cnt < 1:
+            if abs(dc) > 180 and dc_cnt < CONF_CNT:
                 # boundary ripple
-                if rp_fg == 0:
-                    c1 -= 1
+                if rpc_fg == 0:
+                    c1 += 1
                     rpc_fg = 1
                 else:
-                    c1 += 1
+                    c1 -= 1
                     rpc_fg = 0
                 print("RippleC", cnt, cele_dangle[cnt], cele_dangle[cnt-1])
-            elif abs(dc) > 180 and dc_cnt > 1:
+            elif abs(dc) > 180 and dc_cnt > CONF_CNT:
                 c1 += 1
                 rpc_fg = 0
                 dc_cnt = 0
 
-            if abs(ds) > 180 and ds_cnt < 1:
-                # boundary ripple
-                if rps_fg == 0:
-                    c2 -= 1
-                    rps_fg = 1
-                else:
-                    c2 += 1
-                    rps_fg = 0
-                print("RippleS", cnt, sele_dangle[cnt], sele_dangle[cnt-1])
-            elif abs(ds) > 180 and ds_cnt > 1:
-                c2 += 1
-                rps_fg = 0
-                ds_cnt = 0
             dc_cnt += 1
-            ds_cnt += 1
-            sele_dangle_cum[cnt] = sele_dangle[cnt] + 360*c2
+            sele_dangle_cum[cnt] = sele_dangle[cnt] + 360*c1
             cele_dangle_cum[cnt] = cele_dangle[cnt] + 360*c1
             th_svpwm[cnt] = float(data_list[para_index['th_svpwm']])
             temp = th_svpwm[cnt] - cele_dangle[cnt]
@@ -151,3 +133,6 @@ if __name__ == "__main__":
 
     print("Saving figure ...")
     plot_data(file_marker, delat_t)
+
+    import matplotlib.pyplot as plt
+    plt.show()
