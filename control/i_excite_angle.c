@@ -24,7 +24,7 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
             fb_exc_angle->th_er += 360;
         }
     }
-    
+
     fb_exc_angle->th_cum += fb_exc_angle->th_er;     /* 累計誤差 */
 
     /* 限制上下界 */
@@ -37,18 +37,18 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
 #else
     fb_exc_angle->th_esvpwm = e_cdegree;
 #endif
+
+    /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
+    if(fb_exc_angle->th_esvpwm  > (e_sdegree + 90)) {
+        fb_exc_angle->th_esvpwm = (e_sdegree + 90);
+    }
+    else if(fb_exc_angle->th_esvpwm < (e_sdegree - 90)) {
+        fb_exc_angle->th_esvpwm = (e_sdegree - 90);
+    }
+
     /* theta svpwm to positive */
     if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
     else if(fb_exc_angle->th_esvpwm < 0)    fb_exc_angle->th_esvpwm += 360;
-
-    // if(abs_float(fb_exc_angle->th_esvpwm - e_sdegree) > 90) {
-    //     if(e_cdegree > e_sdegree) {
-    //         fb_exc_angle->th_esvpwm -= 30;
-    //     }
-    //     else {
-    //         fb_exc_angle->th_esvpwm += 30;
-    //     }
-    // }
 
     fb_exc_angle->last_er = fb_exc_angle->th_er;
 }
