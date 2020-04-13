@@ -69,7 +69,7 @@ if __name__ == "__main__":
             if cnt > 0:
                 dc = cele_dangle[cnt] - cele_dangle[cnt-1]
                 ds = sele_dangle[cnt] - sele_dangle[cnt-1]
-            if abs(dc) > 180 and dc_cnt < 10:
+            if abs(dc) > 180 and dc_cnt < 1:
                 # boundary ripple
                 if rp_fg == 0:
                     c1 -= 1
@@ -77,13 +77,13 @@ if __name__ == "__main__":
                 else:
                     c1 += 1
                     rpc_fg = 0
-                print("Ripplec", cnt, cele_dangle[cnt], cele_dangle[cnt-1])
-            elif abs(dc) > 180 and dc_cnt > 20:
+                print("RippleC", cnt, cele_dangle[cnt], cele_dangle[cnt-1])
+            elif abs(dc) > 180 and dc_cnt > 1:
                 c1 += 1
                 rpc_fg = 0
                 dc_cnt = 0
 
-            if abs(ds) > 180 and ds_cnt < 10:
+            if abs(ds) > 180 and ds_cnt < 1:
                 # boundary ripple
                 if rps_fg == 0:
                     c2 -= 1
@@ -91,8 +91,8 @@ if __name__ == "__main__":
                 else:
                     c2 += 1
                     rps_fg = 0
-                print("Ripple s", cnt, sele_dangle[cnt], sele_dangle[cnt-1])
-            elif abs(ds) > 180 and ds_cnt > 20:
+                print("RippleS", cnt, sele_dangle[cnt], sele_dangle[cnt-1])
+            elif abs(ds) > 180 and ds_cnt > 1:
                 c2 += 1
                 rps_fg = 0
                 ds_cnt = 0
@@ -123,8 +123,8 @@ if __name__ == "__main__":
 
     # Handle current positive or negative by decide PWM duty
     # 20 is gain (AD8206), 0.1 is current sense resistor
-    ia = (3.3 * ia / 65535.0 - 1.65) / 20 / 0.1
-    ib = (3.3 * ib / 65535.0 - 1.65) / 20 / 0.1
+    ia = -(3.3 * ia / 65535.0 - 1.65) / 20 / 0.1
+    ib = -(3.3 * ib / 65535.0 - 1.65) / 20 / 0.1
 
     # Calculate the power
     power = (ia*ia*ra) + (ib*ib*rb)

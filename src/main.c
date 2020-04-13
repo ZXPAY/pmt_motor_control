@@ -81,7 +81,7 @@ int main (void) {
 
     /* SysTick initialize */
     systick_init();
-    RS485_trm("start \r\n");
+    RS485_trm("start !!!\r\n");
     hal_delay(100);
 
     // Enable interrupt

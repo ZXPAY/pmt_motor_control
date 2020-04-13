@@ -10,6 +10,10 @@ def plot_data(file_marker, DELTA_T):
         os.mkdir(FIG_DIR)
     except:
         pass
+    try:
+        os.mkdir(FIG_DIR+"/"+file_marker)
+    except:
+        pass
 
     save_data = load_pickle("data/data_"+file_marker+'.pickle')
 
@@ -41,7 +45,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['ia', 'ib'], fontsize=20)
-    plt.savefig(FIG_DIR + '/ia_ib_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/ia_ib_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, angle)
@@ -51,7 +55,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('angle coding', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/angle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, sele_dangle)
@@ -63,19 +67,19 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['sensor', 'command'], fontsize=20)
-    plt.savefig(FIG_DIR + '/scele_dangle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/scele_dangle_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
-    plt.plot(t, sele_dangle_cum)
-    plt.plot(t, cele_dangle_cum)
+    plt.plot(t, sele_dangle_cum*1.8/90)
+    plt.plot(t, cele_dangle_cum*1.8/90)
     plt.grid(True)
     plt.xlabel('t', fontsize=24)
     plt.ylabel('degree', fontsize=24)
-    plt.title('command and sensor eletrical degree accumlate', fontsize=28)
+    plt.title('command and sensor machanical degree accumlate', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['sensor', 'command'], fontsize=20)
-    plt.savefig(FIG_DIR + '/scele_dangle_cum_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/scele_dangle_cum_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, ki_cum)
@@ -85,7 +89,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('th_svpwm minus command eletrical degree', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/svpwm_c_ele_dangle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_c_ele_dangle_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, i_svpwm)
@@ -95,7 +99,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('i svpwm', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/i_svpwm_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/i_svpwm_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_er*1.8/90)
@@ -105,7 +109,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('theta error machanical angle', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/th_er_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/th_er_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_cum)
@@ -115,7 +119,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('theta error accumulate', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/th_cum_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/th_cum_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, pwma)
@@ -127,7 +131,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(['pwma', 'pwmb'], fontsize=20)
-    plt.savefig(FIG_DIR + '/pwma_pwmb_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/pwma_pwmb_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
     plt.plot(t, power)
@@ -137,7 +141,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('1A1B 2A2B Power', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR + '/power_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/power_' + file_marker + '.png')
 
     print("Data size is ", ia.shape[0])
     print("===== sensor ele angle =====")

@@ -21,13 +21,11 @@
 #define STEP_C_THETA_TO_LENGTH       1.0                                     /* 命令微步累加器角度轉換成長度增益 */
 #define STEP_S_THETA_TO_LENGTH       1.0                                     /* 感測微步累加器角度轉換成長度增益 */
 
-/* Define maximum velocity */
-#define ADJ_MAX     10                                                       /* 最大調整正反轉步數 */
-
 /* Define default N-step */
-#define N_STEP      2
+#define N_STEP      1
 
-
+/* Define maximum velocity */
+#define ADJ_MAX     N_STEP                                                   /* 最大調整正反轉步數 */
 
 
 #endif /* CONTROL_CONFIG_H */

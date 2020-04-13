@@ -50,7 +50,7 @@ void control_init(void) {
     set_caccum_k(&c_accum, STEP_C_THETA_TO_LENGTH);
     set_saccum_k(&s_accum, STEP_S_THETA_TO_LENGTH);
 
-    hal_delay(500);
+    hal_delay(1000);
 
     /* Initialize machanical angle */
     for(int i=0;i<16;i++) {
@@ -61,10 +61,14 @@ void control_init(void) {
 }
 
 void control_print(void) {
+    static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
     RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-    update_cangle(&cangle, get_cangle_inc(&adj_v));
+    if(prec_cnt++ == 20) {
+        update_cangle(&cangle, get_cangle_inc(&adj_v));
+        prec_cnt = 0;
+    }
 }
 
 void control_handle(void) {

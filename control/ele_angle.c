@@ -68,7 +68,7 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
 }
 
 void init_cangle(cangle_t *cangle, uint16_t N_step, int16_t init_ele_angle) {
-    cangle->K_degree = 360.0/(N_step*FULL_STEPS_NUM);
+    cangle->K_degree = 360.0/(N_step*FULL_STEPS_NUM)*(90.0/1.8);
     cangle->ele_limit = N_step*FULL_STEPS_NUM;
     cangle->init_ele_angle = init_ele_angle;
     cangle->ele_angle = 0;
@@ -82,8 +82,8 @@ void update_cangle(cangle_t *cangle, int16_t th_inc) {
     else {
         if(cangle->ele_angle < -cangle->ele_limit) cangle->ele_angle = 0;
     }
-
-    cangle->ele_dangle = (float)cangle->ele_angle * cangle->K_degree;
+    /* 360度餘數 */
+    cangle->ele_dangle = (int16_t)(cangle->ele_angle * cangle->K_degree) % 360;
 
     /* Let angle to 0~360 */
     if(cangle->ele_dangle < 0) {cangle->ele_dangle += 360;}
