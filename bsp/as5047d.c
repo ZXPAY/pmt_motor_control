@@ -41,12 +41,13 @@ static void as5047d_write(uint16_t address, uint16_t value) {
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
     ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
 }
-
+#include "control_board.h"
 static uint16_t as5047d_read(uint16_t address) {
     uint32_t spi_cmd = SPI_PUSHR_CTAS(0) | (1<<SPI_PUSHR_PCS_SHIFT);
     // address parity should be even
     address |= (1<<14);     // bit14 0 is write, 1 is read
     if(as50474_dri.get_parity(address&0x7fff)) address |= 0x8000;
+
     ENCODER_SPI->PUSHR = address | spi_cmd;
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
     ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
@@ -90,10 +91,10 @@ static void as5047d_cs_low(void) {
 }
 
 static uint8_t as5047d_get_parity(uint16_t n) {
-  int parity = 0;
-  while (n > 0) {
-    parity = (parity + (n & 1)) % 2;
-    n >>= 1;
-  }
-  return (parity);
+    int parity = 0;
+    while (n) {
+        parity = !parity;
+        n = n & (n-1);
+    }
+    return parity;
 }

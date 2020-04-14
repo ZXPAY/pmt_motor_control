@@ -194,12 +194,14 @@
 #define PIN_TEST1             6
 #define ENABLE_TEST1()        GPIO_TEST1->PSOR |= (1<<PIN_TEST1);
 #define DISABLE_TEST1()       GPIO_TEST1->PCOR |= (1<<PIN_TEST1);
+#define TOGGLE_TEST1()        GPIO_TEST1->PTOR |= (1<<PIN_TEST1);
 
 #define GPIO_TEST2            GPIOD
 #define PORT_TEST2            PORTD
 #define PIN_TEST2             4
 #define ENABLE_TEST2()        GPIO_TEST2->PSOR |= (1<<PIN_TEST2);
 #define DISABLE_TEST2()       GPIO_TEST2->PCOR |= (1<<PIN_TEST2);
+#define TOGGLE_TEST2()        GPIO_TEST1->PTOR |= (1<<PIN_TEST2);
 
 /**
  * @brief Correction period handle

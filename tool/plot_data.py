@@ -92,6 +92,16 @@ def plot_data(file_marker, DELTA_T):
     plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_cele_dangle_' + file_marker + '.png')
 
     plt.figure(figsize=(20, 12))
+    plt.plot(t, th_svpwm-sele_dangle)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24)
+    plt.ylabel('degree', fontsize=24)
+    plt.title('th_svpwm minus sele_dangle eletrical degree', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_s_' + file_marker + '.png')
+
+    plt.figure(figsize=(20, 12))
     plt.plot(t, i_svpwm)
     plt.grid(True)
     plt.xlabel('t', fontsize=24)

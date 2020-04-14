@@ -72,11 +72,13 @@ void control_print(void) {
 }
 
 void control_handle(void) {
-    as5047d.update();
+    as5047d.update();   /* about 10.1 us */
+
     update_sangle(&sangle, as5047d.angle);
     cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
     cal_current_correct(&fb_exc_angle, &fb_current);
-    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);
+
+    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);  /* about 26 us */
 
     /* update duty cycle */
     /* 0 => 1A is high, 1B is low */

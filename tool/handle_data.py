@@ -52,7 +52,7 @@ if __name__ == "__main__":
     dc = 0
     dc_cnt = 0
     rpc_fg = 0
-    CONF_CNT = 10
+    CONF_CNT = 20
     a = []
     for data in raw_data:
         data_list = data.split(',')
@@ -134,5 +134,5 @@ if __name__ == "__main__":
     print("Saving figure ...")
     plot_data(file_marker, delat_t)
 
-    import matplotlib.pyplot as plt
-    plt.show()
+    # import matplotlib.pyplot as plt
+    # plt.show()

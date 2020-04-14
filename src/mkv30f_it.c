@@ -42,7 +42,7 @@ extern freq_div_t freq_div_pwmB;
  *
  */
 void FTM_2A2B_Handler(void) {
-    freq_div_handle(&freq_div_pwmA);
+    freq_div_handle(&freq_div_pwmB);
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -53,7 +53,7 @@ void FTM_2A2B_Handler(void) {
  *
  */
 void FTM_1A1B_Handler(void) {
-    freq_div_handle(&freq_div_pwmB);
+    freq_div_handle(&freq_div_pwmA);
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;
