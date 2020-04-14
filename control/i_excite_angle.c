@@ -9,7 +9,7 @@ void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki) {
     fb_exc_angle->th_er = 0;
     fb_exc_angle->th_esvpwm = 0;
     /* Maximum correct dangle */
-    fb_exc_angle->cum_limit = 120.0/fb_exc_angle->pid.ki;
+    fb_exc_angle->cum_limit = 90.0/fb_exc_angle->pid.ki;
     fb_exc_angle->last_er = 0;
 }
 
