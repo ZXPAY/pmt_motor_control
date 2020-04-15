@@ -1,12 +1,8 @@
 /**
  * @file system.h
- * @author LiYu87
+ * @author Deng Xiang-Guan
  * @date 2020.01.07
- * @brief system clock、system power、pinconnect之設定函式。
- *
- * init 為初始化函式，在進入bootloader之前需要對硬體做初始化。
- * deinit 為反初始化函式，在離開bootloader之前呼叫，確保使用者使用環境之暫存器
- * 皆為初始值。
+ * @brief system clock初始化和預設systick設定為1K
  */
 
 #ifndef SYSTEM_H
@@ -27,4 +23,4 @@ void system_clock_deinit(void);
  */
 void systick_init(void);
 
-#endif  // SYSTEM_H
+#endif  /* SYSTEM_H */

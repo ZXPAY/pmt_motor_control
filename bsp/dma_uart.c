@@ -1,7 +1,5 @@
 #include <stdint.h>
 #include "control_board.h"
-#include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
-#include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "rs485.h"
 
 #ifdef USE_UART_DMA

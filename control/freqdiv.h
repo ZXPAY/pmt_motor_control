@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 
-#define MAX_FUN_NUM       5
+#define MAX_FUN_NUM       (5)
 
 typedef void (*FREQ_DIV_FUN_T)(void *);
 

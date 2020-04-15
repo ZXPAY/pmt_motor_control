@@ -12,12 +12,12 @@ void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, __attribute__((unus
 #ifdef ENABLE_CURRENT_PI
     /* 由角差I回饋 和 電流PI回饋計算SVPWM */
     if(fb_current->i_svpwm < 0) {
-        ia_svpwm = (-fb_current->i_svpwm)*I_SVPWM_NORMALIZE_GAIN*sinf(temp_ang);
-        ib_svpwm = (-fb_current->i_svpwm)*I_SVPWM_NORMALIZE_GAIN*cosf(temp_ang);
+        ia_svpwm = (-fb_current->i_svpwm)*I_SVPWM_GAIN*sinf(temp_ang);
+        ib_svpwm = (-fb_current->i_svpwm)*I_SVPWM_GAIN*cosf(temp_ang);
     }
     else {
-        ia_svpwm = (fb_current->i_svpwm)*I_SVPWM_NORMALIZE_GAIN*sinf(temp_ang);
-        ib_svpwm = (fb_current->i_svpwm)*I_SVPWM_NORMALIZE_GAIN*cosf(temp_ang);
+        ia_svpwm = (fb_current->i_svpwm)*I_SVPWM_GAIN*sinf(temp_ang);
+        ib_svpwm = (fb_current->i_svpwm)*I_SVPWM_GAIN*cosf(temp_ang);
     }
 #else
     ia_svpwm = sinf(temp_ang);

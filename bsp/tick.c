@@ -1,7 +1,6 @@
 #include "hal_tick.h"
 #include "tick.h"
-#include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
-#include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
+#include "control_board.h"
 #include "cortex_m4.h"
 
 void init_hw_tick(void) {

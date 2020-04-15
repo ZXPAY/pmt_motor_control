@@ -47,9 +47,9 @@ void update_step_caccum(step_caccumulator_t *c_accum, int32_t th_inc);
 float get_step_caccum_length(step_caccumulator_t *c_accum);
 
 
-#define SENSOR_RES         (16384)
-#define SENSOR_HALF        (SENSOR_RES>>1)
-#define STEP_SACCUMUILATOR_INIT   {\
+#define SENSOR_RES                 (16384UL)
+#define SENSOR_HALF                (SENSOR_RES>>1)
+#define STEP_SACCUMUILATOR_INIT {  \
     .th_s = 0,                     \
     .last_th_s = 0,                \
     .delta_th = 0,                 \

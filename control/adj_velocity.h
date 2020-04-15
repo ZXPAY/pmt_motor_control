@@ -13,9 +13,8 @@
 
 /* Define the adject velocity status */
 #define SM_READY              0
-#define SM_OVERLIMIT          1
-#define SM_RUNNING            2
-#define SM_OVERFLOW           3
+#define SM_RUNNING            1
+#define SM_OVERLIMIT          2
 
 /**
  *  @brief Adjust velocity parameter, state structure
@@ -30,16 +29,26 @@ typedef struct _adj_v_ {
     uint8_t sm;              /* Current status */
 }adj_v_t;
 
-
+/**
+ * @brief Initialize command eletrical angle increment
+ */
 void init_cangle_inc(adj_v_t *adj_v);
 
-
+/**
+ * @brief Set command eletrical angle increment
+ */
 void set_cangle_inc(adj_v_t *adj_v, int16_t th_add);
 
-
+/**
+ * @brief Set command background eletrical angle speed
+ */
 void set_cangle_wback(adj_v_t *adj_v, int16_t w_back);
 
-
+/**
+ * @brief Get command angle
+ *
+ * If angle more than max speed, it will return max spped value
+ */
 int16_t get_cangle_inc(adj_v_t *adj_v);
 
 #endif /* ADJ_VELOCITY_H */

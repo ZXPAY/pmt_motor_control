@@ -244,16 +244,22 @@ download:
 	Jlink $(JLINK_OPT) -CommanderScript $(DOT_JLINK_FILE)
 
 # Collect data
-clt:
+clt_raw:
 	@echo start collect data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
+	
+# Collect data and handle it
+clt:
+	@echo start collect data
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 13
 	@echo Handle collect data
 	@python ./tool/handle_data.py -mk $(mk)
 	@echo Done !
 
+# Collect encoder test data and handle it
 clt_enc:
 	@echo start collect encoder value
-	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 5
 	@echo Handle collect data
 	@python ./tool/handle_enc.py -mk $(mk) -len $(len)
 	@echo Done !

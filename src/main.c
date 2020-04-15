@@ -5,7 +5,6 @@
  * @date 2020.xx.xx
  *
  * Compiler: arm-none-eabi-gcc (8.3.1)
- * TODO: overflow problem (0~360)
  */
 
 /* Include C standard library */
@@ -23,6 +22,11 @@
 
 /* Include control library */
 #include "control.h"
+#include "control.h"
+#include "freqdiv.h"
+extern freq_div_t freq_div_pwmA;
+extern freq_div_t freq_div_pwmB;
+
 
 /* Include other library */
 #include "hal_tick.h"
@@ -33,18 +37,8 @@
 #include "hal_drv8847.h"
 #include "tick.h"
 #include "rs485.h"
-
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
-
-/* Include control library */
-#include "control.h"
-#include "freqdiv.h"
-
-extern freq_div_t freq_div_pwmA;
-extern freq_div_t freq_div_pwmB;
-
-volatile uint32_t presc_cnt = 0;
 
 /* Main code */
 int main (void) {
@@ -100,14 +94,6 @@ void HardFalut_Handler(void) {
     RS485_trm("Hardware error occur\r\n");
     while(true);
 }
-
-/* period : 2 ms */
-void PIT0_IRQHandler(void) {
-
-    /* clear flag */
-    PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
-}
-
 
 /* period : 10 ms */
 /* Do experiment, print whole words need 7 ms => choose 100 Hz */

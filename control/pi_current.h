@@ -11,10 +11,6 @@
 #define PI_CURRENT_H
 #include "i_excite_angle.h"
 
-/* Experiment value */
-#define Ia_MAX        0.6
-#define Ib_MAX        0.6
-
 typedef struct _fb_current_ {
     fb_pid_t pid;
     float i_svpwm;
@@ -23,14 +19,12 @@ typedef struct _fb_current_ {
 }fb_current_t;
 
 /**
- * @brief TODO
- *
+ * @brief Initialize PI current object patameters
  */
 void init_current_para(fb_current_t *fb_current, float kp, float ki, float low_limit, float high_limit);
 
 /**
- * @brief TODO
- *
+ * @brief Calculate PI current value to excite SVPWM
  */
 void cal_current_correct(fb_exc_angle_t *fb_exc_angle, fb_current_t *fb_current);
 

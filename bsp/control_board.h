@@ -15,7 +15,7 @@
 /* Define system clock freqency */
 #define SYS_CLOCK_FREQ         (72000000UL)
 
-// MUX alternative function
+/* MUX alternative function */
 #define MUX_ALT_0              0
 #define MUX_ALT_1              1
 #define MUX_ALT_2              2

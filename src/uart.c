@@ -1,20 +1,11 @@
 /**
  * @file uart.c
- * @author LiYu87
- * @brief
- * @date 2020.02.17
- */
-
-/**
- * @file uart.c
- * @author LiYu87
- * @date 2020.02.17
- * @brief uart3 operation functions
+ * @author Deng Xiang-Guan
+ * @date 2020.XX.XX
+ * @brief RS485 uart operation functions
  */
 
 #include "uart.h"
-
-#include "MKV30F12810.h"
 #include "control_board.h"
 
 #define MUL_VAL 4

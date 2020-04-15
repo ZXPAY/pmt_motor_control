@@ -34,7 +34,6 @@ volatile uint8_t fff = 0;
 * Rsense1 : PTE24
 * Rsense2 : ADC0_SE23
 */
-
 /* Freuqncy divide object */
 freq_div_t freq_div_pwmA = {.reg_num = 0};
 freq_div_t freq_div_pwmB = {.reg_num = 0};

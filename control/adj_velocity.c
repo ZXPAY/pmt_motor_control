@@ -11,21 +11,21 @@ void init_cangle_inc(adj_v_t *adj_v) {
 }
 
 void set_cangle_inc(adj_v_t *adj_v, int16_t th_add) {
-    /* Update the new phase adjust angle */
-    adj_v->add = th_add;
+    adj_v->add = th_add;    /* Update the new phase adjust angle */
 }
 
 void set_cangle_wback(adj_v_t *adj_v, int16_t w_back) {
-    /* Background step setting */
     adj_v->w_back = w_back;
 }
 
 int16_t get_cangle_inc(adj_v_t *adj_v) {
     if(adj_v->residual_phase > adj_v->limit) {
         adj_v->w_phase = adj_v->limit;
+        adj_v->sm = SM_OVERLIMIT;
     }
     else {
         adj_v->w_phase = adj_v->residual_phase;
+        adj_v->sm = SM_RUNNING;
     }
     adj_v->residual_phase += adj_v->add - adj_v->w_phase;
     adj_v->add = 0;

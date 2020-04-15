@@ -1,16 +1,13 @@
 /**
  * @file system.c
- * @author LiYu87
+ * @author Deng Xiang-Guan
  * @date 2020.01.07
- * @brief system clock、system power、pinconnect之設定函式。
+ * @brief system clock初始化和預設systick設定為1K
  */
 
 #include "system.h"
-
-#include "MKV30F12810.h"
-
-
-#define SYSTEM_CLOCK_FREQUENCY 72000000UL
+#include "control_board.h"
+#include "cortex_m4.h"
 
 void system_clock_init(void) {
     /* WDOG->UNLOCK: WDOGUNLOCK=0xC520 */
@@ -34,10 +31,9 @@ void system_clock_deinit(void) {
 
 }
 
-
 void systick_init(void) {
     // Initialize SysTick, setting slot 1 ms
-    SYST_RVR = (uint32_t)(SYSTEM_CLOCK_FREQUENCY/1000);   /* 24 bits */
+    SYST_RVR = (uint32_t)(SYS_CLOCK_FREQ/1000);   /* 24 bits */
     SYST_CSR = 0x07;
 }
 

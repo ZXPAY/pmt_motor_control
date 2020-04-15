@@ -14,8 +14,8 @@
 #define abs_float(X) ((X < 0)? (-X) : (X))
 #endif
 
-#define MAX_CORRECT_POSITIVE   20
-#define MAX_CORRECT_NEGATIVE   -20
+#define MAX_CORRECT_POSITIVE   (20)
+#define MAX_CORRECT_NEGATIVE   (-20)
 
 typedef struct _fb_pid_ {
     float ref;

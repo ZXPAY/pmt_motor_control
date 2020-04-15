@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "pi_current.h"
 
-#define DEGREE_TO_RADIAN      3.141593/180
+#define DEGREE_TO_RADIAN      (3.141593/180.0)
 
 typedef struct _pwmAB_ {
     int32_t pwm1;
