@@ -12,10 +12,10 @@
 #include <stdint.h>
 
 /* Define the adject velocity status */
-#define SM_READY        0
-#define SM_OVERLIMIT    1
-#define SM_RUNNING      2
-#define SM_OVERFLOW     3
+#define SM_READY              0
+#define SM_OVERLIMIT          1
+#define SM_RUNNING            2
+#define SM_OVERFLOW           3
 
 /**
  *  @brief Adjust velocity parameter, state structure

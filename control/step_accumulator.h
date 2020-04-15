@@ -32,20 +32,17 @@ typedef struct _step_caccumulator {
 }step_caccumulator_t;
 
 /**
- * @brief TODO
- *
+ * @brief Set command theta accumulated value to length
  */
 void set_caccum_k(step_caccumulator_t *c_accum, float k_theta2legnth);
 
 /**
- * @brief TODO
- *
+ * @brief Update command theta accumulated value
  */
 void update_step_caccum(step_caccumulator_t *c_accum, int32_t th_inc);
 
 /**
- * @brief TODO
- *
+ * @brief Get command length
  */
 float get_step_caccum_length(step_caccumulator_t *c_accum);
 
@@ -79,26 +76,22 @@ typedef struct _step_saccumulator {
 }step_saccumulator_t;
 
 /**
- * @brief TODO
- *
+ * @brief Set sensor theta accumulated value to length
  */
 void set_saccum_k(step_saccumulator_t *s_accum, float k_theta2legnth);
 
 /**
- * @brief TODO
- *
+ * @brief Set sensor theta initial position
  */
 void set_saccum_th_init(step_saccumulator_t *s_accum, int32_t th_init);
 
 /**
- * @brief TODO
- *
+ * @brief Update sensor theta accumulated value
  */
 void update_step_saccum(step_saccumulator_t *s_accum, int32_t th_s);
 
 /**
- * @brief TODO
- *
+ * @brief Get sensor length
  */
 float get_step_saccum_length(step_saccumulator_t *s_accum);
 

@@ -35,11 +35,12 @@ volatile uint8_t fff = 0;
 * Rsense2 : ADC0_SE23
 */
 
+/* Freuqncy divide object */
 freq_div_t freq_div_pwmA = {.reg_num = 0};
 freq_div_t freq_div_pwmB = {.reg_num = 0};
 
-/** @brief 2A 2B timer/PWM handler
- *
+/**
+ * @brief 2A 2B timer/PWM handler
  */
 void FTM_2A2B_Handler(void) {
     freq_div_handle(&freq_div_pwmB);
@@ -49,8 +50,8 @@ void FTM_2A2B_Handler(void) {
 }
 
 
-/** @brief 1A 1B timer/PWM handler
- *
+/**
+ * @brief 1A 1B timer/PWM handler
  */
 void FTM_1A1B_Handler(void) {
     freq_div_handle(&freq_div_pwmA);
@@ -60,9 +61,8 @@ void FTM_1A1B_Handler(void) {
 }
 
 
-
-/** brief TODO
- *
+/**
+ * @brief UART interrupt handler
  */
 uint8_t buf[200];
 uint8_t cc = 0;
@@ -85,12 +85,15 @@ void RS485_INT_HANDLER(void) {
     }
 }
 
+/**
+ * @brief ADC conversion complete handler
+ */
 void ADC0_IRQHandler(void) {
     drv8847.drv->handle();
 }
 
-/** brief TODO
- *
+/**
+ * @brief ARM systTick handler
  */
 void SysTick_Handler(void) {
 

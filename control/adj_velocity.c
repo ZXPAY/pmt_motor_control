@@ -16,6 +16,7 @@ void set_cangle_inc(adj_v_t *adj_v, int16_t th_add) {
 }
 
 void set_cangle_wback(adj_v_t *adj_v, int16_t w_back) {
+    /* Background step setting */
     adj_v->w_back = w_back;
 }
 
