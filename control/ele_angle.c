@@ -29,24 +29,24 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
         }
     }
     sangle->ele_angle += sangle->delta_angle;
-    if(sangle->ele_angle > ENC_PER_ELE_ANGLE_L) {
-        sangle->ele_angle -= ENC_PER_ELE_ANGLE_H;
-        sangle->err_count += ENC_PER_ELE_ANGLE_UP;
-        if(sangle->err_count > ENC_PER_ELE_ANGLE_DW_THR) {
+    if(sangle->ele_angle > ENC_ELE_ANGLE_TH_L) {
+        sangle->ele_angle -= ENC_ELE_ANGLE_TH_H;
+        sangle->err_count += ENC_ELE_ANGLE_ER;
+        if(sangle->err_count > ENC_ELE_ANGLE_ER_TH) {
             sangle->ele_angle++;
-            sangle->err_count -= EMC_PER_ELE_AMGLE_COUNT;
+            sangle->err_count -= EMC_ELE_AMGLE_COUNT;
         }
         sangle->poles++;
         if(sangle->poles >= MAX_ELETRICAL_ROTOR_ANGLE) {
             sangle->poles -= MAX_ELETRICAL_ROTOR_ANGLE;
         }
     }
-    else if(sangle->ele_angle < -ENC_PER_ELE_ANGLE_L) {
-        sangle->ele_angle += ENC_PER_ELE_ANGLE_H;
-        sangle->err_count -= ENC_PER_ELE_ANGLE_UP;
-        if(sangle->err_count < ENC_PER_ELE_ANGLE_UP_THR) {
+    else if(sangle->ele_angle < -ENC_ELE_ANGLE_TH_L) {
+        sangle->ele_angle += ENC_ELE_ANGLE_TH_H;
+        sangle->err_count -= ENC_ELE_ANGLE_ER;
+        if(sangle->err_count < -ENC_ELE_ANGLE_ER_TH) {
             sangle->ele_angle--;
-            sangle->err_count += EMC_PER_ELE_AMGLE_COUNT;
+            sangle->err_count += EMC_ELE_AMGLE_COUNT;
         }
         sangle->poles--;
         if(sangle->poles < 0) {
@@ -60,9 +60,6 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
     }
     /* 順時針為正 */
     sangle->ele_dangle = (float)sangle->ele_angle * sangle->K_degree;
-    if(sangle->ele_dangle < 0) {
-        sangle->ele_dangle = -sangle->ele_dangle;
-    }
 
     update_step_saccum(&s_accum, enc_angle);
 }
@@ -84,9 +81,6 @@ void update_cangle(cangle_t *cangle, int16_t th_inc) {
     }
     /* 360度餘數 */
     cangle->ele_dangle = (int16_t)(cangle->ele_angle * cangle->K_degree) % 360;
-
-    /* Let angle to 0~360 */
-    if(cangle->ele_dangle < 0) {cangle->ele_dangle += 360;}
 
     /* command angle accumlate */
     update_step_caccum(&c_accum, th_inc);

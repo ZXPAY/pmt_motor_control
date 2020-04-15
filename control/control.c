@@ -38,7 +38,7 @@ extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在control/ele
 void control_init(void) {
     /* Initialize add adjust calculator */
     init_cangle_inc(&adj_v);
-    set_cangle_wback(&adj_v, 1);
+    set_cangle_wback(&adj_v, -1);
 
     /* Initialize excited angle feedback */
     init_exc_ang_para(&fb_exc_angle, EXC_KI);
