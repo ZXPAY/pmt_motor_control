@@ -65,10 +65,6 @@ int main (void) {
     }
     // drv8847.setMode(DRV8847_MODE_SLEEP);
 
-    /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
-    /* Use in test */
-    // init_sin_cos_table(PERIOD_COUNT, N_STEP);
-
     /* Initialize control library */
     control_init();
 
@@ -116,15 +112,6 @@ void PIT0_IRQHandler(void) {
 /* period : 10 ms */
 /* Do experiment, print whole words need 7 ms => choose 100 Hz */
 void PIT1_IRQHandler(void) {
-    /* Test code */
-    /*
-    int32_t temp_sin = get_sin();
-    int32_t temp_cos = get_cos();
-    RS485_trm("===== update =====, %ld, %ld, %ld\n", temp_sin, temp_cos, as5047d.angle);
-
-    SET_PHASEA_DUTY((temp_sin+PERIOD_COUNT)>>1);
-    SET_PHASEB_DUTY((temp_cos+PERIOD_COUNT)>>1);
-    */
     control_print();
 
     /* clear flag */
