@@ -13,7 +13,7 @@
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 
 /* Define system clock freqency */
-#define SYS_CLOCK_FREQ         72000000U
+#define SYS_CLOCK_FREQ         (72000000UL)
 
 // MUX alternative function
 #define MUX_ALT_0              0
@@ -155,6 +155,9 @@
 #define PORT_CS                PORTC
 #define PIN_CS                 4
 
+#define SPI_CMD SPI_PUSHR_CTAS(0) | (1<<SPI_PUSHR_PCS_SHIFT)
+
+
 /**
 * @brief RS485 pin map
 * CTR1 : PTD1
@@ -205,11 +208,10 @@
 
 /**
  * @brief Correction period handle
- * Correction period : 2 ms (500 Hz)
  * Print period : 10 ms (100 Hz)
  */
-#define CORRECTION_FREQ       500
 #define PERIOD_PRINT_FREQ     100
+#define ENABLE_PRINT_INT()    __enable_irqn(PIT1_IRQn)
 
 /* initialize motor control IC */
 void init_hw_drv8847_s(void);

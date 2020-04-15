@@ -63,7 +63,7 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    drv8847.setMode(DRV8847_MODE_SLEEP);
+    // drv8847.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
@@ -88,7 +88,7 @@ int main (void) {
     ENABLE_PHA_INT();
     ENABLE_PHB_INT();
     ENABLE_ADC_PHAB_INT();
-    __enable_irqn(PIT1_IRQn);
+    ENABLE_PRINT_INT();
     __enable_irqn(HardFault_IRQn);
 
     uint32_t cnt = 0;

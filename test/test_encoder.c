@@ -73,14 +73,18 @@ int main (void) {
     ENABLE_PHB_INT();
     ENABLE_ADC_PHAB_INT();
     uint16_t angle;
+    uint16_t angle_com;
+    uint16_t dia;
     while (true) {
-        ENABLE_TEST1();
+
         angle = as5047d.instance->read(AS5047D_ANGLE);
+        ENABLE_TEST1();
+        angle_com = as5047d.instance->read_anglecom();
         DISABLE_TEST1();
-        RS485_trm(",%d,\r\n", angle);
+        dia = as5047d.instance->read(AS5047D_DIAAGC);
+
+        RS485_trm(",%d, %d, %x,\r\n", angle, angle_com, dia);
     }
-
-
     return 0;
 }
 
