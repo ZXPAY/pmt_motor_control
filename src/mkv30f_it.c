@@ -35,8 +35,8 @@ volatile uint8_t fff = 0;
 * Rsense2 : ADC0_SE23
 */
 
-extern freq_div_t freq_div_pwmA;
-extern freq_div_t freq_div_pwmB;
+freq_div_t freq_div_pwmA = {.reg_num = 0};
+freq_div_t freq_div_pwmB = {.reg_num = 0};
 
 /** @brief 2A 2B timer/PWM handler
  *

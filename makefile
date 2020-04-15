@@ -6,7 +6,7 @@ CPU      = cortex-m4
 PLATFORM = MKV30F128
 DEVICE = MKV30F128XXX10
 THUMB    = YES
-UART_DMA = YES
+UART_DMA = NO
 # Define the motor drive IC DRV8847 or DRV8847S
 CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
@@ -19,7 +19,8 @@ CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c si
 HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c dma_uart.c
 HAL_CSRC	= hal_as5047d.c hal_drv8847.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
-CSRC   += main.c
+# CSRC   += main.c
+CSRC   += test_encoder.c
 # CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
@@ -133,6 +134,8 @@ DOT_JLINK_TEXT  = "r\n"
 DOT_JLINK_TEXT += "loadfile $(PROJECT).hex\n"
 DOT_JLINK_TEXT += "exit"
 
+# Open com port
+p := COM8
 # Data size receive
 sz := 1000
 # Save file name marker
@@ -243,9 +246,16 @@ download:
 # Collect data
 clt:
 	@echo start collect data
-	@python ./tool/rec_data.py -sz $(sz) -mk $(mk) -len $(len)
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
 	@echo Handle collect data
 	@python ./tool/handle_data.py -mk $(mk)
+	@echo Done !
+
+clt_enc:
+	@echo start collect encoder value
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
+	@echo Handle collect data
+	@python ./tool/handle_enc.py -mk $(mk)
 	@echo Done !
 
 # Collect data help

@@ -13,12 +13,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-sz", "--size", help="Receive data size you want", default=1000, type=int)
     parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
+    parser.add_argument("-p", "--port", help="COM port choose, e.g. COM8", default="COM8", type=str)
     parser.add_argument("-len", "--length", help="Comma \",\" split length, example \"1,2,3\" is three", default=default_len, type=int)
     args = parser.parse_args()
 
     file_marker = args.marker
     GRAB_DATA_SIZE = args.size
     COMMA_DATA_LEN = args.length
+    COM_PORT = args.port
     raw_data_file_name = 'raw_data_' + file_marker + '.txt'
     print('Write to file: ' + raw_data_file_name)
     print('Grab data size: ' + str(GRAB_DATA_SIZE))
@@ -28,7 +30,8 @@ if __name__ == "__main__":
         os.mkdir(DATA_DIR)
     except:
         pass
-    ser = serial.Serial("COM6", 115200)
+    print("Open ", COM_PORT)
+    ser = serial.Serial("COM8", 115200)
 
 
     cnt = 0

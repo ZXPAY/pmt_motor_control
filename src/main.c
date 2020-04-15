@@ -41,8 +41,8 @@ extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 #include "control.h"
 #include "freqdiv.h"
 
-freq_div_t freq_div_pwmA;
-freq_div_t freq_div_pwmB;
+extern freq_div_t freq_div_pwmA;
+extern freq_div_t freq_div_pwmB;
 
 volatile uint32_t presc_cnt = 0;
 
@@ -63,7 +63,7 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    // drv8847.setMode(DRV8847_MODE_SLEEP);
+    drv8847.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
