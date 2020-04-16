@@ -26,14 +26,14 @@ extern as50474_t as5047d;               /* AS5047D motor encoder IC */
 extern drv8847_t drv8847;               /* DRV8847 motor drive IC */
 
 /* Define stepper motor control object */
-sangle_t sangle;                        /* 感測角 */
-cangle_t cangle;                        /* 命令角 */
-adj_v_t adj_v;                          /* 相位調整限速器 */
-fb_exc_angle_t fb_exc_angle;            /* 激磁角回饋 */
-fb_current_t fb_current;                /* 電流回饋 */
-pwmAB_t pwm12;                          /* 1A1B 2A2B PWM */
-extern step_caccumulator_t c_accum;     /* 命令微步累加器, 在control/ele_angle.c內初始化 */
-extern step_saccumulator_t s_accum;     /* 感測微步累加器, 在control/ele_angle.c內初始化 */
+sangle_t sangle;                         /* 感測角 */
+cangle_t cangle;                         /* 命令角 */
+adj_v_t adj_v;                           /* 相位調整限速器 */
+fb_exc_angle_t fb_exc_angle;             /* 激磁角回饋 */
+fb_current_t fb_current;                 /* 電流回饋 */
+pwmAB_t pwm12;                           /* 1A1B 2A2B PWM */
+extern step_caccumulator_t c_accum;      /* 命令微步累加器, 在control/ele_angle.c內初始化 */
+extern step_saccumulator_t s_accum;      /* 感測微步累加器, 在control/ele_angle.c內初始化 */
 
 void control_init(void) {
     /* Initialize add adjust calculator */
@@ -62,23 +62,22 @@ void control_init(void) {
 
 void control_print(void) {
     static uint8_t prec_cnt = 0;
-    /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-    RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
-    if(prec_cnt++ == 5) {
+    /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2, s_cycles, s_total, c_total */
+    RS485_trm(",%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%ld,%ld,%ld,\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2,
+                                                    s_accum.cycles, s_accum.s_theta_total, c_accum.c_theta_total);
+    if(++prec_cnt == 5) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
         prec_cnt = 0;
     }
 }
 
 void control_handle(void) {
-    as5047d.update();   /* about 10.1 us */
-
-    update_sangle(&sangle, as5047d.angle);
-    cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);
-    cal_current_correct(&fb_exc_angle, &fb_current);
-
-    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);  /* about 26 us */
+    as5047d.update();   /* about 6.825 us */
+    update_sangle(&sangle, as5047d.angle);  /* about 3.825 us */
+    cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);  /* about 3.225 us */
+    cal_current_correct(&fb_exc_angle, &fb_current); /* about 5.25 us */
+    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);   /* about 16.32 us */
 
     /* update duty cycle */
     /* 0 => 1A is high, 1B is low */

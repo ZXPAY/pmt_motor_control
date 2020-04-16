@@ -22,7 +22,6 @@
 
 /* Include control library */
 #include "control.h"
-#include "control.h"
 #include "freqdiv.h"
 extern freq_div_t freq_div_pwmA;
 extern freq_div_t freq_div_pwmB;

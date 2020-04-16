@@ -247,11 +247,11 @@ download:
 clt_raw:
 	@echo start collect data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
-	
+
 # Collect data and handle it
 clt:
 	@echo start collect data
-	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 13
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len $(len)
 	@echo Handle collect data
 	@python ./tool/handle_data.py -mk $(mk)
 	@echo Done !

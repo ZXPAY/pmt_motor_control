@@ -24,6 +24,7 @@ if __name__ == "__main__":
     raw_data_file_name = 'raw_data_' + file_marker + '.txt'
     print('Write to file: ' + raw_data_file_name)
     print('Grab data size: ' + str(GRAB_DATA_SIZE))
+    print("parameter size: ", COMMA_DATA_LEN)
 
     DATA_DIR = 'data'
     try:
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     except:
         pass
     print("Open ", COM_PORT)
-    ser = serial.Serial("COM8", 115200)
+    ser = serial.Serial(COM_PORT, 115200)
 
 
     cnt = 0
@@ -54,6 +55,9 @@ if __name__ == "__main__":
                 cnt += 1
                 if cnt % 100 == 0:
                     print("waiting ... ", cnt)
+            else:
+                print("length not match --> ", len(raw_data.decode("utf-8").split(",")))
+                print(raw_data)
         except Exception as e:
             print(raw_data)
             print(e)

@@ -43,11 +43,11 @@ void update_step_saccum(step_saccumulator_t *s_accum, int32_t th_s) {
     if(abs_int(s_accum->delta_th) > SENSOR_HALF) {
         /* ZERO to MAX */
         if(s_accum->delta_th > 0) {
-            s_accum->cycles--;
+            s_accum->cycles++;
         }
         /* MAX to ZERO */
         else {
-            s_accum->cycles++;
+            s_accum->cycles--;
         }
     }
     /* transfer theta to length */

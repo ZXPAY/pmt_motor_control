@@ -20,7 +20,7 @@ if __name__ == "__main__":
     ra = 7.29
     rb = 7.08
     para_index = {'title': 0, 'ia': 1, 'ib': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
-                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11}
+                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11, 's_cycles':12, 's_total':13, 'c_total':14}
 
     print("Handle data ...")
     f = open("data" + "/" + 'raw_data_' + file_marker + '.txt', "r")
@@ -42,6 +42,9 @@ if __name__ == "__main__":
     th_cum = np.zeros([data_length, 1], dtype=np.float32)
     pwma = np.zeros([data_length, 1], dtype=np.float32)
     pwmb = np.zeros([data_length, 1], dtype=np.float32)
+    s_cycles = np.zeros([data_length, 1], dtype=np.float32)
+    s_total = np.zeros([data_length, 1], dtype=np.float32)
+    c_total = np.zeros([data_length, 1], dtype=np.float32)
     # Accumulate sele_dangle and cele_dangle
     sele_dangle_cum = np.zeros([data_length, 1], dtype=np.float32)
     cele_dangle_cum = np.zeros([data_length, 1], dtype=np.float32)
@@ -56,7 +59,7 @@ if __name__ == "__main__":
     a = []
     for data in raw_data:
         data_list = data.split(',')
-        if len(data_list) == 13:
+        if len(data_list) == 16:
             ia[cnt] = float(data_list[para_index['ia']])
             ib[cnt] = float(data_list[para_index['ib']])
             angle[cnt] = float(data_list[para_index['angle']])
@@ -94,6 +97,9 @@ if __name__ == "__main__":
             th_cum[cnt] = float(data_list[para_index['th_cum']])
             pwma[cnt] = float(data_list[para_index['pwma']])
             pwmb[cnt] = float(data_list[para_index['pwmb']])
+            s_cycles[cnt] = float(data_list[para_index['s_cycles']])
+            s_total[cnt] = float(data_list[para_index['s_total']])
+            c_total[cnt] = float(data_list[para_index['c_total']])
             cnt += 1
         else:
             print("Warning !!! List size not match !!!, ", cnt)
@@ -127,6 +133,9 @@ if __name__ == "__main__":
     save_data["pwma"] = pwma
     save_data["pwmb"] = pwmb
     save_data["power"] = power
+    save_data["s_cycles"] = s_cycles
+    save_data["s_total"] = s_total
+    save_data["c_total"] = c_total
 
     print("Saving data to pickle file ...")
     save2pickle("data"+'/data_'+file_marker+'.pickle', save_data)

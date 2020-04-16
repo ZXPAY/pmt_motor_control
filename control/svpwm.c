@@ -23,6 +23,6 @@ void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, __attribute__((unus
     ia_svpwm = sinf(temp_ang);
     ib_svpwm = cosf(temp_ang);
 #endif
-    pwmAB->pwm1 = ((int32_t)(ia_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
-    pwmAB->pwm2 = ((int32_t)(ib_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
+    pwmAB->pwm1 = ((int16_t)(ia_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
+    pwmAB->pwm2 = ((int16_t)(ib_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
 }
