@@ -32,6 +32,9 @@ def plot_data(file_marker, DELTA_T):
     pwma = save_data["pwma"]
     pwmb = save_data["pwmb"]
     power = save_data['power']
+    s_cycles = save_data['s_cycles']
+    s_length = save_data['s_length']
+    c_total = save_data['c_total']
 
     t = np.linspace(0, ia.shape[0]-1, ia.shape[0]) * DELTA_T
 
@@ -91,6 +94,8 @@ def plot_data(file_marker, DELTA_T):
     plt.yticks(fontsize=20)
     plt.savefig(FIG_DIR+"/"+file_marker + '/svpwm_cele_dangle_' + file_marker + '.png')
 
+    err = th_svpwm-sele_dangle
+    err = err*(np.abs(err)<360) + (err*(err>360)-360) + (err*(err<-360)+360)
     plt.figure(figsize=(20, 12))
     plt.plot(t, th_svpwm-sele_dangle)
     plt.grid(True)
@@ -153,6 +158,36 @@ def plot_data(file_marker, DELTA_T):
     plt.yticks(fontsize=20)
     plt.savefig(FIG_DIR+"/"+file_marker + '/power_' + file_marker + '.png')
 
+    plt.figure(figsize=(20, 12))
+    plt.plot(t, s_cycles)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24)
+    plt.ylabel('cycles', fontsize=24)
+    plt.title('sensor cycles', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/s_cycles_' + file_marker + '.png')
+
+    plt.figure(figsize=(20, 12))
+    plt.plot(t, s_length)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24)
+    plt.ylabel('L', fontsize=24)
+    plt.title('sensor theta_inc', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/s_length_' + file_marker + '.png')
+
+    plt.figure(figsize=(20, 12))
+    plt.plot(t, c_total)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24)
+    plt.ylabel('steps', fontsize=24)
+    plt.title('command theta_inc', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/c_total_' + file_marker + '.png')
+
     print("Data size is ", ia.shape[0])
     print("===== sensor ele angle =====")
     print("max: ", np.max(sele_dangle))
@@ -176,6 +211,9 @@ def plot_data(file_marker, DELTA_T):
     print("max: ", np.max(th_cum))
     print("min: ", np.min(th_cum))
     print("mean: ", np.mean(th_cum))
+
+    print("===== consume power =====")
+    print("power mean is ", np.mean(power))
 
 
 

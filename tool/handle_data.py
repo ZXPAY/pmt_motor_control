@@ -20,7 +20,7 @@ if __name__ == "__main__":
     ra = 7.29
     rb = 7.08
     para_index = {'title': 0, 'ia': 1, 'ib': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
-                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11, 's_cycles':12, 's_total':13, 'c_total':14}
+                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11, 's_cycles':12, 's_length':13, 'c_total':14}
 
     print("Handle data ...")
     f = open("data" + "/" + 'raw_data_' + file_marker + '.txt', "r")
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     pwma = np.zeros([data_length, 1], dtype=np.float32)
     pwmb = np.zeros([data_length, 1], dtype=np.float32)
     s_cycles = np.zeros([data_length, 1], dtype=np.float32)
-    s_total = np.zeros([data_length, 1], dtype=np.float32)
+    s_length = np.zeros([data_length, 1], dtype=np.float32)
     c_total = np.zeros([data_length, 1], dtype=np.float32)
     # Accumulate sele_dangle and cele_dangle
     sele_dangle_cum = np.zeros([data_length, 1], dtype=np.float32)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
             pwma[cnt] = float(data_list[para_index['pwma']])
             pwmb[cnt] = float(data_list[para_index['pwmb']])
             s_cycles[cnt] = float(data_list[para_index['s_cycles']])
-            s_total[cnt] = float(data_list[para_index['s_total']])
+            s_length[cnt] = float(data_list[para_index['s_length']])
             c_total[cnt] = float(data_list[para_index['c_total']])
             cnt += 1
         else:
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     save_data["pwmb"] = pwmb
     save_data["power"] = power
     save_data["s_cycles"] = s_cycles
-    save_data["s_total"] = s_total
+    save_data["s_length"] = s_length
     save_data["c_total"] = c_total
 
     print("Saving data to pickle file ...")

@@ -55,7 +55,6 @@ float get_step_caccum_length(step_caccumulator_t *c_accum);
     .delta_th = 0,                 \
     .th_init = 0,                  \
     .cycles = 0,                   \
-    .s_theta_total = 0,            \
     .s_length = 0.0,               \
     .k_theta2legnth = 0.0,         \
     }                              \
@@ -70,7 +69,6 @@ typedef struct _step_saccumulator {
     int32_t delta_th;              /* delta theta */
     int32_t th_init;               /* initial theta position */
     int32_t cycles;                /* rounds */
-    int32_t s_theta_total;         /* total command angle */
     float s_length;                /* total length */
     float k_theta2legnth;          /* theta to length gain */
 }step_saccumulator_t;

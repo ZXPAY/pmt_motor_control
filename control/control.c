@@ -56,6 +56,7 @@ void control_init(void) {
     for(int i=0;i<16;i++) {
         as5047d.update();    // update encoder angle to be first machanical angle
     }
+    set_saccum_th_init(&s_accum, as5047d.angle);
     init_sangle(&sangle, as5047d.angle);
     init_cangle(&cangle, N_STEP, 0);
 }
@@ -63,9 +64,9 @@ void control_init(void) {
 void control_print(void) {
     static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2, s_cycles, s_total, c_total */
-    RS485_trm(",%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%ld,%ld,%ld,\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+    RS485_trm(",%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,%ld,%.2f,%ld,\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2,
-                                                    s_accum.cycles, s_accum.s_theta_total, c_accum.c_theta_total);
+                                                    s_accum.cycles, s_accum.s_length, c_accum.c_theta_total);
     if(++prec_cnt == 5) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
         prec_cnt = 0;

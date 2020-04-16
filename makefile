@@ -10,9 +10,9 @@ UART_DMA = YES
 # Define the motor drive IC DRV8847 or DRV8847S
 CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
-CONTROL_DEF += ENABLE_EXI_ANGLE_I
+# CONTROL_DEF += ENABLE_EXI_ANGLE_I
 # Enable current PI controller
-CONTROL_DEF += ENABLE_CURRENT_PI
+# CONTROL_DEF += ENABLE_CURRENT_PI
 
 ### Source files and search directories
 CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c control.c freqdiv.c
