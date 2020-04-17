@@ -37,7 +37,7 @@
 #include "tick.h"
 #include "rs485.h"
 
-#define ADC_SAMPLE_NUM 1024
+#define ADC_SAMPLE_NUM 2048
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
@@ -106,25 +106,29 @@ int main (void) {
     full_step();
     while (true) {
         if(flag) {
-            stop_step();
             DISABLE_TEST1();
             angle = as5047d.instance->read_anglecom();
             for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) {
                 RS485_trm(",%d,%d,%d,%d,\r\n", i, buff_adc[i], angle, tog_fg);
             }
             cnt++;
-            if(cnt == 200) {
+            if(cnt == 201) {
                 RS485_trm("Full step done !!!\r\n");
                 while(1);
             }
             sample_n = 0;
             flag = 0;
             tog_fg ^= 1;
+            stop_step();
             ENABLE_TEST1();
             ENABLE_ADC_PHAB_INT();
             adc_trig();
             full_step();
         }
+        // stop_step();
+        // hal_delay(1);
+        // full_step();
+        // hal_delay(100);
     }
 
 
