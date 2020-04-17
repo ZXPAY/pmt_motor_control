@@ -128,6 +128,7 @@
 #define PIN_SCL                19
 
 #define ENABLE_ADC_PHAB_INT()  __enable_irqn(ADC0_IRQn);
+#define DISABLE_ADC_PHAB_INT() __disable_irqn(ADC0_IRQn);
 #define ADC_PHAB_Handler       ADC0_IRQHandler
 
 /**

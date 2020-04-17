@@ -6,7 +6,7 @@ CPU      = cortex-m4
 PLATFORM = MKV30F128
 DEVICE = MKV30F128XXX10
 THUMB    = YES
-UART_DMA = YES
+UART_DMA = NO
 # Define the motor drive IC DRV8847 or DRV8847S
 CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
@@ -19,11 +19,12 @@ CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c si
 HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c dma_uart.c
 HAL_CSRC	= hal_as5047d.c hal_drv8847.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
-CSRC   += main.c
+# CSRC   += main.c
 # CSRC   += test_encoder.c
 # CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
+CSRC   += test_step_res.c
 ASRC	= fpu.S
 CSRCARM	=
 ASRCARM	=
@@ -258,10 +259,18 @@ clt:
 
 # Collect encoder test data and handle it
 clt_enc:
-	@echo start collect encoder value
+	@echo start collect encoder data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 5
-	@echo Handle collect data
+	@echo Handle encoder data
 	@python ./tool/handle_enc.py -mk $(mk) -len $(len)
+	@echo Done !
+
+# Collect step response data
+clt_step_res:
+	@echo start collect step response data
+	@python ./tool/rec_data.py -p $(p) -sz 204800 -mk step_res -len 6
+	@echo Handle step response data
+	@python ./tool/handle_step_rec.py -mk step_res -len 6
 	@echo Done !
 
 # Collect data help
