@@ -37,7 +37,7 @@
 #include "tick.h"
 #include "rs485.h"
 
-#define ADC_SAMPLE_NUM 2048
+#define ADC_SAMPLE_NUM 1024
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
@@ -73,7 +73,7 @@ int main (void) {
     PORT_PHA->PCR[PIN_PHA] &= ~PORT_PCR_MUX_MASK;
     PORT_PHB->PCR[PIN_PHB] &= ~PORT_PCR_MUX_MASK;
     ADC_PHAB->CFG1 = ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(0);  // 16 bit
-    ADC_PHAB->SC3 = ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(0);
+    ADC_PHAB->SC3 = ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(1);
     ADC_PHAB->CFG2 = ADC_CFG2_ADHSC_MASK;
 
     drv8847.init();
@@ -81,6 +81,16 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
+
+    /* enable clock source */
+    SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
+    /* enable, and do not stop in DEBUG mode */
+    PIT->MCR = 0;
+
+    /* 250k ADC */
+    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 250000;
+    /* enable PIT1 timer and enable interrupt */
+    PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 
     SET_1A_DUTY = 0;
     SET_1A_DUTY = PERIOD_COUNT;
@@ -96,16 +106,20 @@ int main (void) {
     for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) buff_adc[i] = 0;
 
     RS485_trm("start step response %lx, %lx\r\n", ADC_PHAB->CFG1, ADC_PHAB->CFG2);
-    hal_delay(100);
+    SET_PHASEA_DUTY(0);
+    hal_delay(1000);
     __set_irqn_priority(ADC0_IRQn, 1);
     ENABLE_ADC_PHAB_INT();
-
+    stop_step();
+    hal_delay(1000);
     uint16_t angle, cnt = 0;
     ENABLE_TEST1();
-    adc_trig();
+    __enable_irqn(PIT0_IRQn);
     full_step();
+
     while (true) {
         if(flag) {
+            stop_step();
             DISABLE_TEST1();
             angle = as5047d.instance->read_anglecom();
             for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) {
@@ -116,13 +130,13 @@ int main (void) {
                 RS485_trm("Full step done !!!\r\n");
                 while(1);
             }
+
             sample_n = 0;
             flag = 0;
             tog_fg ^= 1;
-            stop_step();
             ENABLE_TEST1();
             ENABLE_ADC_PHAB_INT();
-            adc_trig();
+            __enable_irqn(PIT0_IRQn);
             full_step();
         }
         // stop_step();
@@ -187,11 +201,17 @@ void full_step(void) {
 void handle_response(void) {
     buff_adc[sample_n++] =  ADC_PHA->R[0];
     if(sample_n == ADC_SAMPLE_NUM) {
-        DISABLE_ADC_PHAB_INT();
         flag = 1;
+        __disable_irqn(PIT0_IRQn);
+        DISABLE_ADC_PHAB_INT();
         return;
     }
-    adc_trig();
 }
 
+void PIT0_IRQHandler(void) {
+    if(!flag) {
+        adc_trig();
+    }
 
+    PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
+}

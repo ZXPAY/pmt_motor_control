@@ -268,9 +268,9 @@ clt_enc:
 # Collect step response data
 clt_step_res:
 	@echo start collect step response data
-	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk step_res -len 6
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk step_res1 -len 6
 	@echo Handle step response data
-	@python ./tool/handle_step_rec.py -mk step_res -len 6
+	@python ./tool/handle_step_rec.py -mk step_res1 -len 6
 	@echo Done !
 
 # Collect data help

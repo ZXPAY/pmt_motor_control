@@ -40,11 +40,13 @@ extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 freq_div_t freq_div_pwmA;
 freq_div_t freq_div_pwmB;
 
-#define DUTY0
-#define DUTY25
-#define DUTY50
-#define DUTY75
-#define DUTY100
+#define NO_OUTPUT
+#define CALIBRATE
+// #define DUTY0
+// #define DUTY25
+// #define DUTY50
+// #define DUTY75
+// #define DUTY100
 
 /* Main code */
 int main (void) {
@@ -63,14 +65,20 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    // drv8847.setMode(DRV8847_MODE_SLEEP);
-
+#ifdef NO_OUTPUT
+    drv8847.setMode(DRV8847_MODE_SLEEP);
+#endif
     /* Initialize freqency divider */
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
     freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 0);
     freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 10);
-
+#ifdef NO_OUTPUT
+    SET_1A_DUTY = 0;
+    SET_1B_DUTY = PERIOD_COUNT;
+    SET_2B_DUTY = 0;
+    SET_2A_DUTY = PERIOD_COUNT;
+#endif
     hal_delay(100);
     RS485_trm("start \r\n");
     ENABLE_PHA_INT();
@@ -82,7 +90,8 @@ int main (void) {
             SET_PHASEA_DUTY(0);
             SET_PHASEB_DUTY(0);
             hal_delay(100);
-            RS485_trm(", 0, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            // RS485_trm(", 0, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
+            RS485_trm(", 0, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0), (3.3*(float)drv8847.drv->v_r2/65535.0));
             hal_delay(1000);
         #endif
 
@@ -121,7 +130,18 @@ int main (void) {
             RS485_trm(", 100, %.4f, %.4f, \r\n", (3.3*(float)drv8847.drv->v_r1/65535.0-1.65)/20/0.1, (3.3*(float)drv8847.drv->v_r2/65535.0-1.65)/20/0.1);
             hal_delay(1000);
         #endif
-
+        #ifdef CALIBRATE
+            float suma = 0, sumb = 0;
+            for(uint16_t i=0;i<10000;i++) {
+                suma += (3.3*(float)drv8847.drv->v_r1/65535.0);
+                sumb += (3.3*(float)drv8847.drv->v_r2/65535.0);
+                hal_delay(1);
+            }
+            suma /= 10000;
+            sumb /= 10000;
+            RS485_trm(", cal, %.4f, %.4f, \r\n", suma, sumb);
+            hal_delay(1000);
+        #endif
     }
 
 
