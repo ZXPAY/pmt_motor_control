@@ -42,7 +42,7 @@ freq_div_t freq_div_pwmB;
 
 #define NO_OUTPUT
 #define CALIBRATE
-// #define DUTY0
+#define DUTY0
 // #define DUTY25
 // #define DUTY50
 // #define DUTY75

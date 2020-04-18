@@ -37,7 +37,7 @@
 #include "tick.h"
 #include "rs485.h"
 
-#define ADC_SAMPLE_NUM 1024
+#define ADC_SAMPLE_NUM 512
 
 extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
@@ -74,7 +74,6 @@ int main (void) {
     PORT_PHB->PCR[PIN_PHB] &= ~PORT_PCR_MUX_MASK;
     ADC_PHAB->CFG1 = ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(0);  // 16 bit
     ADC_PHAB->SC3 = ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(1);
-    ADC_PHAB->CFG2 = ADC_CFG2_ADHSC_MASK;
 
     drv8847.init();
     if(drv8847.status == I2C_STATUS_TIMEOUT) {
@@ -87,8 +86,8 @@ int main (void) {
     /* enable, and do not stop in DEBUG mode */
     PIT->MCR = 0;
 
-    /* 250k ADC */
-    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 250000;
+    /* 100k ADC */
+    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 100000;
     /* enable PIT1 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 

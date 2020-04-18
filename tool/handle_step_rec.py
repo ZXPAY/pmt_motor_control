@@ -5,18 +5,16 @@ import matplotlib.pyplot as plt
 import argparse
 
 if __name__ == "__main__":
-    step_data = 1024
-    delat_t = 4*10e-6
+    step_data = 512
+    delat_t = 1/(100000)
     now = datetime.now()
     default_file_marker = now.strftime("%m_%d_%H_%M_%S")
-    default_len = 13
     parser = argparse.ArgumentParser()
     parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
-    parser.add_argument("-len", "--length", help="Comma \",\" split length, example \"1,2,3\" is three", default=default_len, type=int)
     args = parser.parse_args()
 
     file_marker = args.marker
-    length = args.length
+    factor_length = 6
     para_index = {'title': 0, 'index':1, 'adc':2, 'angle':3}
 
     print("Handle data ...")
@@ -43,7 +41,7 @@ if __name__ == "__main__":
 
     for data in raw_data:
         data_list = data.split(',')
-        if len(data_list) == length:
+        if len(data_list) == factor_length:
             temp_adc = float(data_list[para_index['adc']])
             temp_angle = float(data_list[para_index['angle']])
             raw_adc[cnt, 0] = temp_adc
@@ -82,7 +80,7 @@ if __name__ == "__main__":
     # print("min value: ", np.min(ia))
 
     test_all = np.zeros([step_data-1, 2], dtype=np.float32)
-    test = (3.3 * raw_adc[0:step_data, 0] / 65535.0 - 1.65 - 0.026) / 20 / 0.1
+    test = (3.3 * raw_adc[0:step_data, 0] / 65535.0 - 1.65) / 20 / 0.1
     for i in range(1, test.shape[0]):
         test_all[i-1, 0] = (test[i] - test[i-1]) / delat_t
         test_all[i-1, 1] = test[i-1]
