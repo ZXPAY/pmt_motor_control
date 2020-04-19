@@ -85,6 +85,9 @@
 #define ENABLE_PHB_INT()       __enable_irqn(FTM0_IRQn);
 #define DISABLE_PHB_INT()      __disable_irqn(FTM0_IRQn);
 
+#define FTM_1A1B_Handler       FTM1_IRQHandler
+#define FTM_2A2B_Handler       FTM0_IRQHandler
+
 #define GPIO_MODE              GPIOE
 #define PORT_MODE              PORTE
 #define PIN_MODE               18

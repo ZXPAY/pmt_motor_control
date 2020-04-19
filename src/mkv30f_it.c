@@ -6,9 +6,6 @@
  *
  */
 
-#define FTM_1A1B_Handler         FTM1_IRQHandler
-#define FTM_2A2B_Handler         FTM0_IRQHandler
-
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "freqdiv.h"
@@ -19,7 +16,6 @@
 #include "rs485.h"
 
 extern drv8847_t drv8847;
-volatile uint8_t fff = 0;
 
 /**
 * @brief DRV8847 pin map

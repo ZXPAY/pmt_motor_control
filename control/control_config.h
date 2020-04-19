@@ -11,10 +11,10 @@
 #define CONTROL_CONFIG_H
 
 /* Define default N-step */
-#define N_STEP                    1
+#define N_STEP                    32
 
 /* Define parameters */
-#define EXC_KI                    0.002                                       /* 激磁角Ki回饋 */
+#define EXC_KI                    0.005                                       /* 激磁角Ki回饋 */
 #define SVPWM_LIMIT_UNIT          (1.0/N_STEP/EXC_KI)                         /* SVPWM超過sensor電子角正負90度修正 */
 #define I_SVPWM_LOW               -0.688                                      /* 電流下限 */
 #define I_SVPWM_HIGH              0.704                                       /* 電流上限 */

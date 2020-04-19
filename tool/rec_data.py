@@ -1,5 +1,6 @@
 import serial
 import os
+import sys
 import numpy as np
 from datetime import datetime
 from mypickle import save2pickle, load_pickle
@@ -38,10 +39,24 @@ if __name__ == "__main__":
     cnt = 0
     temp_str = ''
     ser.flush()
+    exit_fg = False
+    for _, __, fn in os.walk("./"+DATA_DIR):
+        if raw_data_file_name in fn:
+            exit_fg = True
+    if exit_fg == True:
+        print("Warning the file already exits !!!")
+        print("Overwrite ? (Y/N)")
+        yes_no = input()
+        if yes_no.lower() == "y" or yes_no.lower() == "yes":
+            # Erase
+            f = open(DATA_DIR + "/" + raw_data_file_name, "w")
+            f.close()
+        else:
+            sys.exit()
+    else:
+        f = open(DATA_DIR + "/" + raw_data_file_name, "w")
+        f.close()
 
-    # Erase
-    f = open(DATA_DIR + "/" + raw_data_file_name, "w")
-    f.close()
     # Open
     f = open(DATA_DIR + "/" + raw_data_file_name, "ab")
     while cnt < (GRAB_DATA_SIZE):

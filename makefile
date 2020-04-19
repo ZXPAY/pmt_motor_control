@@ -6,11 +6,11 @@ CPU      = cortex-m4
 PLATFORM = MKV30F128
 DEVICE = MKV30F128XXX10
 THUMB    = YES
-UART_DMA = NO
+UART_DMA = YES
 # Define the motor drive IC DRV8847 or DRV8847S
 CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
-# CONTROL_DEF += ENABLE_EXI_ANGLE_I
+CONTROL_DEF += ENABLE_EXI_ANGLE_I
 # Enable current PI controller
 # CONTROL_DEF += ENABLE_CURRENT_PI
 
@@ -252,7 +252,8 @@ clt_raw:
 # Collect data and handle it
 clt:
 	@echo start collect data
-	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 13
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 16
+hdl:
 	@echo Handle collect data
 	@python ./tool/handle_data.py -mk $(mk)
 	@echo Done !
@@ -261,6 +262,7 @@ clt:
 clt_enc:
 	@echo start collect encoder data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 5
+hdl_enc:
 	@echo Handle encoder data
 	@python ./tool/handle_enc.py -mk $(mk) -len $(len)
 	@echo Done !
@@ -269,6 +271,7 @@ clt_enc:
 clt_step_res:
 	@echo start collect step response data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk step_res1 -len 6
+hdl_step_res:
 	@echo Handle step response data
 	@python ./tool/handle_step_rec.py -mk step_res1 -len 6
 	@echo Done !
