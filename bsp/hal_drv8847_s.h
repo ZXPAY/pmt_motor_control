@@ -1,5 +1,5 @@
 /**
- * @file hal_drv8847.h
+ * @file hal_drv8847_s.h
  * @author Xiang-Guan Deng
  * @brief DRV8847(S) HAL
  * @date 2020.xx.xx
@@ -8,12 +8,12 @@
  * ADC conversion time : 6.8 us
  */
 
-#ifndef HAL_DRV8847_H
-#define HAL_DRV8847_H
+#ifndef HAL_DRV8847_S_H
+#define HAL_DRV8847_S_H
 #include <stdint.h>
 
 /* ADC parameters */
-#define R_SENSE                   0.15
+#define R_SENSE                   0.1
 #define ADC_RES                   65535
 #define ADC_REF                   3.3
 
@@ -56,7 +56,7 @@ typedef struct _drv8847_io {
     void (*handle)(void);
 }drv8847_io_t;
 
-typedef struct _a4988 {
+typedef struct _drv8847_s {
     drv8847_io_t *drv;
     float i1;
     float i2;
@@ -67,6 +67,6 @@ typedef struct _a4988 {
     void (*adc_trig1A1B)(void);
     void (*adc_trig2A2B)(void);
     void (*update_current)(void);
-}drv8847_t;
+}drv8847_s_t;
 
-#endif /* HAL_DRV8847_H */
+#endif /* HAL_DRV8847_S_H */

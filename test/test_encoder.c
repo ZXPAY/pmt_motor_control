@@ -32,11 +32,11 @@
 /* Include board support package */
 #include "control_board.h"
 #include "hal_as5047d.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "tick.h"
 #include "rs485.h"
 
-extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
+extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 freq_div_t freq_div_pwmA;
@@ -54,18 +54,18 @@ int main (void) {
     enable_fpu();
     enable_tick();
 
-    drv8847.init();
-    if(drv8847.status == I2C_STATUS_TIMEOUT) {
+    drv8847_s.init();
+    if(drv8847_s.status == I2C_STATUS_TIMEOUT) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    drv8847.setMode(DRV8847_MODE_SLEEP);
+    drv8847_s.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize freqency divider */
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
-    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847.adc_trig1A1B, NULL, 0);
-    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847.adc_trig2A2B, NULL, 10);
+    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847_s.adc_trig1A1B, NULL, 0);
+    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847_s.adc_trig2A2B, NULL, 10);
 
     hal_delay(100);
     RS485_trm("start \r\n");

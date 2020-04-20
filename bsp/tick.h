@@ -1,3 +1,12 @@
+/**
+ * @file tick.h
+ * @author Xiang-Guan Deng
+ * @brief tick, timeout implement file
+ * @date 2020.xx.xx
+ *
+ * It's hardware depentdent. User should implement these function
+ */
+
 #ifndef TICK_H
 #define TICK_H
 

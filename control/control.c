@@ -3,7 +3,7 @@
 /* Include BSP, it't hardware dependent */
 #include "rs485.h"
 #include "hal_as5047d.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "control_board.h"
 
 /* Include hal delay library */
@@ -23,7 +23,7 @@
 #include "cortex_m4.h"
 
 extern as50474_t as5047d;               /* AS5047D motor encoder IC */
-extern drv8847_t drv8847;               /* DRV8847 motor drive IC */
+extern drv8847_s_t drv8847_s;               /* DRV8847 motor drive IC */
 
 /* Define stepper motor control object */
 sangle_t sangle;                         /* 感測角 */
@@ -64,7 +64,7 @@ void control_init(void) {
 void control_print(void) {
     static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2, s_cycles, s_total, c_total */
-    RS485_trm(",%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+    RS485_trm(",%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
     if(++prec_cnt == 5) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));

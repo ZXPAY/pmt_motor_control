@@ -1,6 +1,6 @@
-#include "hal_drv8847.h"
-#define NOP_DELAY(void)  for(uint32_t i=0;i<STEP_PULSE_COUNT;i++) __asm("nop")
+#include "hal_drv8847_s.h"
 
+#define NOP_DELAY(void)  for(uint32_t i=0;i<STEP_PULSE_COUNT;i++) __asm("nop")
 #define ADC_VALUE_TO_CURRENT      ADC_REF/ADC_RES/R_SENSE
 
 extern drv8847_io_t drv8847_dri;
@@ -12,7 +12,7 @@ static void drv8847_adc_trig1A1B(void);
 static void drv8847_adc_trig2A2B(void);
 static void drv8847_update_current(void);
 
-drv8847_t drv8847 = {                              \
+drv8847_s_t drv8847_s = {                            \
     .drv = &drv8847_dri,                           \
     .i1 = 0.0,                                     \
     .i2 = 0.0,                                     \
@@ -41,13 +41,13 @@ static void drv8847_setMode(uint8_t mode) {
             drv8847_dri.sleep_high();
             break;
     }
-    drv8847.status = drv8847.drv->status;
+    drv8847_s.status = drv8847_s.drv->status;
 }
 
 static void drv8847_init(void) {
-    drv8847.setMode(DRV8847_MODE_OPERATION);
-    drv8847.setMode(DRV8847_MODE_FOUR_PIN);
-    drv8847.setTorque(DRV8847_TRQ_FULL);
+    drv8847_s.setMode(DRV8847_MODE_OPERATION);
+    drv8847_s.setMode(DRV8847_MODE_FOUR_PIN);
+    drv8847_s.setTorque(DRV8847_TRQ_FULL);
 }
 
 static void drv8847_setTorque(uint8_t trq) {
@@ -59,19 +59,18 @@ static void drv8847_setTorque(uint8_t trq) {
             drv8847_dri.trq_full();
             break;
     }
-    drv8847.status = drv8847.drv->status;
+    drv8847_s.status = drv8847_s.drv->status;
 }
 
-#include "rs485.h"
 static void drv8847_adc_trig1A1B(void) {
-    drv8847.drv->mcu_trig1A1B();
+    drv8847_s.drv->mcu_trig1A1B();
 }
 
 static void drv8847_adc_trig2A2B(void) {
-    drv8847.drv->mcu_trig2A2B();
+    drv8847_s.drv->mcu_trig2A2B();
 }
 
 static void drv8847_update_current(void) {
-    drv8847.i1 = drv8847.drv->v_r1*ADC_VALUE_TO_CURRENT;
-    drv8847.i2 = drv8847.drv->v_r2*ADC_VALUE_TO_CURRENT;
+    drv8847_s.i1 = drv8847_s.drv->v_r1*ADC_VALUE_TO_CURRENT;
+    drv8847_s.i2 = drv8847_s.drv->v_r2*ADC_VALUE_TO_CURRENT;
 }

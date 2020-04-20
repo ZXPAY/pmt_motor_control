@@ -11,7 +11,6 @@ void inc_tick(void);
 void hal_delay(uint32_t delay_ms);
 uint32_t get_tick(void);
 
-
 /* timeout */
 void timeout_set_ms(uint16_t _out);
 uint8_t is_timeout(void);

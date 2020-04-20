@@ -29,13 +29,13 @@
 /* Include board support package */
 #include "control_board.h"
 #include "hal_as5047d.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "tick.h"
 #include "rs485.h"
 
 #include "freqdiv.h"
 
-extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
+extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 /* not use these object */

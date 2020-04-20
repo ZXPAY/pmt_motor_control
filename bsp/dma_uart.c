@@ -1,3 +1,12 @@
+/**
+ * @file dma_uart.c
+ * @author Xiang-Guan Deng
+ * @brief MKV30F128 MCU DMA implement file
+ * @date 2020.xx.xx
+ *
+ * If you want to use uart dma function, you need to define USE_UART_DMA in makefile
+ */
+
 #include <stdint.h>
 #include "control_board.h"
 #include "rs485.h"

@@ -4,6 +4,7 @@
  * @brief Hardware setting
  * @date 2020.xx.xx
  *
+ * BSP header file, define the hardware initialize and implement
  */
 
 #ifndef CONTROL_BOARD_H
@@ -14,6 +15,10 @@
 
 /* Define system clock freqency */
 #define SYS_CLOCK_FREQ         (72000000UL)
+
+/* Define enable/disable hardware fault interrupt methods */
+#define ENABLE_HARDWARE_INT()    __enable_irqn(HardFault_IRQn)
+#define DISABLE_HARDWARE_INT()   __disable_irqn(HardFault_IRQn)
 
 /* MUX alternative function */
 #define MUX_ALT_0              0
@@ -186,8 +191,10 @@
 #define PIN_RX1               17
 
 #define ENABLE_RS485_INT()    __enable_irqn(UART1_RX_TX_IRQn)
+#define DISABLE_RS485_INT()   __disable_irqn(UART1_RX_TX_IRQn)
 #define RS485_INT_HANDLER     UART1_RX_TX_IRQHandler
-#define ENABLE_DMA_INT()      __enable_irqn(DMA0_IRQn);
+#define ENABLE_DMA_INT()      __enable_irqn(DMA0_IRQn)
+#define DISABLE_DMA_INT()      __disable_irqn(DMA0_IRQn)
 
 #define SEND_BUFF_SIZE        128
 
@@ -216,6 +223,8 @@
  */
 #define PERIOD_PRINT_FREQ     100
 #define ENABLE_PRINT_INT()    __enable_irqn(PIT1_IRQn)
+#define DISABLE_PRINT_INT()   __disable_irqn(PIT1_IRQn)
+#define PRINT_IRQHandler      PIT1_IRQHandler
 
 /* initialize motor control IC */
 void init_hw_drv8847_s(void);

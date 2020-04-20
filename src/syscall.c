@@ -1,3 +1,11 @@
+/**
+ * @file syscall.c
+ * @author Xiang-Guan Deng
+ * @brief implment , overwrite the printf, scanf method
+ * @date 2020.xx.xx
+ *
+ * If not use UART DMA, "printf" will call these function, it will increase CPU load
+ */
 #include "uart.h"
 
 #ifndef USE_UART_DMA

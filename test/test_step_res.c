@@ -33,13 +33,13 @@
 /* Include board support package */
 #include "control_board.h"
 #include "hal_as5047d.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "tick.h"
 #include "rs485.h"
 
 #define ADC_SAMPLE_NUM 512
 
-extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
+extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 /* Not used */
@@ -75,8 +75,8 @@ int main (void) {
     ADC_PHAB->CFG1 = ADC_CFG1_MODE(3) | ADC_CFG1_ADIV(0);  // 16 bit
     ADC_PHAB->SC3 = ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(1);
 
-    drv8847.init();
-    if(drv8847.status == I2C_STATUS_TIMEOUT) {
+    drv8847_s.init();
+    if(drv8847_s.status == I2C_STATUS_TIMEOUT) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
@@ -99,7 +99,7 @@ int main (void) {
     hal_delay(100);
 
     /* Replace the default ADC handler */
-    drv8847.drv->handle = handle_response;
+    drv8847_s.drv->handle = handle_response;
 
     /* Initialize adc buff */
     for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) buff_adc[i] = 0;

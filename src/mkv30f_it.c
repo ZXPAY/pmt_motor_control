@@ -4,18 +4,19 @@
  * @brief Interrupt file
  * @date 2020.xx.xx
  *
+ * Define and handle interrupt that happens
  */
 
 #include "MKV30F12810.h"                // NXP::Device:Startup:MKV30F12810_startup
 #include "MKV30F12810_features.h"       // NXP::Device:Startup:MKV30F12810_startup
 #include "freqdiv.h"
 #include "cortex_m4.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "control_board.h"
 #include "uart.h"
 #include "rs485.h"
 
-extern drv8847_t drv8847;
+extern drv8847_s_t drv8847_s;
 
 /**
 * @brief DRV8847 pin map
@@ -30,6 +31,7 @@ extern drv8847_t drv8847;
 * Rsense1 : PTE24
 * Rsense2 : ADC0_SE23
 */
+
 /* Freuqncy divide object */
 freq_div_t freq_div_pwmA = {.reg_num = 0};
 freq_div_t freq_div_pwmB = {.reg_num = 0};
@@ -84,7 +86,7 @@ void RS485_INT_HANDLER(void) {
  * @brief ADC conversion complete handler
  */
 void ADC0_IRQHandler(void) {
-    drv8847.drv->handle();
+    drv8847_s.drv->handle();
 }
 
 /**

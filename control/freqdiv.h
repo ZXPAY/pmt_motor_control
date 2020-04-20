@@ -5,6 +5,7 @@
  * @date 2020.xx.xx
  *
  * 除頻功能方塊，將PWM除頻後執行
+ * Frequency divide function
  */
 #ifndef FREQ_DIV_H
 #define FREQ_DIV_H

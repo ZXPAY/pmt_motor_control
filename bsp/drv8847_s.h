@@ -4,6 +4,7 @@
  * @brief drv8847s i2c address, register definition
  * @date 2020.xx.xx
  *
+ * TI H-bridge drv8847s IC, I2C address define
  */
 
 #ifndef DRV8847_S_H

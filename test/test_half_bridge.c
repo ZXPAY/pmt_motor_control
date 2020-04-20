@@ -27,10 +27,10 @@
 /* Include board support package */
 #include "control_board.h"
 #include "hal_as5047d.h"
-#include "hal_drv8847.h"
+#include "hal_drv8847_s.h"
 #include "rs485.h"
 
-extern drv8847_t drv8847;        /* DRV8847 motor drive IC */
+extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 /* Include control library */
@@ -68,7 +68,7 @@ int main (void) {
 
     RS485_trm("initialize \n");
     as5047d.init();
-    drv8847.init();
+    drv8847_s.init();
 
     /* Initialize sin, cos table, call get_sin() and get_cos() to get current value */
     /* Use in test */
@@ -114,18 +114,18 @@ int main (void) {
     uint32_t cnt = 0;
     while (true) {
         /* This will consume a lot of time */
-        // drv8847.update_current();
+        // drv8847_s.update_current();
 
         /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
         if(cnt %1000 == 0) {
             pit_flag = PIT_BUSY;
-            RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847.drv->v_r1, drv8847.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+            RS485_trm(", %d, %d, %d, %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %ld, %ld, \n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
             pit_flag = PIT_OK;
         }
 
-        // RS485_trm("%.2f, %.2f\n", drv8847.drv->v_r1*3.3/65535/0.15*1000, drv8847.drv->v_r2*3.3/65535/0.15*1000);
-        // RS485_trm("%x\n", drv8847.drv->i2c_read(0));
+        // RS485_trm("%.2f, %.2f\n", drv8847_s.drv->v_r1*3.3/65535/0.15*1000, drv8847_s.drv->v_r2*3.3/65535/0.15*1000);
+        // RS485_trm("%x\n", drv8847_s.drv->i2c_read(0));
         if(cnt % 300 == 0) update_cangle(&cangle, get_cangle_inc(&adj_v));
 
         cnt++;

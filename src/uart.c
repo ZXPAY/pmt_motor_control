@@ -1,10 +1,3 @@
-/**
- * @file uart.c
- * @author Deng Xiang-Guan
- * @date 2020.XX.XX
- * @brief RS485 uart operation functions
- */
-
 #include "uart.h"
 #include "control_board.h"
 

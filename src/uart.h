@@ -1,8 +1,8 @@
 /**
  * @file uart.h
- * @author LiYu87
- * @date 2020.01.07
- * @brief uart3 operaction functions.
+ * @author Deng Xiang-Guan
+ * @date 2020.XX.XX
+ * @brief RS485 uart operation functions
  */
 
 #ifndef UART_H
@@ -14,4 +14,4 @@ void uart_init(void);
 void uart_putc(uint8_t data);
 uint8_t uart_getc(void);
 
-#endif  // UART_H
+#endif /* UART_H */

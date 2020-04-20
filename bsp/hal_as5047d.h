@@ -4,7 +4,7 @@
  * @brief AS5047D HAL
  * @date 2020.xx.xx
  *
- * AS5047D HAL
+ * AS5047D IC HAL
  * Encoder resolution : 16 bits
  */
 
