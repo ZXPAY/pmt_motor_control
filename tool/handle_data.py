@@ -117,6 +117,7 @@ if __name__ == "__main__":
 
     sangle_cum = 16383 - angle
     sangle_cum = sangle_cum - sangle_cum[0]
+    cangle_cum = cangle_cum - cangle_cum[0]
     g = 16384 / sangle_cum.shape[0]
     threshold = g
     for i in range(sangle_cum.shape[0]):
