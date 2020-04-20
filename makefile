@@ -12,7 +12,7 @@ CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
 CONTROL_DEF += ENABLE_EXI_ANGLE_I
 # Enable current PI controller
-# CONTROL_DEF += ENABLE_CURRENT_PI
+CONTROL_DEF += ENABLE_CURRENT_PI
 
 ### Source files and search directories
 CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c control.c freqdiv.c
@@ -252,10 +252,10 @@ clt_raw:
 # Collect data and handle it
 clt:
 	@echo start collect data
-	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 16
+	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 13
 hdl:
 	@echo Handle collect data
-	@python ./tool/handle_data.py -mk $(mk)
+	@python ./tool/handle_data.py -mk $(mk) -len $(len)
 	@echo Done !
 
 # Collect encoder test data and handle it

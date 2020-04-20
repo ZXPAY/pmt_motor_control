@@ -7,9 +7,12 @@ import argparse
 if __name__ == "__main__":
     delat_t = 0.01
     now = datetime.now()
+    default_len = 13
     default_file_marker = now.strftime("%m_%d_%H_%M_%S")
     parser = argparse.ArgumentParser()
     parser.add_argument("-mk", "--marker", help="Enter the marker about file, it will add behine the file", default=default_file_marker, type=str)
+    parser.add_argument("-len", "--length", help="Comma \",\" split length, example \"1,2,3\" is three", default=default_len, type=int)
+
     args = parser.parse_args()
 
     file_marker = args.marker
@@ -19,8 +22,9 @@ if __name__ == "__main__":
     # define each phase resistor
     ra = 7.29
     rb = 7.08
+    COMMA_DATA_LEN = args.length
     para_index = {'title': 0, 'ia': 1, 'ib': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
-                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11, 's_cycles':12, 's_length':13, 'c_total':14}
+                    'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11}
 
     print("Handle data ...")
     f = open("data" + "/" + 'raw_data_' + file_marker + '.txt', "r")
@@ -42,12 +46,9 @@ if __name__ == "__main__":
     th_cum = np.zeros([data_length, 1], dtype=np.float32)
     pwma = np.zeros([data_length, 1], dtype=np.float32)
     pwmb = np.zeros([data_length, 1], dtype=np.float32)
-    s_cycles = np.zeros([data_length, 1], dtype=np.float32)
-    s_length = np.zeros([data_length, 1], dtype=np.float32)
-    c_total = np.zeros([data_length, 1], dtype=np.float32)
     # Accumulate sele_dangle and cele_dangle
-    sele_dangle_cum = np.zeros([data_length, 1], dtype=np.float32)
-    cele_dangle_cum = np.zeros([data_length, 1], dtype=np.float32)
+    sangle_cum = np.zeros([data_length, 1], dtype=np.float32)
+    cangle_cum = np.zeros([data_length, 1], dtype=np.float32)
     save_data = {}
 
     cnt = 0
@@ -55,11 +56,11 @@ if __name__ == "__main__":
     dc = 0
     dc_cnt = 0
     rpc_fg = 0
-    CONF_CNT = 20
+    CONF_CNT = 5
     a = []
     for data in raw_data:
         data_list = data.split(',')
-        if len(data_list) == 16:
+        if len(data_list) == COMMA_DATA_LEN:
             ia[cnt] = float(data_list[para_index['ia']])
             ib[cnt] = float(data_list[para_index['ib']])
             angle[cnt] = float(data_list[para_index['angle']])
@@ -67,7 +68,6 @@ if __name__ == "__main__":
             cele_dangle[cnt] = float(data_list[para_index['cele_dangle']])
             if cnt > 0:
                 dc = cele_dangle[cnt] - cele_dangle[cnt-1]
-                ds = sele_dangle[cnt] - sele_dangle[cnt-1]
             if abs(dc) > 180 and dc_cnt < CONF_CNT:
                 # boundary ripple
                 if rpc_fg == 0:
@@ -83,8 +83,7 @@ if __name__ == "__main__":
                 dc_cnt = 0
 
             dc_cnt += 1
-            sele_dangle_cum[cnt] = sele_dangle[cnt] + 360*c1
-            cele_dangle_cum[cnt] = cele_dangle[cnt] + 360*c1
+            cangle_cum[cnt] = cele_dangle[cnt] + 360*c1
             th_svpwm[cnt] = float(data_list[para_index['th_svpwm']])
             temp = th_svpwm[cnt] - cele_dangle[cnt]
             if temp > 180:
@@ -97,9 +96,6 @@ if __name__ == "__main__":
             th_cum[cnt] = float(data_list[para_index['th_cum']])
             pwma[cnt] = float(data_list[para_index['pwma']])
             pwmb[cnt] = float(data_list[para_index['pwmb']])
-            s_cycles[cnt] = float(data_list[para_index['s_cycles']])
-            s_length[cnt] = float(data_list[para_index['s_length']])
-            c_total[cnt] = float(data_list[para_index['c_total']])
             cnt += 1
         else:
             print("Warning !!! List size not match !!!, ", cnt)
@@ -117,13 +113,23 @@ if __name__ == "__main__":
     # Calculate the power
     power = (ia*ia*ra) + (ib*ib*rb)
 
+    import matplotlib.pyplot as plt
+
+    sangle_cum = 16383 - angle
+    sangle_cum = sangle_cum - sangle_cum[0]
+    g = 16384 / sangle_cum.shape[0]
+    threshold = g
+    for i in range(sangle_cum.shape[0]):
+        if abs(sangle_cum[i] - threshold*i) > 8000:
+            sangle_cum[i] += 16384
+
     save_data["ia"] = ia
     save_data["ib"] = ib
     save_data["angle"] = angle
     save_data["sele_dangle"] = sele_dangle
     save_data["cele_dangle"] = cele_dangle
-    save_data["sele_dangle_cum"] = sele_dangle_cum
-    save_data["cele_dangle_cum"] = cele_dangle_cum
+    save_data["sangle_cum"] = sangle_cum*360/16384
+    save_data["cangle_cum"] = cangle_cum*1.8/90
     save_data["th_svpwm"] = th_svpwm
     save_data["i_svpwm"] = i_svpwm
     save_data["th_svpwm"] = th_svpwm
@@ -133,9 +139,6 @@ if __name__ == "__main__":
     save_data["pwma"] = pwma
     save_data["pwmb"] = pwmb
     save_data["power"] = power
-    save_data["s_cycles"] = s_cycles
-    save_data["s_length"] = s_length
-    save_data["c_total"] = c_total
 
     print("Saving data to pickle file ...")
     save2pickle("data"+'/data_'+file_marker+'.pickle', save_data)
@@ -143,5 +146,3 @@ if __name__ == "__main__":
     print("Saving figure ...")
     plot_data(file_marker, delat_t)
 
-    # import matplotlib.pyplot as plt
-    # plt.show()
