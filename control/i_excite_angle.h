@@ -28,13 +28,13 @@ typedef struct _fb_exc_angle_ {
 }fb_exc_angle_t;
 
 /**
- * @brief TODO
+ * @brief Initialize excited angle parameters
  *
  */
 void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki);
 
 /**
- * @brief TODO
+ * @brief Calculate the theta svpwm to adjest step motor
  *
  */
 void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e_cdegree);
