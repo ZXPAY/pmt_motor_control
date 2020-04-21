@@ -25,6 +25,8 @@ typedef struct _fb_exc_angle_ {
     float th_er;
     float th_cum;
     float cum_limit;
+    float last_th;
+    float w;
 }fb_exc_angle_t;
 
 /**

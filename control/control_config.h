@@ -33,5 +33,8 @@
 /* Define maximum velocity */
 #define ADJ_MAX                   (N_STEP*2)                                   /* 最大調整正反轉步數 */
 
+/* Define the control frequency, and calculate omega(rad/s) gain */
+#define CONTROL_FREQ              (4000)
+#define DELTA_THETA_TO_OMEGA      (1.0/CONTROL_FREQ)*(1.8/90.0)
 
 #endif /* CONTROL_CONFIG_H */

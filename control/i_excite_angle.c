@@ -60,5 +60,14 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
 #else
     fb_exc_angle->th_esvpwm = e_cdegree;
 #endif
+    float delta_theta = e_sdegree - fb_exc_angle->last_th;
+    if(delta_theta > 180) {
+        delta_theta -=360;
+    }
+    else if(delta_theta < -180) {
+        delta_theta += 360;
+    }
+    fb_exc_angle->w = delta_theta * DELTA_THETA_TO_OMEGA;
 
+    fb_exc_angle->last_th = e_sdegree;
 }
