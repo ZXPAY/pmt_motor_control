@@ -4,10 +4,10 @@
 #define ENABLE_RS485_TRM()    GPIO_RS485_CTR->PSOR |= (1<<PIN_RS485_CTR)
 #define DISABLE_RS485_TRM()   GPIO_RS485_CTR->PCOR |= (1<<PIN_RS485_CTR)
 
-extern char send_buf[SEND_BUFF_SIZE];
-
 /* RS485 transmit macro */
 #ifdef USE_UART_DMA
+
+extern char send_buf[SEND_BUFF_SIZE];
 
 #define DMA_IDLE                       1
 #define DMA_BUZY                       2

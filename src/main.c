@@ -61,7 +61,7 @@ int main (void) {
     /* Initialize control library */
     control_init();
 
-    /* Initialize freqency divider */
+    /* Initialize frequency divider */
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
     freq_div_add(&freq_div_pwmA, 10, (void *)control_handle, NULL, 0);

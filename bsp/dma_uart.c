@@ -12,6 +12,7 @@
 #include "rs485.h"
 
 #ifdef USE_UART_DMA
+
 char send_buf[SEND_BUFF_SIZE];
 static volatile uint8_t dma_fg = DMA_IDLE;
 static volatile uint8_t dma_er = DMA_IDLE;
