@@ -77,7 +77,7 @@ void control_handle(void) {
     update_sangle(&sangle, as5047d.angle);  /* about 3.825 us */
     cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);  /* about 3.225 us */
     cal_current_correct(&fb_exc_angle, &fb_current); /* about 5.25 us */
-    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);   /* about 16.32 us */
+    cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);   /* about 26.32 us */
 
     /* update duty cycle */
     /* 0 => 1A is high, 1B is low */

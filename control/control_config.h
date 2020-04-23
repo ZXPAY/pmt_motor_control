@@ -21,8 +21,8 @@
 #define I_SVPWM_MEAN              ((-I_SVPWM_LOW + I_SVPWM_HIGH) * 0.5)       /* 電流平均值 */
 #define I_SVPWM_ZERO              ((I_SVPWM_LOW + I_SVPWM_HIGH) * 0.5)        /* 電流中心點 */
 #define I_SVPWM_EXI_BASE          (I_SVPWM_ZERO + 0.05)                       /* 激發電流最小值 */
-#define I_SVPWM_KP                (I_SVPWM_MEAN / N_STEP * 5)               /* 電流Kp回饋  */
-#define I_SVPWM_KI                (I_SVPWM_MEAN / (90.0/EXC_KI) * 0.1)        /* 電流Ki回饋 */
+#define I_SVPWM_KP                (I_SVPWM_MEAN / (90.0/N_STEP) * 1.2)        /* 電流Kp回饋 */
+#define I_SVPWM_KI                (I_SVPWM_MEAN / (80.0/EXC_KI) * 1)          /* 電流Ki回饋，超過修正80度電流全開 */
 #define STEP_C_THETA_TO_LENGTH    1.0                                         /* 命令微步累加器角度轉換成長度增益 */
 #define STEP_S_THETA_TO_LENGTH    1.0                                         /* 感測微步累加器角度轉換成長度增益 */
 
