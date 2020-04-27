@@ -14,48 +14,85 @@
 #define NVIC_STIR                (*(volatile uint32_t *)0xE000EF00)
 
 /* Cortex-M4 SCB */
-#define SCB_CPUID               (*(volatile uint32_t *)0xE000ED00)  /*!< Offset: 0x000 (R/ )  CPUID Base Register                                   */
-#define SCB_ICSR                (*(volatile uint32_t *)0xE000ED04)  /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register                  */
-#define SCB_VTOR                (*(volatile uint32_t *)0xE000ED08)  /*!< Offset: 0x008 (R/W)  Vector Table Offset Register                          */
-#define SCB_AIRCR               (*(volatile uint32_t *)0xE000ED0C)  /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register      */
-#define SCB_SCR                 (*(volatile uint32_t *)0xE000ED10)  /*!< Offset: 0x010 (R/W)  System Control Register                               */
-#define SCB_CCR                 (*(volatile uint32_t *)0xE000ED14)  /*!< Offset: 0x014 (R/W)  Configuration Control Register                        */
-#define SCB_SHPR                ( (volatile uint8_t *)0xE000ED18)   /*!< Offset: 0x018 (R/W)  System Handlers Priority Registers (4-7, 8-11, 12-15) */
-#define SCB_SHCSR               (*(volatile uint32_t *)0xE000ED28)  /*!< Offset: 0x024 (R/W)  System Handler Control and State Register             */
-#define SCB_CFSR                (*(volatile uint32_t *)0xE000ED28)  /*!< Offset: 0x028 (R/W)  Configurable Fault Status Register                    */
-#define SCB_HFSR                (*(volatile uint32_t *)0xE000ED2C)  /*!< Offset: 0x02C (R/W)  HardFault Status Register   `                         */
-#define SCB_DFSR                (*(volatile uint32_t *)0xE000ED30)  /*!< Offset: 0x030 (R/W)  Debug Fault Status Register                           */
-#define SCB_MMFAR               (*(volatile uint32_t *)0xE000ED34)  /*!< Offset: 0x034 (R/W)  MemManage Fault Address Register                      */
-#define SCB_BFAR                (*(volatile uint32_t *)0xE000ED38)  /*!< Offset: 0x038 (R/W)  BusFault Address Register                             */
-#define SCB_AFSR                (*(volatile uint32_t *)0xE000ED3C)  /*!< Offset: 0x03C (R/W)  Auxiliary Fault Status Register                       */
-#define SCB_PFR                 (*(volatile uint32_t *)0xE000ED40)  /*!< Offset: 0x040 (R/ )  Processor Feature Register                            */
-#define SCB_DFR                 (*(volatile uint32_t *)0xE000ED48)  /*!< Offset: 0x048 (R/ )  Debug Feature Register                                */
-#define SCB_ADR                 (*(volatile uint32_t *)0xE000ED4C)  /*!< Offset: 0x04C (R/ )  Auxiliary Feature Register                            */
-#define SCB_MMFR                (*(volatile uint32_t *)0xE000ED50)  /*!< Offset: 0x050 (R/ )  Memory Model Feature Register                         */
-#define SCB_ISAR                (*(volatile uint32_t *)0xE000ED60)  /*!< Offset: 0x060 (R/ )  Instruction Set Attributes Register                   */
-#define SCB_RESEARVED           (*(volatile uint32_t *)0xE000ED74)  /*!< Offset: 0x074 (R/W)  Researved Register                                    */
-#define SCB_CPACR               (*(volatile uint32_t *)0xE000ED88)  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register                   */
+#define SCB_CPUID               (*(volatile uint32_t *)0xE000ED00)  /*!< Offset: 0x000 (R/ )  CPUID Base Register                                    */
+#define SCB_ICSR                (*(volatile uint32_t *)0xE000ED04)  /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register                   */
+#define SCB_VTOR                (*(volatile uint32_t *)0xE000ED08)  /*!< Offset: 0x008 (R/W)  Vector Table Offset Register                           */
+#define SCB_AIRCR               (*(volatile uint32_t *)0xE000ED0C)  /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register       */
+#define SCB_SCR                 (*(volatile uint32_t *)0xE000ED10)  /*!< Offset: 0x010 (R/W)  System Control Register                                */
+#define SCB_CCR                 (*(volatile uint32_t *)0xE000ED14)  /*!< Offset: 0x014 (R/W)  Configuration Control Register                         */
+#define SCB_SHPR                ( (volatile uint8_t *)0xE000ED18)   /*!< Offset: 0x018 (R/W)  System Handlers Priority Registers (4-7, 8-11, 12-15)  */
+#define SCB_SHCSR               (*(volatile uint32_t *)0xE000ED28)  /*!< Offset: 0x024 (R/W)  System Handler Control and State Register              */
+#define SCB_CFSR                (*(volatile uint32_t *)0xE000ED28)  /*!< Offset: 0x028 (R/W)  Configurable Fault Status Register                     */
+#define SCB_HFSR                (*(volatile uint32_t *)0xE000ED2C)  /*!< Offset: 0x02C (R/W)  HardFault Status Register   `                          */
+#define SCB_DFSR                (*(volatile uint32_t *)0xE000ED30)  /*!< Offset: 0x030 (R/W)  Debug Fault Status Register                            */
+#define SCB_MMFAR               (*(volatile uint32_t *)0xE000ED34)  /*!< Offset: 0x034 (R/W)  MemManage Fault Address Register                       */
+#define SCB_BFAR                (*(volatile uint32_t *)0xE000ED38)  /*!< Offset: 0x038 (R/W)  BusFault Address Register                              */
+#define SCB_AFSR                (*(volatile uint32_t *)0xE000ED3C)  /*!< Offset: 0x03C (R/W)  Auxiliary Fault Status Register                        */
+#define SCB_PFR                 (*(volatile uint32_t *)0xE000ED40)  /*!< Offset: 0x040 (R/ )  Processor Feature Register                             */
+#define SCB_DFR                 (*(volatile uint32_t *)0xE000ED48)  /*!< Offset: 0x048 (R/ )  Debug Feature Register                                 */
+#define SCB_ADR                 (*(volatile uint32_t *)0xE000ED4C)  /*!< Offset: 0x04C (R/ )  Auxiliary Feature Register                             */
+#define SCB_MMFR                (*(volatile uint32_t *)0xE000ED50)  /*!< Offset: 0x050 (R/ )  Memory Model Feature Register                          */
+#define SCB_ISAR                (*(volatile uint32_t *)0xE000ED60)  /*!< Offset: 0x060 (R/ )  Instruction Set Attributes Register                    */
+#define SCB_RESEARVED           (*(volatile uint32_t *)0xE000ED74)  /*!< Offset: 0x074 (R/W)  Researved Register                                     */
+#define SCB_CPACR               (*(volatile uint32_t *)0xE000ED88)  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register                    */
+
+/* Cortex-M4 Debug register */
+#define DFSR                    (*(volatile uint32_t *)0xE000ED30)               /*!< Debug Fault Status Register                                    */
+#define DHCSR                   (*(volatile uint32_t *)0xE000EDF0)               /*!< Debug Halting Control and Status Register                      */
+#define DCRSR                   (*(volatile uint32_t *)0xE000EDF4)               /*!< Debug Core Register Selector Register                          */
+#define DCRDR                   (*(volatile uint32_t *)0xE000EDF8)               /*!< Debug Core Register Data Register                              */
+#define DEMCR                   (*(volatile uint32_t *)0xE000EDFC)               /*!< Debug Exception and Monitor Control Register                   */
+
+/* Cortex-M4 Data Watchpoint and Trace Unit */
+#define DWT_BASE                (*(volatile uint32_t *)0xE0001000)               /*!< Offset: 0x0000 (R/W)  DWT Control Register                     */
+#define DWT_CTRL                (*(volatile uint32_t *)0xE0001000)               /*!< Offset: 0x0000 (R/W)  DWT Control Register                     */
+#define DWT_CYCCNT              (*(volatile uint32_t *)0xE0001004)               /*!< Offset: 0x0004 (R/W)  Cycle Count Register                     */
+#define DWT_CPICNT              (*(volatile uint32_t *)0xE0001008)               /*!< Offset: 0x0008 (R/W)  CPI Count Register                       */
+#define DWT_EXCCNT              (*(volatile uint32_t *)0xE000100C)               /*!< Offset: 0x000C (R/W)  Exception Overhead Count Register        */
+#define DWT_SLEEPCNT            (*(volatile uint32_t *)0xE0001010)               /*!< Offset: 0x0010 (R/W)  Sleep Count Register                     */
+#define DWT_LSUCNT              (*(volatile uint32_t *)0xE0001014)               /*!< Offset: 0x0014 (R/W)  LSU Count Register                       */
+#define DWT_FOLDCNT             (*(volatile uint32_t *)0xE0001018)               /*!< Offset: 0x0018 (R/W)  Folded-instruction Count Register        */
+#define DWT_PCSR                (*(volatile uint32_t *)0xE000101C)               /*!< Offset: 0x001C (R/W)  Program Counter Sample Register          */
 
 /* Cortex-M4 ITM */
-#define ITM_BASE                (*(volatile uint32_t *)0xE0000000)               /*!< Offset: 0x0000 (R/W)  Stimulus Port Registers 0-31            */
-#define ITM_Port8(n)            (*((volatile uint8_t *) (0xE0000000 + 4 * n)))   /*!< ITM_Port8                                                     */
-#define ITM_Port16(n)           (*((volatile uint16_t*) (0xE0000000 + 4 * n)))   /*!< ITM_Port16                                                    */
-#define ITM_Port32(n)           (*((volatile uint32_t *) (0xE0000000 + 4 * n)))  /*!< ITM_Port32                                                    */
-#define ITM_TER                 (*(volatile uint32_t *)0xE0000E00)               /*!< Offset: 0x0E00 (R/W)  Trace Enable Register                   */
-#define ITM_TPR                 (*(volatile uint32_t *)0xE0000E40)               /*!< Offset: 0x0E40 (R/W)  ITM Trace Privilege Register            */
-#define ITM_TCR                 (*(volatile uint32_t *)0xE0000E80)               /*!< Offset: 0x0E80 (R/W)  Trace Control Register                  */
-#define ITM_PID4                (*(volatile uint32_t *)0xE0000FD0)               /*!< Offset: 0x0FD0 (R/W)  Peripheral Identification registers 4   */
-#define ITM_PID5                (*(volatile uint32_t *)0xE0000FD4)               /*!< Offset: 0x0FD4 (R/W)  Peripheral Identification registers 5   */
-#define ITM_PID6                (*(volatile uint32_t *)0xE0000FD8)               /*!< Offset: 0x0FD8 (R/W)  Peripheral Identification registers 6   */
-#define ITM_PID7                (*(volatile uint32_t *)0xE0000FDC)               /*!< Offset: 0x0FDC (R/W)  Peripheral Identification registers 7   */
-#define ITM_PID0                (*(volatile uint32_t *)0xE0000FE0)               /*!< Offset: 0x0FE0 (R/W)  Peripheral Identification registers 0   */
-#define ITM_PID1                (*(volatile uint32_t *)0xE0000FE4)               /*!< Offset: 0x0FE4 (R/W)  Peripheral Identification registers 1   */
-#define ITM_PID2                (*(volatile uint32_t *)0xE0000FE8)               /*!< Offset: 0x0FE8 (R/W)  Peripheral Identification registers 2   */
-#define ITM_PID3                (*(volatile uint32_t *)0xE0000FEC)               /*!< Offset: 0x0FEC (R/W)  Peripheral Identification registers 3   */
-#define ITM_CID0                (*(volatile uint32_t *)0xE0000FF0)               /*!< Offset: 0x0F00 (R/W)  Component Identification registers  0   */
-#define ITM_CID1                (*(volatile uint32_t *)0xE0000FF4)               /*!< Offset: 0x0FF4 (R/W)  Component Identification registers  1   */
-#define ITM_CID2                (*(volatile uint32_t *)0xE0000FF8)               /*!< Offset: 0x0FF8 (R/W)  Component Identification registers  2   */
-#define ITM_CID3                (*(volatile uint32_t *)0xE0000FFC)               /*!< Offset: 0x0FFC (R/W)  Component Identification registers  3   */
+#define ITM_BASE                (*(volatile uint32_t *)0xE0000000)               /*!< Offset: 0x0000 (R/W)  Stimulus Port Registers 0-31             */
+#define ITM_Port8(n)            (*((volatile uint8_t *) (0xE0000000 + 4 * n)))   /*!< ITM_Port8                                                      */
+#define ITM_Port16(n)           (*((volatile uint16_t*) (0xE0000000 + 4 * n)))   /*!< ITM_Port16                                                     */
+#define ITM_Port32(n)           (*((volatile uint32_t *) (0xE0000000 + 4 * n)))  /*!< ITM_Port32                                                     */
+#define ITM_TER                 (*(volatile uint32_t *)0xE0000E00)               /*!< Offset: 0x0E00 (R/W)  Trace Enable Register                    */
+#define ITM_TPR                 (*(volatile uint32_t *)0xE0000E40)               /*!< Offset: 0x0E40 (R/W)  ITM Trace Privilege Register             */
+#define ITM_TCR                 (*(volatile uint32_t *)0xE0000E80)               /*!< Offset: 0x0E80 (R/W)  Trace Control Register                   */
+#define ITM_PID4                (*(volatile uint32_t *)0xE0000FD0)               /*!< Offset: 0x0FD0 (R/W)  Peripheral Identification registers 4    */
+#define ITM_PID5                (*(volatile uint32_t *)0xE0000FD4)               /*!< Offset: 0x0FD4 (R/W)  Peripheral Identification registers 5    */
+#define ITM_PID6                (*(volatile uint32_t *)0xE0000FD8)               /*!< Offset: 0x0FD8 (R/W)  Peripheral Identification registers 6    */
+#define ITM_PID7                (*(volatile uint32_t *)0xE0000FDC)               /*!< Offset: 0x0FDC (R/W)  Peripheral Identification registers 7    */
+#define ITM_PID0                (*(volatile uint32_t *)0xE0000FE0)               /*!< Offset: 0x0FE0 (R/W)  Peripheral Identification registers 0    */
+#define ITM_PID1                (*(volatile uint32_t *)0xE0000FE4)               /*!< Offset: 0x0FE4 (R/W)  Peripheral Identification registers 1    */
+#define ITM_PID2                (*(volatile uint32_t *)0xE0000FE8)               /*!< Offset: 0x0FE8 (R/W)  Peripheral Identification registers 2    */
+#define ITM_PID3                (*(volatile uint32_t *)0xE0000FEC)               /*!< Offset: 0x0FEC (R/W)  Peripheral Identification registers 3    */
+#define ITM_CID0                (*(volatile uint32_t *)0xE0000FF0)               /*!< Offset: 0x0F00 (R/W)  Component Identification registers  0    */
+#define ITM_CID1                (*(volatile uint32_t *)0xE0000FF4)               /*!< Offset: 0x0FF4 (R/W)  Component Identification registers  1    */
+#define ITM_CID2                (*(volatile uint32_t *)0xE0000FF8)               /*!< Offset: 0x0FF8 (R/W)  Component Identification registers  2    */
+#define ITM_CID3                (*(volatile uint32_t *)0xE0000FFC)               /*!< Offset: 0x0FFC (R/W)  Component Identification registers  3    */
+#define ITM_TCR_ITMENA_MASK     (1 << 0)
+#define ITM_TCR_TSENA_MASK      (1 << 1)
+#define ITM_TCR_SYNCENA_MASK    (1 << 2)
+#define ITM_TCR_TXENA_MASK      (1 << 3)
+#define ITM_TCR_SWOENA_MASK     (1 << 4)
+#define ITM_TCR_STALLENA_MASK   (1 << 5)
+#define ITM_TCR_TSPres(prec)    (prec << 8U)
+#define ITM_TCR_TraceID(id)     (id << 16U)
+#define ITM_TCR_BUSY_MASK       (1 << 23U)
+
+
+/* Cortex-M4 TPIU programmers model */
+#define TPIU_BASE               (*(volatile uint32_t *)0xE0040000)               /*!< Offset: 0x0000 (R/W) Supported Synchronous Port Size Register   */
+#define TPIU_CSPSR              (*(volatile uint32_t *)0xE0040004)               /*!< Offset: 0x0000 (R/W) Current Synchronous Port Size Register     */
+#define TPIU_ACPR               (*(volatile uint32_t *)0xE0040010)               /*!< Offset: 0x0000 (R/W) Asynchronous Clock Prescaler Register      */
+#define TPIU_SPPR               (*(volatile uint32_t *)0xE00400F0)               /*!< Offset: 0x0000 (R/W) Selected Pin Protocol Register             */
+#define TPIU_FFSR               (*(volatile uint32_t *)0xE0040300)               /*!< Offset: 0x0000 (R/W) Formatter and Flush Status Register        */
+#define TPIU_FFCR               (*(volatile uint32_t *)0xE0040304)               /*!< Offset: 0x0000 (R/W) Formatter and Flush Control Register       */
+#define TPIU_FSCR               (*(volatile uint32_t *)0xE0040308)               /*!< Offset: 0x0000 (R/W) Formatter Synchronization Counter Register */
 
 /*--------------------------------------------------------------*/
 /* Cortex-M4 core/peripheral access macros                      */

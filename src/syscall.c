@@ -8,7 +8,7 @@
  */
 #include "uart.h"
 
-#ifndef USE_UART_DMA
+#ifdef DEBUG_ITM
 
 int _write (__attribute__((unused)) int fd, char *ptr, int len) {
     int i;

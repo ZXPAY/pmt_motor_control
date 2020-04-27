@@ -1,5 +1,5 @@
 /**
- * @file main.c
+ * @file test_step_res.c
  * @author Xiang-Guan Deng
  * @brief Test code to collect full step each  step response
  * @date 2020.xx.xx
@@ -8,7 +8,6 @@
  * All is 1024*200 = 204800
  * Sample rate is about 350 kHz
  * Compiler: arm-none-eabi-gcc (8.3.1)
- * TODO: overflow problem (0~360)
  */
 
 /* Include C standard library */

@@ -1,10 +1,8 @@
 /**
- * @file test_encoder.c
+ * @file main.c
  * @author Xiang-Guan Deng
- * @brief test encoder
+ * @brief Main code for motor control board
  * @date 2020.xx.xx
- *
- * Setting makefile UART_DMA = NO
  *
  * Compiler: arm-none-eabi-gcc (8.3.1)
  */
@@ -35,6 +33,9 @@
 #include "tick.h"
 #include "rs485.h"
 
+/* Include test header file */
+#include "arm_itm.h"
+
 extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
@@ -60,30 +61,26 @@ int main (void) {
     }
     drv8847_s.setMode(DRV8847_MODE_SLEEP);
 
-    /* Initialize freqency divider */
-    freq_div_init(&freq_div_pwmA);
-    freq_div_init(&freq_div_pwmB);
-    freq_div_add(&freq_div_pwmA, 20, (void *)drv8847_s.adc_trig1A1B, NULL, 0);
-    freq_div_add(&freq_div_pwmB, 20, (void *)drv8847_s.adc_trig2A2B, NULL, 10);
+    /* MKV30F128, SWO is PTA2 */
+    SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK;
 
-    hal_delay(100);
-    RS485_trm("start \r\n");
-    ENABLE_PHA_INT();
-    ENABLE_PHB_INT();
-    ENABLE_ADC_PHAB_INT();
-    uint16_t angle;
-    uint16_t angle_com;
-    uint16_t dia;
+    SIM->SOPT2 |= SIM_SOPT2_TRACECLKSEL_MASK;
+
+    /* Something wrong below the code */
+    // SWO_Init(1, SYS_CLOCK_FREQ);
+    /* If I comment the code, it will work. ??? */
+
     while (true) {
-
-        angle = as5047d.instance->read(AS5047D_ANGLE);
-        ENABLE_TEST1();
-        angle_com = as5047d.instance->read_anglecom();
-        DISABLE_TEST1();
-        dia = as5047d.instance->read(AS5047D_DIAAGC);
-
-        RS485_trm(",%d, %d, %x,\r\n", angle, angle_com, dia);
+        SWO_PrintChar('H', 0);
+        SWO_PrintChar('e', 0);
+        SWO_PrintChar('l', 0);
+        SWO_PrintChar('l', 0);
+        SWO_PrintChar('o', 0);
+        SWO_PrintChar('\n', 0);
+        hal_delay(1000);
     }
+
+
     return 0;
 }
 

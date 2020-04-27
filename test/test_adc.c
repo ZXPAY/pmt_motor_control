@@ -5,7 +5,6 @@
  * @date 2020.xx.xx
  *
  * Compiler: arm-none-eabi-gcc (8.3.1)
- * TODO: overflow problem (0~360)
  */
 
 /* Include C standard library */
