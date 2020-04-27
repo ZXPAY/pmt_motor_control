@@ -1,8 +1,8 @@
 /* Cortex-M4 System timer */
-#define SYST_CSR            (*(volatile uint32_t *)0xE000E010)
-#define SYST_RVR            (*(volatile uint32_t *)0xE000E014)
-#define SYST_CVR            (*(volatile uint32_t *)0xE000E018)
-#define SYST_CALIB          (*(volatile uint32_t *)0xE000E01C)
+#define SYST_CSR                 (*(volatile uint32_t *)0xE000E010)
+#define SYST_RVR                 (*(volatile uint32_t *)0xE000E014)
+#define SYST_CVR                 (*(volatile uint32_t *)0xE000E018)
+#define SYST_CALIB               (*(volatile uint32_t *)0xE000E01C)
 
 /* Cortex-M4 NVIC */
 #define NVIC_ISER                ( (volatile uint32_t *)0xE000E100)
@@ -36,6 +36,27 @@
 #define SCB_RESEARVED           (*(volatile uint32_t *)0xE000ED74)  /*!< Offset: 0x074 (R/W)  Researved Register                                    */
 #define SCB_CPACR               (*(volatile uint32_t *)0xE000ED88)  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register                   */
 
+/* Cortex-M4 ITM */
+#define ITM_BASE                (*(volatile uint32_t *)0xE0000000)               /*!< Offset: 0x0000 (R/W)  Stimulus Port Registers 0-31            */
+#define ITM_Port8(n)            (*((volatile uint8_t *) (0xE0000000 + 4 * n)))   /*!< ITM_Port8                                                     */
+#define ITM_Port16(n)           (*((volatile uint16_t*) (0xE0000000 + 4 * n)))   /*!< ITM_Port16                                                    */
+#define ITM_Port32(n)           (*((volatile uint32_t *) (0xE0000000 + 4 * n)))  /*!< ITM_Port32                                                    */
+#define ITM_TER                 (*(volatile uint32_t *)0xE0000E00)               /*!< Offset: 0x0E00 (R/W)  Trace Enable Register                   */
+#define ITM_TPR                 (*(volatile uint32_t *)0xE0000E40)               /*!< Offset: 0x0E40 (R/W)  ITM Trace Privilege Register            */
+#define ITM_TCR                 (*(volatile uint32_t *)0xE0000E80)               /*!< Offset: 0x0E80 (R/W)  Trace Control Register                  */
+#define ITM_PID4                (*(volatile uint32_t *)0xE0000FD0)               /*!< Offset: 0x0FD0 (R/W)  Peripheral Identification registers 4   */
+#define ITM_PID5                (*(volatile uint32_t *)0xE0000FD4)               /*!< Offset: 0x0FD4 (R/W)  Peripheral Identification registers 5   */
+#define ITM_PID6                (*(volatile uint32_t *)0xE0000FD8)               /*!< Offset: 0x0FD8 (R/W)  Peripheral Identification registers 6   */
+#define ITM_PID7                (*(volatile uint32_t *)0xE0000FDC)               /*!< Offset: 0x0FDC (R/W)  Peripheral Identification registers 7   */
+#define ITM_PID0                (*(volatile uint32_t *)0xE0000FE0)               /*!< Offset: 0x0FE0 (R/W)  Peripheral Identification registers 0   */
+#define ITM_PID1                (*(volatile uint32_t *)0xE0000FE4)               /*!< Offset: 0x0FE4 (R/W)  Peripheral Identification registers 1   */
+#define ITM_PID2                (*(volatile uint32_t *)0xE0000FE8)               /*!< Offset: 0x0FE8 (R/W)  Peripheral Identification registers 2   */
+#define ITM_PID3                (*(volatile uint32_t *)0xE0000FEC)               /*!< Offset: 0x0FEC (R/W)  Peripheral Identification registers 3   */
+#define ITM_CID0                (*(volatile uint32_t *)0xE0000FF0)               /*!< Offset: 0x0F00 (R/W)  Component Identification registers  0   */
+#define ITM_CID1                (*(volatile uint32_t *)0xE0000FF4)               /*!< Offset: 0x0FF4 (R/W)  Component Identification registers  1   */
+#define ITM_CID2                (*(volatile uint32_t *)0xE0000FF8)               /*!< Offset: 0x0FF8 (R/W)  Component Identification registers  2   */
+#define ITM_CID3                (*(volatile uint32_t *)0xE0000FFC)               /*!< Offset: 0x0FFC (R/W)  Component Identification registers  3   */
+
 /*--------------------------------------------------------------*/
 /* Cortex-M4 core/peripheral access macros                      */
 /*--------------------------------------------------------------*/
@@ -55,66 +76,66 @@
 #define __get_MSP()                                                            \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, MSP\n" : "=r"(__rv));                                         \
+    __asm("MRS %0, MSP\n" : "=r"(__rv));                                       \
     __rv;                                                                      \
   })
 #define __get_PSP()                                                            \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, PSP\n" : "=r"(__rv));                                         \
+    __asm("MRS %0, PSP\n" : "=r"(__rv));                                       \
     __rv;                                                                      \
   })
 #define __get_PRIMASK()                                                        \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, PRIMASK\n" : "=r"(__rv));                                     \
+    __asm("MRS %0, PRIMASK\n" : "=r"(__rv));                                   \
     __rv;                                                                      \
   })
 #define __get_FAULTMASK()                                                      \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, FAULTMASK\n" : "=r"(__rv));                                   \
+    __asm("MRS %0, FAULTMASK\n" : "=r"(__rv));                                 \
     __rv;                                                                      \
   })
 #define __get_BASEPRI()                                                        \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, BASEPRI\n" : "=r"(__rv));                                     \
+    __asm("MRS %0, BASEPRI\n" : "=r"(__rv));                                   \
     __rv;                                                                      \
   })
 #define __get_CONTROL()                                                        \
   ({                                                                           \
     uint32_t __rv;                                                             \
-    __asm("MRS %0, CONTROL\n" : "=r"(__rv));                                     \
+    __asm("MRS %0, CONTROL\n" : "=r"(__rv));                                   \
     __rv;                                                                      \
   })
 #define __set_MSP(arg)                                                         \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR MSP, %0\n" ::"r"(__v));                                           \
+    __asm("MSR MSP, %0\n" ::"r"(__v));                                         \
   }
 #define __set_PSP(arg)                                                         \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR PSP, %0\n" ::"r"(__v));                                           \
+    __asm("MSR PSP, %0\n" ::"r"(__v));                                         \
   }
 #define __set_PRIMASK(arg)                                                     \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR PRIMASK, %0\n" ::"r"(__v));                                       \
+    __asm("MSR PRIMASK, %0\n" ::"r"(__v));                                     \
   }
 #define __set_FAULTMASK(arg)                                                   \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR FAULTMASK, %0\n" ::"r"(__v));                                     \
+    __asm("MSR FAULTMASK, %0\n" ::"r"(__v));                                   \
   }
 #define __set_BASEPRI(arg)                                                     \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR BASEPRI, %0\n" ::"r"(__v));                                       \
+    __asm("MSR BASEPRI, %0\n" ::"r"(__v));                                     \
   }
 #define __set_CONTORL(arg)                                                     \
   {                                                                            \
     uint32_t __v = arg;                                                        \
-    __asm("MSR CONTROL, %0\nISB\n" ::"r"(__v));                                  \
+    __asm("MSR CONTROL, %0\nISB\n" ::"r"(__v));                                \
   }
