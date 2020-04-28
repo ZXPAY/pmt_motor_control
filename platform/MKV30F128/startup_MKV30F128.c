@@ -35,7 +35,7 @@ extern void system_clock_init(void);
 /* System exception vector handler */
 void Reset_Handler (void)		__attribute__ ((weak, alias ("default_reset_handler")));
 void NMI_Handler (void)			__attribute__ ((weak, alias ("Default_Handler")));
-void HardFault_Hander (void)	__attribute__ ((weak, alias ("Default_Handler")));
+void HardFault_Handler (void)	__attribute__ ((weak, alias ("Default_Handler")));
 void MemManage_Handler (void)	__attribute__ ((weak, alias ("Default_Handler")));
 void BusFault_Handler (void)	__attribute__ ((weak, alias ("Default_Handler")));
 void UsageFault_Handler (void)	__attribute__ ((weak, alias ("Default_Handler")));
@@ -145,7 +145,7 @@ static void* const vector[] __attribute__ ((section(".isr_vector"))) = {
     // 0x04 ~ 0x3C is Exception vector
     Reset_Handler,		// 0x04
     NMI_Handler,		// 0x08
-    HardFault_Hander,	// 0x0C
+    HardFault_Handler,	// 0x0C
     MemManage_Handler,	// 0x10
     BusFault_Handler,	// 0x14
     UsageFault_Handler,	// 0x18

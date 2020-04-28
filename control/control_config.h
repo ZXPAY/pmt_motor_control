@@ -11,7 +11,7 @@
 #define CONTROL_CONFIG_H
 
 /* Define default N-step */
-#define N_STEP                    32
+#define N_STEP                    8
 
 /* Define parameters */
 #define EXC_KI                    0.001                                       /* 激磁角Ki回饋 */

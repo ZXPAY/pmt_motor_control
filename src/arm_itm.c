@@ -18,7 +18,6 @@ void SWO_Init(uint32_t portBits, uint32_t cpuCoreFreqHz) {
     ITM_TER = portBits;
     DWT_CTRL = 0x400003FE;    /* DWT_CTRL */
     TPIU_FFSR = 0x00000100;   /* Formatter and Flush Control Register */
-
 }
 
 void SWO_PrintChar(char c, uint8_t portNo) {
@@ -34,4 +33,3 @@ void SWO_PrintChar(char c, uint8_t portNo) {
 
     ITM_Port8(portNo) = c;
 }
-

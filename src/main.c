@@ -89,7 +89,7 @@ int main (void) {
     return 0;
 }
 
-void HardFalut_Handler(void) {
+void HardFault_Handler(void) {
     RS485_trm("Hardware error occur\r\n");
     while(true);
 }

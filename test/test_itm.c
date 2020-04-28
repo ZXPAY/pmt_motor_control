@@ -67,7 +67,7 @@ int main (void) {
     SIM->SOPT2 |= SIM_SOPT2_TRACECLKSEL_MASK;
 
     /* Something wrong below the code */
-    // SWO_Init(1, SYS_CLOCK_FREQ);
+    SWO_Init(1, SYS_CLOCK_FREQ);
     /* If I comment the code, it will work. ??? */
 
     while (true) {
@@ -84,8 +84,8 @@ int main (void) {
     return 0;
 }
 
-void HardFalut_Handler(void) {
-    RS485_trm("Error occur\n");
+void HardFault_Handler(void) {
+    while(true);
 }
 
 

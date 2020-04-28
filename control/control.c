@@ -64,12 +64,9 @@ void control_init(void) {
 void control_print(void) {
     static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-    // RS485_trm("%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
-    //                                                 fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
+    RS485_trm("%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+                                                    fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
 
-    /* i1, i2, angle, sangle, cangle, th_er, th_cum */
-    RS485_trm("%d,%d,%d,%.2f,%.2f,%.3f,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle,
-                                                                    cangle.ele_dangle, fb_exc_angle.th_er);
     if(++prec_cnt == 5) {
         update_cangle(&cangle, get_cangle_inc(&adj_v));
         prec_cnt = 0;
