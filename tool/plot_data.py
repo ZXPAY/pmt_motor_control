@@ -32,9 +32,9 @@ def plot_data(file_marker, DELTA_T):
     pwma = save_data["pwma"]
     pwmb = save_data["pwmb"]
     power = save_data['power']
-    # s_cycles = save_data['s_cycles']
-    # s_length = save_data['s_length']
-    # c_total = save_data['c_total']
+
+    # 轉換成度度量
+    th_er = th_er*1.8/90
 
     t = np.linspace(0, ia.shape[0]-1, ia.shape[0]) * DELTA_T
 
@@ -77,7 +77,7 @@ def plot_data(file_marker, DELTA_T):
     plt.legend(['sensor', 'command'], fontsize=20)
     # second figure
     plt.subplot(212)
-    plt.plot(t, th_er*1.8/90)
+    plt.plot(t, th_er)
     plt.grid(True)
     plt.xlabel('t', fontsize=24, position=(1, 0))
     plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
@@ -190,32 +190,35 @@ def plot_data(file_marker, DELTA_T):
     plt.savefig(FIG_DIR+"/"+file_marker + '/current_power_' + file_marker + '.png')
 
     ### ==================================================================================== ###
-    print("Data size is ", ia.shape[0])
-    print("===== sensor ele angle =====")
-    print("max: ", np.max(sele_dangle))
-    print("min: ", np.min(sele_dangle))
-    print("mean: ", np.mean(sele_dangle))
+    report_str = ""
+    report_str += "Data size is " +  str(ia.shape[0]) + "\n"
+    report_str += "===== sensor ele angle =====" + "\n"
+    report_str += "max: " + str(np.max(sele_dangle)) + "\n"
+    report_str += "min: " + str(np.min(sele_dangle)) + "\n"
+    report_str += "mean: " + str(np.mean(sele_dangle)) + "\n"
+    report_str += "===== command ele angle =====" + "\n"
+    report_str += "max: " + str(np.max(cele_dangle)) + "\n"
+    report_str += "min: " + str(np.min(cele_dangle)) + "\n"
+    report_str += "mean: " + str(np.mean(cele_dangle)) + "\n"
+    report_str += "===== theta error (degree) =====" + "\n"
+    report_str += "max: " + str(np.max(th_er)) + "\n"
+    report_str += "min: " + str(np.min(th_er)) + "\n"
+    report_str += "mean: " + str(np.mean(th_er)) + "\n"
+    report_str += "std: " + str(np.std(th_er)) + "\n"
+    report_str += "mse: " + str(np.mean(np.square(th_er))) + "\n"
+    report_str += "N_STEP: " + str(1.8/(np.max(th_er))) + str(1.8/(np.min(th_er))) + "\n"
+    report_str += "===== consume power (watt) =====" + "\n"
+    report_str += "max: " + str(np.max(power)) + "\n"
+    report_str += "min: " + str(np.min(power)) + "\n"
+    report_str += "mean: " + str(np.mean(power)) + "\n"
+    report_str += "std: " + str(np.std(power)) + "\n"
+    report_str += "sum: " + str(np.sum(np.abs(power))) + " J\n"
 
-    print("===== command ele angle =====")
-    print("max: ", np.max(cele_dangle))
-    print("min: ", np.min(cele_dangle))
-    print("mean: ", np.mean(cele_dangle))
+    print(report_str)
 
-    print("===== theta error =====")
-    print("max: ", np.max(th_er))
-    print("min: ", np.min(th_er))
-    print("mean: ", np.mean(th_er))
-    print("machanical angle res: ", np.max(th_er)*1.8/90, np.min(th_er)*1.8/90)
-    print("N_STEP: ", 1.8/(np.max(th_er)*1.8/90), 1.8/(np.min(th_er)*1.8/90))
-    print("mse er: ", np.mean(np.square(th_er)))
-
-    print("===== theta cum =====")
-    print("max: ", np.max(th_cum))
-    print("min: ", np.min(th_cum))
-    print("mean: ", np.mean(th_cum))
-
-    print("===== consume power =====")
-    print("power mean is ", np.mean(power))
+    f = open(FIG_DIR + "/" + file_marker + "/report_" + file_marker + ".txt", "w")
+    f.write(report_str)
+    f.close()
 
 
 
