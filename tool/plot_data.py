@@ -206,7 +206,7 @@ def plot_data(file_marker, DELTA_T):
     report_str += "mean: " + str(np.mean(th_er)) + "\n"
     report_str += "std: " + str(np.std(th_er)) + "\n"
     report_str += "mse: " + str(np.mean(np.square(th_er))) + "\n"
-    report_str += "N_STEP: " + str(1.8/(np.max(th_er))) + str(1.8/(np.min(th_er))) + "\n"
+    report_str += "N_STEP: " + str(1.8/(np.max(th_er))) + ", " + str(1.8/(np.min(th_er))) + "\n"
     report_str += "===== consume power (watt) =====" + "\n"
     report_str += "max: " + str(np.max(power)) + "\n"
     report_str += "min: " + str(np.min(power)) + "\n"

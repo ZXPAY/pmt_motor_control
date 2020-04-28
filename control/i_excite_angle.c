@@ -9,7 +9,7 @@ void init_exc_ang_para(fb_exc_angle_t *fb_exc_angle, float ki) {
     fb_exc_angle->th_er = 0;
     fb_exc_angle->th_esvpwm = 0;
     /* Maximum correct dangle */
-    fb_exc_angle->cum_limit = 90.0/fb_exc_angle->pid.ki;
+    fb_exc_angle->cum_limit = 360.0/fb_exc_angle->pid.ki;
 }
 
 void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e_cdegree) {
@@ -40,21 +40,25 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
     else if(fb_exc_angle->th_esvpwm < 0)    fb_exc_angle->th_esvpwm += 360;
 
-    /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
-    float er_sensor_svpwm = e_sdegree - fb_exc_angle->th_esvpwm;
-    if(er_sensor_svpwm > 180) {
-        er_sensor_svpwm -= 360;
-    }
-    else if(er_sensor_svpwm < -180){
-        er_sensor_svpwm += 360;
-    }
-    if(er_sensor_svpwm > 90) {
-        /* Over 90 degree */
-        fb_exc_angle->cum_limit += SVPWM_LIMIT_UNIT;
-    }
-    else if(er_sensor_svpwm < -90) {
-        fb_exc_angle->cum_limit -= SVPWM_LIMIT_UNIT;
-    }
+    // /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
+    // float er_sensor_svpwm = e_sdegree - fb_exc_angle->th_esvpwm;
+    // if(er_sensor_svpwm > 180) {
+    //     er_sensor_svpwm -= 360;
+    // }
+    // else if(er_sensor_svpwm < -180){
+    //     er_sensor_svpwm += 360;
+    // }
+    // if(er_sensor_svpwm > 90) {
+    //     /* Over 90 degree */
+    //     ENABLE_TEST1();
+    //     fb_exc_angle->th_cum += SVPWM_LIMIT_UNIT;
+    //     DISABLE_TEST1();
+    // }
+    // else if(er_sensor_svpwm < -90) {
+    //     ENABLE_TEST2();
+    //     fb_exc_angle->th_cum -= SVPWM_LIMIT_UNIT;
+    //     DISABLE_TEST2();
+    // }
 
 
 #else
