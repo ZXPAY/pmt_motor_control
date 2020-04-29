@@ -26,7 +26,7 @@ static void as5047d_init(void) {
 }
 
 static void as5047d_update(void) {
-    uint16_t temp = as5047d.instance->read_anglecom();
+    uint16_t temp = as5047d.instance->read_angle();
     if(temp != 0) {
         as5047d.angle = temp;
     }

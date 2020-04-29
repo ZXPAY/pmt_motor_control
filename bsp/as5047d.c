@@ -12,6 +12,7 @@
 
 static void as5047d_write(uint16_t address, uint16_t value);
 static uint16_t as5047d_read(uint16_t address);
+static uint16_t as5047d_read_angle(void);
 static uint16_t as5047d_read_anglecom(void);
 static void as5047d_cs_high(void);
 static void as5047d_cs_low(void);
@@ -21,6 +22,7 @@ as50474_dri_t as50474_dri = {                 \
     .CHIP_SELECT = 0,                         \
     .write = as5047d_write,                   \
     .read = as5047d_read,                     \
+    .read_angle = as5047d_read_angle,   \
     .read_anglecom = as5047d_read_anglecom,   \
     .cs_high = as5047d_cs_high,               \
     .cs_low = as5047d_cs_low,                 \
@@ -48,6 +50,22 @@ static uint16_t as5047d_read(uint16_t address) {
     if(as50474_dri.get_parity(address&0x7fff)) address |= 0x8000;
 
     ENCODER_SPI->PUSHR = address | SPI_CMD;
+    while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
+    ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
+
+    ENCODER_SPI->PUSHR = 0x00 | SPI_CMD;
+    while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
+    ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
+
+    uint16_t value = ENCODER_SPI->RXFR1;
+    // flush RX FIFO
+    ENCODER_SPI->MCR |= SPI_MCR_CLR_RXF_MASK;
+    return value & 0x3fff;
+}
+
+static uint16_t as5047d_read_angle(void) {
+    // address parity should be even
+    ENCODER_SPI->PUSHR = AS5047D_ANGLE_READ_ADDRESS | SPI_CMD;
     while(!(ENCODER_SPI->SR & SPI_SR_TCF_MASK));
     ENCODER_SPI->SR |= SPI_SR_TCF_MASK;
 

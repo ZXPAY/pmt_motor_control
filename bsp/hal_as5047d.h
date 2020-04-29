@@ -29,12 +29,14 @@
 #define AS5047D_ABIBIN                 (0b0000000000100000UL)  // Select Binary
 #define AS5047D_ABIRES                 (0b0000000111000000UL)  // select resolution 2048
 
+#define AS5047D_ANGLE_READ_ADDRESS     (0x7FFEUL)
 #define AS5047D_ANGLECOM_READ_ADDRESS  (0xFFFFUL)
 
 typedef struct __as5047d_dri {
     uint8_t CHIP_SELECT;
     void (*write)(uint16_t address, uint16_t value);
     uint16_t (*read)(uint16_t address);
+    uint16_t (*read_angle)(void);
     uint16_t (*read_anglecom)(void);
     void (*cs_high)(void);
     void (*cs_low)(void);
