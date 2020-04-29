@@ -40,6 +40,7 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     if(fb_exc_angle->th_esvpwm > 360)  fb_exc_angle->th_esvpwm -= 360;
     else if(fb_exc_angle->th_esvpwm < 0)    fb_exc_angle->th_esvpwm += 360;
 
+    /* Uncomment the below code, it will cause system unstable sometimes */
     // /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
     // float er_sensor_svpwm = e_sdegree - fb_exc_angle->th_esvpwm;
     // if(er_sensor_svpwm > 180) {

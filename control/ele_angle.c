@@ -81,11 +81,14 @@ void update_sangle(sangle_t *sangle, uint16_t enc_angle) {
             sangle->poles += MAX_ELETRICAL_ROTOR_ANGLE;
         }
     }
-    // reset the angle
-    if(abs_int(sangle->mach_angle - sangle->init_mach_angle) == 0) {
-        sangle->ele_angle = 0;
-        sangle->err_count = 0;
-    }
+
+    /* Uncomment the below code, it will cause system unstable sometimes */
+    /* reset the angle */
+    // if(abs_int(sangle->mach_angle - sangle->init_mach_angle) == 0) {
+    //     sangle->ele_angle = 0;
+    //     sangle->err_count = 0;
+    // }
+    
     /* 順時針為正 */
     sangle->ele_dangle = (float)sangle->ele_angle * sangle->K_degree;
 
