@@ -6,8 +6,8 @@
  *
  * 將馬達編碼器濾波
  */
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef FIR_FILTER_H
+#define FIR_FILTER_H
 
 
 
