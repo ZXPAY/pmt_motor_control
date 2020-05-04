@@ -219,7 +219,7 @@
 
 /**
  * @brief Correction period handle
- * Print period : 5 ms (200 Hz)
+ * Print period : 10 ms (100 Hz)
  */
 #define PERIOD_PRINT_FREQ     (100)
 #define ENABLE_PRINT_INT()    __enable_irqn(PIT1_IRQn)

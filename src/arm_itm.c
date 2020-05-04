@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include "cortex_m4.h"
 
+#ifndef DEBUG_ITM
+
 void SWO_Init(uint32_t portBits, uint32_t cpuCoreFreqHz) {
     uint32_t SWOSpeed = 64000; /* default 64k baud rate */
     uint32_t SWOPrescaler = (cpuCoreFreqHz / SWOSpeed) - 1; /* SWOSpeed in Hz, note that cpuCoreFreqHz is expected to be match the CPU core clock */
@@ -33,3 +35,5 @@ void SWO_PrintChar(char c, uint8_t portNo) {
 
     ITM_Port8(portNo) = c;
 }
+
+#endif

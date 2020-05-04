@@ -19,6 +19,7 @@
 #include "i_excite_angle.h"
 #include "svpwm.h"
 #include "step_accumulator.h"
+#include "fir_filter.h"
 
 #include "cortex_m4.h"
 
@@ -72,10 +73,16 @@ void control_print(void) {
         prec_cnt = 0;
     }
 }
-
+// volatile uint16_t temp[4];
+// volatile uint8_t ccc = 0;
 void control_handle(void) {
-    as5047d.update();   /* about 6.825 us */
-    update_sangle(&sangle, as5047d.angle);  /* about 3.825 us */
+    ENABLE_TEST1();
+    // as5047d.update();
+    as5047d.update();
+    // temp[ccc] = as5047d.angle;
+    // ccc++;
+    fir_update((float)as5047d.angle);
+    update_sangle(&sangle, (uint16_t)get_fir_enc());  /* about 3.825 us */
     cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);  /* about 3.225 us */
     cal_current_correct(&fb_exc_angle, &fb_current); /* about 5.25 us */
     cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);   /* about 26.32 us */
@@ -85,4 +92,5 @@ void control_handle(void) {
     /* 0 => 2B is high, 2A is low */
     SET_PHASEA_DUTY(pwm12.pwm1);
     SET_PHASEB_DUTY(pwm12.pwm2);
+    DISABLE_TEST1();
 }

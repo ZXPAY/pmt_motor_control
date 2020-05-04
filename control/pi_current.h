@@ -13,7 +13,7 @@
 
 typedef struct _fb_current_ {
     fb_pid_t pid;
-    float i_svpwm;
+    volatile float i_svpwm;
     float low_limit;
     float high_limit;
 }fb_current_t;

@@ -6,28 +6,29 @@ CPU      = cortex-m4
 PLATFORM = MKV30F128
 DEVICE = MKV30F128XXX10
 THUMB    = YES
-UART_DMA = NO
+UART_DMA = YES
 # Define the motor drive IC DRV8847 or DRV8847S
 CONTROL_DEF  = DRV8847
 # Enable exite angle I controller
-# CONTROL_DEF += ENABLE_EXI_ANGLE_I
+CONTROL_DEF += ENABLE_EXI_ANGLE_I
 # Enable current PI controller
-# CONTROL_DEF += ENABLE_CURRENT_PI
-CONTROL_DEF += DEBUG_ITM
+CONTROL_DEF += ENABLE_CURRENT_PI
+# CONTROL_DEF += DEBUG_ITM
 
 ### Source files and search directories
-CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c control.c freqdiv.c filter.c
+CONTROL_CSRC = adj_velocity.c ele_angle.c pid.c i_excite_angle.c pi_current.c sin_cos_val_table.c svpwm.c step_accumulator.c control.c freqdiv.c fir_filter.c
 HARDWARE_CSRC = uart.c system.c syscall.c control_board.c mkv30f_it.c as5047d.c drv8847_s.c tick.c dma_uart.c arm_itm.c
 HAL_CSRC	= hal_as5047d.c hal_drv8847_s.c hal_tick.c
 CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
-# CSRC   += main.c
+CSRC   += main.c
 # CSRC   += test_encoder.c
 # CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
 # CSRC   += test_step_res.c
 # CSRC   += test_itm.c
-CSRC   += test_filter.c
+# CSRC   += test_filter.c
+# CSRC   += test_id_filter.c
 ASRC	= fpu.S
 CSRCARM	=
 ASRCARM	=

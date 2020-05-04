@@ -25,7 +25,6 @@
 /* Include other library */
 #include "hal_tick.h"
 #include "freqdiv.h"
-#include "fir_filter.h"
 
 /* Include board support package */
 #include "control_board.h"
@@ -69,7 +68,7 @@ int main (void) {
     __enable_irqn(PIT0_IRQn);
 
     while (true) {
-        RS485_trm("%.2f\r\n", get_fir_enc());
+        ;
     }
 
 
@@ -81,8 +80,17 @@ void HardFalut_Handler(void) {
 }
 
 void PIT0_IRQHandler(void) {
+    static uint16_t cnt = 0;
     as5047d.update();
-    fir_update((float)as5047d.angle);
+    collect_buf[cnt++] = as5047d.angle;
+    if(cnt >= COLLECT_LEN) {
+        __disable_irqn(PIT0_IRQn);
+        cnt = 0;
+        for (uint16_t i = 0; i < COLLECT_LEN; i++) {
+            RS485_trm("%d,\r\n", collect_buf[i]);
+        }
+
+    }
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }

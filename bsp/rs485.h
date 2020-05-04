@@ -14,7 +14,7 @@ extern char send_buf[SEND_BUFF_SIZE];
 #define DMA_IDLE_BUT_FAIL              3
 #define DMA_MISS_DATA                  4
 #define RS485_DMA_Handler              DMA0_IRQHandler
-#define RS485_trm(format, args...)     rs485_send_edma(sprintf(send_buf, "[485],"format, ##args));  \
+#define RS485_trm(format, args...)     rs485_send_edma(sprintf((char *)send_buf, "[485],"format, ##args));  \
                                        /* Disable when transmit complete */
 
 void rs485_send_edma(size_t buf_sz);
