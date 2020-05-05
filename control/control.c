@@ -65,7 +65,7 @@ void control_init(void) {
 void control_print(void) {
     static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-    RS485_trm("%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, as5047d.angle, sangle.ele_dangle, cangle.ele_dangle,
+    RS485_trm("%d,%d,%.2f,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, get_fir_enc(), sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
 
     if(++prec_cnt == 5) {
@@ -76,12 +76,6 @@ void control_print(void) {
 // volatile uint16_t temp[4];
 // volatile uint8_t ccc = 0;
 void control_handle(void) {
-    ENABLE_TEST1();
-    // as5047d.update();
-    as5047d.update();
-    // temp[ccc] = as5047d.angle;
-    // ccc++;
-    fir_update((float)as5047d.angle);
     update_sangle(&sangle, (uint16_t)get_fir_enc());  /* about 3.825 us */
     cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);  /* about 3.225 us */
     cal_current_correct(&fb_exc_angle, &fb_current); /* about 5.25 us */
@@ -92,5 +86,5 @@ void control_handle(void) {
     /* 0 => 2B is high, 2A is low */
     SET_PHASEA_DUTY(pwm12.pwm1);
     SET_PHASEB_DUTY(pwm12.pwm2);
-    DISABLE_TEST1();
+
 }

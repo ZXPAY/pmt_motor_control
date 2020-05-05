@@ -40,7 +40,7 @@ extern drv8847_s_t drv8847_s;    /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
 
 /* FIR filter handle */
-// void Fir_Handle(void);
+void FIR_Handle(void);
 
 /* Main code */
 int main (void) {
@@ -67,11 +67,10 @@ int main (void) {
     /* Initialize frequency divider */
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
-    // freq_div_add(&freq_div_pwmA, 2, (void *)Fir_Handle, NULL, 0);
+    freq_div_add(&freq_div_pwmA, 1, (void *)FIR_Handle, NULL, 0);
     freq_div_add(&freq_div_pwmA, 10, (void *)control_handle, NULL, 0);
     freq_div_add(&freq_div_pwmA, 20, (void *)drv8847_s.adc_trig1A1B, NULL, 5);
     freq_div_add(&freq_div_pwmB, 20, (void *)drv8847_s.adc_trig2A2B, NULL, 15);
-    // freq_div_add(&freq_div_pwmA, 400, (void *)control_print, NULL, 10);
 
     /* SysTick initialize */
     systick_init();
@@ -95,14 +94,16 @@ int main (void) {
 }
 
 void HardFault_Handler(void) {
+    /* Delay a while */
+    for(uint32_t i=0;i<100000;i++);
     RS485_trm("Hardware error occur\r\n");
     while(true);
 }
 
-// void Fir_Handle(void) {
-//     as5047d.update();
-//     fir_update((float)as5047d.angle);
-// }
+void FIR_Handle(void) {
+    as5047d.update();
+    fir_update((float)as5047d.angle);
+}
 
 /* period : 10 ms */
 /* Do experiment, print whole words need 7 ms => choose 100 Hz */
