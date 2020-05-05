@@ -4,6 +4,10 @@
 #include "pi_current.h"
 #include "control_config.h"
 #include "control_board.h"
+#include "fir_filter.h"
+
+extern mv_avg_t pwma_mv_avg;      /* PWM phase A Moving Average object */
+extern mv_avg_t pwmb_mv_avg;      /* PWM phase B Moving Average object */
 
 void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, __attribute__((unused))fb_current_t *fb_current) {
     float temp_ang = fb_exc_angle->th_esvpwm*DEGREE_TO_RADIAN;
@@ -25,4 +29,8 @@ void cal_pwmAB(pwmAB_t *pwmAB, fb_exc_angle_t *fb_exc_angle, __attribute__((unus
 #endif
     pwmAB->pwm1 = ((int16_t)(ia_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
     pwmAB->pwm2 = ((int16_t)(ib_svpwm * PERIOD_COUNT) + PERIOD_COUNT) >> 1;
+
+    set_mv_avg(&pwma_mv_avg, pwmAB->pwm1);
+    set_mv_avg(&pwmb_mv_avg, pwmAB->pwm2);
+
 }

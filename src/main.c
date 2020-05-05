@@ -26,6 +26,7 @@
 #include "fir_filter.h"
 extern freq_div_t freq_div_pwmA;
 extern freq_div_t freq_div_pwmB;
+extern mv_avg_t enc_mv_avg;      /* Moving average object */
 
 /* Include other library */
 #include "hal_tick.h"
@@ -103,7 +104,7 @@ void HardFault_Handler(void) {
 void FIR_Handle(void) {
     as5047d.update();
     // fir_update((float)as5047d.angle);
-    mv_avg(as5047d.angle);
+    set_mv_avg(&enc_mv_avg, as5047d.angle);
 }
 
 /* period : 10 ms */

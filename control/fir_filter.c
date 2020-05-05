@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 #include "fir_filter.h"
 #include "control_board.h"
 
@@ -10,9 +11,6 @@ const float fir_para[] = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125
 
 static volatile float fir_output;
 static volatile float fir_buf[8] = {0};
-static uint_fast16_t mv_buf[MV_AVG_WINDOW_SIZE] = {0};
-static uint_fast8_t mv_index = 0;
-static uint_fast16_t mv_output;
 
 void fir_update(float fir_input) {
     for(uint_fast8_t i=FIR_NUM-1;i>0;i--) {
@@ -27,21 +25,45 @@ float get_fir_enc(void) {
     return fir_output;
 }
 
-void mv_avg(uint_fast16_t mv_input) {
-    uint_fast16_t temp = 0;
-
-    mv_buf[mv_index++] = mv_input;
-    if(mv_index == MV_AVG_WINDOW_SIZE) {
-        mv_index = 0;
+void init_mv_avg(mv_avg_t *mv_avg, uint_fast8_t window_size) {
+    for(uint_fast16_t i=0;i<window_size;i++) {
+        mv_avg->mv_buf[i] = 0;
     }
-
-    for(uint_fast16_t i=0;i<MV_AVG_WINDOW_SIZE;i++) {
-        temp += mv_buf[i];
+    mv_avg->mv_index = 0;
+    mv_avg->mv_output = 0;
+    mv_avg->shift = 0;
+    mv_avg->wd_sz = window_size;
+    uint_fast8_t temp = window_size;
+    while(1) {
+        if(temp > 1) {
+            mv_avg->shift++;
+            temp >>= 1;
+        }
+        else {
+            break;
+        }
     }
-
-    mv_output = temp >> 3;
 }
 
-uint_fast16_t get_mv_avg(void) {
-    return mv_output;
+void set_mv_avg(mv_avg_t *mv_avg, int_fast16_t mv_input) {
+    int_fast16_t temp = 0;
+
+    mv_avg->mv_buf[mv_avg->mv_index++] = mv_input;
+    if(mv_avg->mv_index == mv_avg->wd_sz) {
+        mv_avg->mv_index = 0;
+    }
+
+    for(uint_fast16_t i=0;i<mv_avg->wd_sz;i++) {
+        temp += mv_avg->mv_buf[i];
+    }
+
+    mv_avg->mv_output = temp >> mv_avg->shift;
+}
+
+int_fast16_t get_mv_avg(mv_avg_t *mv_avg) {
+    return mv_avg->mv_output;
+}
+
+void deinit_mv_avg(mv_avg_t *mv_avg) {
+    free(mv_avg->mv_buf);
 }

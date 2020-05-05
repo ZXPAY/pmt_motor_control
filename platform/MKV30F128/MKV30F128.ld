@@ -5,7 +5,7 @@
  * @date 2020.02.17
  */
 
-STACK_SIZE = 0x800;
+STACK_SIZE = 0x2000;
 
 ENTRY(Reset_Handler)
 

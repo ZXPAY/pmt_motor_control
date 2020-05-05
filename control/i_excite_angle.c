@@ -41,7 +41,7 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     else if(fb_exc_angle->th_esvpwm < 0)    fb_exc_angle->th_esvpwm += 360;
 
     /* Uncomment the below code, it will cause system unstable sometimes */
-    // /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
+    /* Constrain to  (e_sdegree - 90) ~ (e_sdegree + 90)*/
     // float er_sensor_svpwm = e_sdegree - fb_exc_angle->th_esvpwm;
     // if(er_sensor_svpwm > 180) {
     //     er_sensor_svpwm -= 360;
@@ -51,14 +51,10 @@ void cal_exc_ang_correct(fb_exc_angle_t *fb_exc_angle, float  e_sdegree, float e
     // }
     // if(er_sensor_svpwm > 90) {
     //     /* Over 90 degree */
-    //     ENABLE_TEST1();
     //     fb_exc_angle->th_cum += SVPWM_LIMIT_UNIT;
-    //     DISABLE_TEST1();
     // }
     // else if(er_sensor_svpwm < -90) {
-    //     ENABLE_TEST2();
     //     fb_exc_angle->th_cum -= SVPWM_LIMIT_UNIT;
-    //     DISABLE_TEST2();
     // }
 
 

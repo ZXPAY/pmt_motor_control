@@ -96,7 +96,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=22)
     plt.yticks(fontsize=22)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/ther_' + file_marker + '.png', dpi=1000)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/ther_' + file_marker + '.png')
 
     ### ==================================================================================== ###
     plt.figure(figsize=(20, 12))
