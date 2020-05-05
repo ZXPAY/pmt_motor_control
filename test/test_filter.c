@@ -5,6 +5,8 @@
  * @date 2020.xx.xx
  *
  * Compiler: arm-none-eabi-gcc (8.3.1)
+ * Setting:
+ * UART_DMA = NO
  */
 
 /* Include C standard library */
@@ -62,14 +64,14 @@ int main (void) {
 
     hal_delay(100);
     /* reload PIT0 every 1 ms (1000 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 10000;
+    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 1000;
     /* enable PIT0 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
     RS485_trm("start \r\n");
     __enable_irqn(PIT0_IRQn);
 
     while (true) {
-        RS485_trm("%.2f\r\n", get_fir_enc());
+        RS485_trm("%.2f, %d\r\n", get_fir_enc(), get_mv_avg());
     }
 
 
@@ -82,7 +84,12 @@ void HardFalut_Handler(void) {
 
 void PIT0_IRQHandler(void) {
     as5047d.update();
+    ENABLE_TEST1();
     fir_update((float)as5047d.angle);
+    DISABLE_TEST1();
+    ENABLE_TEST2();
+    mv_avg(as5047d.angle);
+    DISABLE_TEST2();
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;
 }

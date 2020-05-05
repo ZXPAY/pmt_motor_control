@@ -59,7 +59,7 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    drv8847_s.setMode(DRV8847_MODE_SLEEP);
+    // drv8847_s.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize control library */
     control_init();
@@ -74,8 +74,8 @@ int main (void) {
 
     /* SysTick initialize */
     systick_init();
-    RS485_trm("start !!!\r\n");
-    hal_delay(100);
+    RS485_trm("start !!!, %d, %d, %d, %d\r\n", sizeof(uint8_t), sizeof(uint_fast8_t), sizeof(uint_fast16_t), sizeof(uint_fast32_t));
+    hal_delay(3000);
 
     // Enable interrupt
     ENABLE_PHA_INT();
@@ -102,7 +102,8 @@ void HardFault_Handler(void) {
 
 void FIR_Handle(void) {
     as5047d.update();
-    fir_update((float)as5047d.angle);
+    // fir_update((float)as5047d.angle);
+    mv_avg(as5047d.angle);
 }
 
 /* period : 10 ms */

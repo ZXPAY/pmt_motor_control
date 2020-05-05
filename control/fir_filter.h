@@ -9,10 +9,13 @@
 #ifndef FIR_FILTER_H
 #define FIR_FILTER_H
 
-#define FIR_NUM     4
+#define FIR_NUM                8
+#define MV_AVG_WINDOW_SIZE     8
 
 void fir_update(float fir_input);
 float get_fir_enc(void);
 
+void mv_avg(uint_fast16_t mv_input);
+uint_fast16_t get_mv_avg(void);
 
 #endif /* FILTER_H */
