@@ -104,6 +104,11 @@ void HardFault_Handler(void) {
 void FIR_Handle(void) {
     as5047d.update();
     // fir_update((float)as5047d.angle);
+    if(as5047d.angle < 5) {
+        for (uint8_t i = 0;i < enc_mv_avg.wd_sz;i++) {
+            enc_mv_avg.mv_buf[i] = 0;
+        }
+    }
     set_mv_avg(&enc_mv_avg, as5047d.angle);
 }
 
