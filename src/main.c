@@ -74,8 +74,8 @@ int main (void) {
 
     /* SysTick initialize */
     systick_init();
-    RS485_trm("start !!!, %d, %d, %d, %d\r\n", sizeof(uint8_t), sizeof(uint_fast8_t), sizeof(uint_fast16_t), sizeof(uint_fast32_t));
-    hal_delay(3000);
+    RS485_trm("start !!! \r\n");
+    hal_delay(100);
 
     // Enable interrupt
     ENABLE_PHA_INT();

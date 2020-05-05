@@ -65,7 +65,7 @@ void control_init(void) {
 void control_print(void) {
     static uint8_t prec_cnt = 0;
     /* i1, i2, angle, sangle, cangle, th_svpwm, i_svpwm, th_er, th_cum, pwm1, pwm2 */
-    RS485_trm("%d,%d,%.2f,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, get_fir_enc(), sangle.ele_dangle, cangle.ele_dangle,
+    RS485_trm("%d,%d,%d,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f,%d,%d,\r\n", drv8847_s.drv->v_r1, drv8847_s.drv->v_r2, get_mv_avg(), sangle.ele_dangle, cangle.ele_dangle,
                                                     fb_exc_angle.th_esvpwm, fb_current.i_svpwm, fb_exc_angle.th_er, fb_exc_angle.th_cum, pwm12.pwm1, pwm12.pwm2);
 
     if(++prec_cnt == 5) {
@@ -76,7 +76,7 @@ void control_print(void) {
 // volatile uint16_t temp[4];
 // volatile uint8_t ccc = 0;
 void control_handle(void) {
-    update_sangle(&sangle, (uint16_t)get_fir_enc());  /* about 3.825 us */
+    update_sangle(&sangle, get_mv_avg());
     cal_exc_ang_correct(&fb_exc_angle, sangle.ele_dangle, cangle.ele_dangle);  /* about 3.225 us */
     cal_current_correct(&fb_exc_angle, &fb_current); /* about 5.25 us */
     cal_pwmAB(&pwm12, &fb_exc_angle, &fb_current);   /* about 26.32 us */
