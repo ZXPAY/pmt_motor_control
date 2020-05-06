@@ -140,7 +140,7 @@ DOT_JLINK_TEXT += "loadfile $(PROJECT).hex\n"
 DOT_JLINK_TEXT += "exit"
 
 # Open com port
-p := COM8
+p := COM6
 # Data size receive
 sz := 1000
 # Save file name marker

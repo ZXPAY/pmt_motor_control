@@ -18,6 +18,7 @@
 #include "cortex_m4.h"
 #include "fpu.h"
 #include "drv8847_s.h"
+#include "ele_angle.h"
 #include "control_config.h"
 
 /* Include control library */
@@ -27,6 +28,7 @@
 extern freq_div_t freq_div_pwmA;
 extern freq_div_t freq_div_pwmB;
 extern mv_avg_t enc_mv_avg;      /* Moving average object */
+extern fir_t enc_fir;            /* FIR filter object */
 
 /* Include other library */
 #include "hal_tick.h"
@@ -69,7 +71,7 @@ int main (void) {
     freq_div_init(&freq_div_pwmA);
     freq_div_init(&freq_div_pwmB);
     freq_div_add(&freq_div_pwmA, 1, (void *)FIR_Handle, NULL, 0);
-    freq_div_add(&freq_div_pwmA, 10, (void *)control_handle, NULL, 0);
+    freq_div_add(&freq_div_pwmA, 8, (void *)control_handle, NULL, 0);
     freq_div_add(&freq_div_pwmA, 20, (void *)drv8847_s.adc_trig1A1B, NULL, 5);
     freq_div_add(&freq_div_pwmB, 20, (void *)drv8847_s.adc_trig2A2B, NULL, 15);
 
@@ -103,13 +105,30 @@ void HardFault_Handler(void) {
 
 void FIR_Handle(void) {
     as5047d.update();
-    // fir_update((float)as5047d.angle);
-    if(as5047d.angle < 5) {
-        for (uint8_t i = 0;i < enc_mv_avg.wd_sz;i++) {
-            enc_mv_avg.mv_buf[i] = 0;
+    /* Encoder boundary threshold constrain */
+    /* Moving average */
+    // if((as5047d.angle > 16370) || (as5047d.angle < 10)) {
+    //     uint16_t temp = enc_mv_avg.mv_output;
+    //     set_mv_avg(&enc_mv_avg, as5047d.angle);
+    //     if(enc_mv_avg.mv_output < 16370 && enc_mv_avg.mv_output > 20) {
+    //         enc_mv_avg.mv_output = temp;
+    //     }
+    // }
+    // else {
+    //     set_mv_avg(&enc_mv_avg, as5047d.angle);
+    // }
+
+    /* FIR filter */
+    if((as5047d.angle > 16370) || (as5047d.angle < 10)) {
+        float temp = enc_fir.fir_output;
+        set_fir(&enc_fir, (float)as5047d.angle);
+        if(enc_fir.fir_output < 16370 && enc_fir.fir_output > 20) {
+            enc_fir.fir_output = temp;
         }
     }
-    set_mv_avg(&enc_mv_avg, as5047d.angle);
+    else {
+        set_fir(&enc_fir, (float)as5047d.angle);
+    }
 }
 
 /* period : 10 ms */
@@ -120,5 +139,3 @@ void PRINT_IRQHandler(void) {
     /* clear flag */
     PIT->CHANNEL[1].TFLG = PIT_TFLG_TIF_MASK;
 }
-
-
