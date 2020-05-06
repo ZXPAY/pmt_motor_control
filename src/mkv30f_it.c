@@ -40,9 +40,9 @@ freq_div_t freq_div_pwmB = {.reg_num = 0};
  * @brief 2A 2B timer/PWM handler
  */
 void FTM_2A2B_Handler(void) {
-    ENABLE_TEST2();
+    // ENABLE_TEST2();
     freq_div_handle(&freq_div_pwmB);
-    DISABLE_TEST2();
+    // DISABLE_TEST2();
 
     /* clear overflow flag */
     FTM_2A2B->SC &= ~FTM_SC_TOF_MASK;
@@ -53,9 +53,9 @@ void FTM_2A2B_Handler(void) {
  * @brief 1A 1B timer/PWM handler
  */
 void FTM_1A1B_Handler(void) {
-    ENABLE_TEST1();
+    // ENABLE_TEST1();
     freq_div_handle(&freq_div_pwmA);
-    DISABLE_TEST1();
+    // DISABLE_TEST1();
 
     /* clear overflow flag */
     FTM_1A1B->SC &= ~FTM_SC_TOF_MASK;

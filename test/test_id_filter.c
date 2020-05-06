@@ -61,7 +61,7 @@ int main (void) {
 
     hal_delay(100);
     /* reload PIT0 every 1 ms (1000 Hz), SYSTEM_CLOCK_FREQUENCY = 72MHz */
-    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 10000;
+    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 40000;
     /* enable PIT0 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
     RS485_trm("start \r\n");
@@ -89,7 +89,7 @@ void PIT0_IRQHandler(void) {
         for (uint16_t i = 0; i < COLLECT_LEN; i++) {
             RS485_trm("%d,\r\n", collect_buf[i]);
         }
-
+        __enable_irqn(PIT0_IRQn);
     }
     /* clear flag */
     PIT->CHANNEL[0].TFLG = PIT_TFLG_TIF_MASK;

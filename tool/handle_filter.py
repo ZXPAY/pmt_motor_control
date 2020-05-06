@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
 
     window = 8
-    recur_num = 3  # feature = 3 + 1 = 4
+    recur_num = 7  # feature = 3 + 1 = 4
     angle_recur = np.zeros([data_length-recur_num, recur_num+1], dtype=np.float64)
     angle_ans = np.ones([data_length-recur_num, 1], dtype=np.float64) * np.mean(angle)
     for i in range(recur_num, data_length):
@@ -59,11 +59,11 @@ if __name__ == "__main__":
             angle_recur[i-recur_num, r] = angle[i-recur_num+r]
 
     # Calculate parameters
-    # P = np.matmul(np.matmul(np.linalg.inv(np.matmul(angle_recur.T, angle_recur)), angle_recur.T), angle_ans)
-    # save2pickle("data/fir_filter_4_2.pickle", P)
+    P = np.matmul(np.matmul(np.linalg.inv(np.matmul(angle_recur.T, angle_recur)), angle_recur.T), angle_ans)
+    save2pickle("data/fir_filter_8_5.pickle", P)
 
     # Load parameters
-    P = load_pickle("data/fir_filter_4_2.pickle")
+    # P = load_pickle("data/fir_filter_8_2.pickle")
 
     print(P.shape)
     print(P)
