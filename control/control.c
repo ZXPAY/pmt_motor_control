@@ -64,8 +64,8 @@ void control_init(void) {
 
     /* Initialize moving average object */
     init_mv_avg(&enc_mv_avg, 8);
-    init_mv_avg(&pwma_mv_avg, 4);
-    init_mv_avg(&pwmb_mv_avg, 4);
+    init_mv_avg(&pwma_mv_avg, 16);
+    init_mv_avg(&pwmb_mv_avg, 16);
 
     /* Initialize FIR filter object */
     init_fir(&enc_fir, fir_para8, (sizeof(fir_para8)>>2));
