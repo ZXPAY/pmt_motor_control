@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import argparse
 
 if __name__ == "__main__":
-    step_data = 1200
+    PLOT_SHOW = False
+    step_data = 1024
     delat_t = 1/(100000)
     now = datetime.now()
     default_file_marker = now.strftime("%m_%d_%H_%M_%S")
@@ -57,15 +58,16 @@ if __name__ == "__main__":
         test_all[i-1, 0] = (i_real[i] - i_real[i-1]) / delat_t
         test_all[i-1, 1] = i_real[i-1]
 
-
-    plt.plot(i_real)
-    plt.title("current (A)")
-    plt.show()
+    if PLOT_SHOW:
+        plt.plot(i_real)
+        plt.title("current (A)")
+        plt.show()
 
     print(angle_mach.shape)
-    plt.plot(angle_mach)
-    plt.title("angle (degree)")
-    plt.show()
+    if PLOT_SHOW:
+        plt.plot(angle_mach)
+        plt.title("angle (degree)")
+        plt.show()
 
     Y = np.ones([step_data-1, 1], dtype=np.float32)*5
 
@@ -74,11 +76,12 @@ if __name__ == "__main__":
     print(np.max(i_real))
 
     A_bar = np.matmul(test_all, th_para)
-    plt.plot(A_bar)
-    plt.plot(Y)
-    plt.show()
+    if PLOT_SHOW:
+        plt.plot(A_bar)
+        plt.plot(Y)
+        plt.show()
 
-    f = open("data/motor_id_phaseA_" + str(file_marker) + ".txt", "w")
+    f = open("data/motor_id_phase_" + str(file_marker) + ".txt", "w")
     write_str = "Data size: " + str(step_data) + "\n"
     write_str += "Inductance: " + str(th_para[0][0] * 1000) + " mH" + "\n"
     write_str += "Resistor: " + str(th_para[1][0]) + " ohms" + "\n"
