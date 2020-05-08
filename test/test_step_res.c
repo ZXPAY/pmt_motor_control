@@ -111,9 +111,9 @@ int main (void) {
 
     RS485_trm("start step response %lx, %lx\r\n", ADC_PHAB->CFG1, ADC_PHAB->CFG2);
 #ifdef ID_PHASE_A
-    SET_PHASEA_DUTY(0);
+    SET_PHASEA_DUTY(PERIOD_COUNT);
 #else
-    SET_PHASEB_DUTY(0);
+    SET_PHASEB_DUTY(PERIOD_COUNT);
 #endif
     hal_delay(1000);
     __set_irqn_priority(ADC0_IRQn, 1);
@@ -125,9 +125,9 @@ int main (void) {
     __enable_irqn(PIT0_IRQn);
 
 #ifdef ID_PHASE_A
-    SET_PHASEA_DUTY(0);
+    SET_PHASEA_DUTY(PERIOD_COUNT);
 #else
-    SET_PHASEB_DUTY(0);
+    SET_PHASEB_DUTY(PERIOD_COUNT);
 #endif
     // full_step();
 
@@ -162,8 +162,9 @@ int main (void) {
     return 0;
 }
 
-void HardFalut_Handler(void) {
-    RS485_trm("Error occur\n");
+void HardFault_Handler(void) {
+    RS485_trm("Hardware error occur\n");
+    while(1);
 }
 
 void adc_trig(void) {

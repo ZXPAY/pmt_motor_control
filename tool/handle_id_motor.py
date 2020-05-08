@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import argparse
 
 if __name__ == "__main__":
-    step_data = 1200
-    delat_t = 1/(100000)
+    step_data = 1200     # stack size limit
+    delat_t = 1/(50000)
     now = datetime.now()
     default_file_marker = now.strftime("%m_%d_%H_%M_%S")
     parser = argparse.ArgumentParser()
@@ -25,20 +25,25 @@ if __name__ == "__main__":
     print("Data has ", data_length)
 
     # collect data
-    index = np.zeros([data_length, 1], dtype=np.float32)
-    raw_adc = np.zeros([data_length, 1], dtype=np.float32)
-    angle = np.zeros([step_data, 1], dtype=np.float32)
+    index = np.zeros([data_length, 200], dtype=np.float32)
+    raw_adc = np.zeros([data_length, 200], dtype=np.float32)
+    angle = np.zeros([step_data, 200], dtype=np.float32)   # full step = 200
 
+    num = 0
     cnt = 0
+
 
     for data in raw_data:
         data_list = data.split(',')
         if len(data_list) == factor_length:
             temp_adc = float(data_list[para_index['adc']])
             temp_angle = float(data_list[para_index['angle']])
-            raw_adc[cnt, 0] = temp_adc
-            angle[cnt, 0] = temp_angle
+            raw_adc[cnt, num] = temp_adc
+            angle[cnt, num] = temp_angle
             cnt += 1
+            if cnt == step_data:
+                cnt = 0
+                num += 1
         else:
             print("Warning !!! List size not match !!!, ", cnt)
             print(data_list)
@@ -51,6 +56,9 @@ if __name__ == "__main__":
     # print("min value: ", np.min(ia))
 
     test_all = np.zeros([step_data-1, 2], dtype=np.float32)
+
+
+
     i_real = (3.3 * raw_adc[0:step_data, 0] / 65535.0 - 1.65) / 20 / 0.1
     angle_mach = angle*360/16383
     for i in range(1, i_real.shape[0]):
@@ -63,7 +71,7 @@ if __name__ == "__main__":
     plt.show()
 
     print(angle_mach.shape)
-    plt.plot(angle_mach)
+    plt.plot(angle_mach[:,0])
     plt.title("angle (degree)")
     plt.show()
 

@@ -25,7 +25,8 @@ CSRC   += $(CONTROL_CSRC) $(HARDWARE_CSRC) $(HAL_CSRC)
 # CSRC   += test_adc.c
 # CSRC   += test_timeout.c
 # CSRC   += test_dma_transmit.c
-CSRC   += test_step_res.c
+# CSRC   += test_step_res.c
+CSRC   += test_id_motor_kt.c
 # CSRC   += test_itm.c
 # CSRC   += test_filter.c
 # CSRC   += test_id_filter.c
@@ -257,7 +258,7 @@ clt_raw:
 clt:
 	@echo start collect data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 13
-hdl:
+hdl: # 對應main.c 程式碼
 	@echo Handle collect data
 	@python ./tool/handle_data.py -mk $(mk) -len $(len)
 	@echo Done !
@@ -266,23 +267,27 @@ hdl:
 clt_enc:
 	@echo start collect encoder data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 5
-hdl_enc:
+hdl_enc: # 對應test_encoder.c 程式碼
 	@echo Handle encoder data
 	@python ./tool/handle_enc.py -mk $(mk) -len $(len)
 	@echo Done !
 
-hdl_filter:
+hdl_filter: # 對應test_filter.c 程式碼
 	@echo Handle encoder data
 	@python ./tool/handle_filter.py -mk $(mk) -len 3
 	@echo Done !
 
 # Collect step response data
-clt_step_res:
+clt_motor_id:
 	@echo start collect step response data
 	@python ./tool/rec_data.py -p $(p) -sz $(sz) -mk $(mk) -len 5
-hdl_step_res:
+hdl_step_res: # 對應test_step_rec.c 程式碼，注意取樣頻率
 	@echo Handle step response data
 	@python ./tool/handle_step_rec.py -mk $(mk)
+	@echo Done !
+hdl_motor_id: # 對應test_motor_id.c 程式碼，注意取樣頻率
+	@echo Handle motor id data
+	@python ./tool/handle_id_motor.py -mk $(mk)
 	@echo Done !
 
 # Collect data help

@@ -65,3 +65,4 @@ dkms.conf
 *.pickle
 *.png
 *.txt
+data/Readme.md

@@ -36,10 +36,7 @@
 #include "tick.h"
 #include "rs485.h"
 
-#define ADC_SAMPLE_NUM 1024
-
-// #define ID_PHASE_A
-#define ID_PHASE_B
+#define ADC_SAMPLE_NUM 1200
 
 extern drv8847_s_t drv8847_s;        /* DRV8847 motor drive IC */
 extern as50474_t as5047d;        /* AS5047D motor encoder IC */
@@ -92,7 +89,7 @@ int main (void) {
     PIT->MCR = 0;
 
     /* 100k ADC */
-    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 100000;
+    PIT->CHANNEL[0].LDVAL = SYS_CLOCK_FREQ / 50000;
     /* enable PIT1 timer and enable interrupt */
     PIT->CHANNEL[0].TCTRL = PIT_TCTRL_TEN_MASK | PIT_TCTRL_TIE_MASK;
 
@@ -109,32 +106,22 @@ int main (void) {
     /* Initialize adc buff */
     for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) buff_adc[i] = 0;
 
-    RS485_trm("start step response %lx, %lx\r\n", ADC_PHAB->CFG1, ADC_PHAB->CFG2);
-#ifdef ID_PHASE_A
-    SET_PHASEA_DUTY(0);
-#else
-    SET_PHASEB_DUTY(0);
-#endif
-    hal_delay(1000);
+    RS485_trm("start ID motor \r\n");
+
+    full_step();
+
+    hal_delay(2000);
     __set_irqn_priority(ADC0_IRQn, 1);
     ENABLE_ADC_PHAB_INT();
-    stop_step();
-    hal_delay(1000);
-    uint16_t cnt = 0;
-    ENABLE_TEST1();
-    __enable_irqn(PIT0_IRQn);
 
-#ifdef ID_PHASE_A
-    SET_PHASEA_DUTY(0);
-#else
-    SET_PHASEB_DUTY(0);
-#endif
-    // full_step();
+    uint16_t cnt = 0;
+    __enable_irqn(PIT0_IRQn);
+    stop_step();
+    full_step();
 
     while (true) {
         if(flag) {
             stop_step();
-            DISABLE_TEST1();
             for(uint16_t i=0;i<ADC_SAMPLE_NUM;i++) {
                 RS485_trm("%d,%d,%d,\r\n", i, buff_adc[i], buff_angle[i]);
             }
@@ -143,27 +130,25 @@ int main (void) {
                 RS485_trm("Full step done !!!\r\n");
                 while(1);
             }
-            while(1);
+            // while(1);
             sample_n = 0;
+            sample_ang = 0;
             flag = 0;
-            tog_fg ^= 1;
-            ENABLE_TEST1();
             ENABLE_ADC_PHAB_INT();
             __enable_irqn(PIT0_IRQn);
+            // stop_step();
             full_step();
+            // while(1);
         }
-        // stop_step();
-        // hal_delay(1);
-        // full_step();
-        // hal_delay(100);
     }
 
 
     return 0;
 }
 
-void HardFalut_Handler(void) {
-    RS485_trm("Error occur\n");
+void HardFault_Handler(void) {
+    RS485_trm("Hardware error occur\n");
+    while(1);
 }
 
 void adc_trig(void) {
