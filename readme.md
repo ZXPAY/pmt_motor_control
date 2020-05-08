@@ -6,7 +6,7 @@
 ---
 
 ## Collect raw data
-```makefile
+```
 make clt_raw mk={file_mark} len={length} sz={data_size}
 ```  
 "file_mark" is the marker that data will save to "raw_data_{file_mark}.txt"  
@@ -16,7 +16,7 @@ make clt_raw mk={file_mark} len={length} sz={data_size}
 ---
 
 ## Collect motor step response or dynamic data
-```makefile
+```
 make clt_motor_id mk={file_mark} sz={data_size}
 ```  
 "file_mark" is the marker that data will save to "raw_data_{file_mark}.txt"  
