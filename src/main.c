@@ -62,7 +62,7 @@ int main (void) {
         RS485_trm("DRV8847S Timeout !!! \r\n");
         hal_delay(1000);
     }
-    // drv8847_s.setMode(DRV8847_MODE_SLEEP);
+    drv8847_s.setMode(DRV8847_MODE_SLEEP);
 
     /* Initialize control library */
     control_init();
