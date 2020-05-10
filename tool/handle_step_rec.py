@@ -110,6 +110,17 @@ if __name__ == "__main__":
     plt.legend(['current'], fontsize=20)
     plt.savefig(FIG_DIR+"/"+file_marker + '/angle_current_step_' + file_marker + '.png')
 
+    plt.figure(figsize=(20,12))
+    plt.plot(t, i_real)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('A', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title("current " + file_marker[:-2] + ", angle velocity=0", fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
+    plt.legend(['current'], fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/current_step_' + file_marker + '.png')
+
     try:
         os.mkdir("data/para")
     except:

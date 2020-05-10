@@ -4,7 +4,7 @@ run(`echo Start handle image`);
 for i = 1:2
     for N_STEP=0:5
         temp = 2^N_STEP
-        command = `make hdl mk=ol_n$temp\_$i`
+        command = `make hdl mk=ol_n$temp\_$i`   
         run(`echo ==========================`)
         run(`echo $command`)
         run(command)
@@ -24,7 +24,7 @@ end
 
 
 #= Start handle close loop, exi_angle + current =#
-for i = 1:4
+for i = 1:2
     for N_STEP=0:5
         temp = 2^N_STEP
         command = `make hdl mk=cl_in$temp\_$i`
@@ -33,9 +33,10 @@ for i = 1:4
         run(command)
     end
 end
+run(`make hdl mk=cl_in32_3`)
+run(`make hdl mk=cl_in32_4`)
 
-
-#= ================================================== =#
+#= Identify encoder FIR filter parameters =#
 
 run(`echo ID FIR filter`)
 run(`make hdl_filter mk=enc_noinput_10k`)
@@ -46,7 +47,7 @@ for i=0:3
     run(`make hdl_filter mk=enc_noinput_40k_$i`)
 end
 
-#= ================================================== =#
+#= Identify motor inductance and resistor =#
 
 run(`echo ID motor inductance and resistor`)
 for i=0:10

@@ -87,6 +87,8 @@ def plot_data(file_marker, DELTA_T):
     fig.align_labels()
     plt.savefig(FIG_DIR+"/"+file_marker + '/scanglecum_er_' + file_marker + '.png')
 
+    ### ==================================================================================== ###
+
     plt.figure(figsize=(20,12))
     plt.plot(t, th_er)
     plt.grid(True)
@@ -231,5 +233,85 @@ def plot_data(file_marker, DELTA_T):
     f.write(report_str)
     f.close()
 
+    ### ==================================================================================== ###
+    ### ==================================================================================== ###
+    ### ==================================================================================== ###
+    ### Plot less data
+    small_data_size = int(ia.shape[0] / 10)
+    small_start = int(ia.shape[0] / 10)
+    t_small = t[small_start:small_start+small_data_size]
+
+    fig = plt.figure(figsize=(20, 12))
+    # first figure
+    plt.subplot(211)
+    plt.plot(t_small, sangle_cum[small_start:small_start+small_data_size])
+    plt.plot(t_small, cangle_cum[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('command and sensor machanical degree accumlation', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(['sensor', 'command'], fontsize=20)
+    # second figure
+    plt.subplot(212)
+    plt.plot(t_small, th_er[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1, 0))
+    plt.ylabel('degree', fontsize=24, position=(0,1.05), rotation="horizontal")
+    plt.title('theta error machanical angle', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    fig.align_labels()
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_scanglecum_er_' + file_marker + '.png')
 
 
+    fig = plt.figure(figsize=(20, 12))
+    # first figure
+    plt.subplot(211)
+    plt.plot(t_small, pwma[small_start:small_start+small_data_size])
+    plt.plot(t_small, pwmb[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('duty', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('Phase A B PWM', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
+    plt.legend(['pwma', 'pwmb'], fontsize=20)
+    # second figure
+    plt.subplot(212)
+    plt.plot(t_small, ia[small_start:small_start+small_data_size])
+    plt.plot(t_small, ib[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('A', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('Phase A B current', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(['ia', 'ib'], fontsize=20)
+    fig.align_labels()
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_pwm_' + file_marker + '.png')
+
+    fig = plt.figure(figsize=(20, 12))
+    # first figure
+    plt.subplot(211)
+    plt.plot(t_small, ia[small_start:small_start+small_data_size])
+    plt.plot(t_small, ib[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('A', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('Phase A B current', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(['ia', 'ib'], fontsize=20)
+    # second figure
+    plt.subplot(212)
+    plt.plot(t_small, power[small_start:small_start+small_data_size])
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('W', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('1A1B 2A2B Power', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    fig.align_labels()
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_power_' + file_marker + '.png')

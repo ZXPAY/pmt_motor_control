@@ -20,8 +20,8 @@ if __name__ == "__main__":
     # define PWM PERIOD COUNT
     PERIOD_COUNT = 900
     # define each phase resistor
-    ra = 7.29
-    rb = 7.08
+    ra = 6.485
+    rb = 6.165
     COMMA_DATA_LEN = args.length
     para_index = {'title': 0, 'ia': 1, 'ib': 2, 'angle': 3, 'sele_dangle': 4, 'cele_dangle': 5, 'th_svpwm': 6,
                     'i_svpwm': 7, 'th_er': 8, 'th_cum': 9, 'pwma': 10, 'pwmb': 11}
