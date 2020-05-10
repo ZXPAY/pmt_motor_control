@@ -115,13 +115,13 @@ if __name__ == "__main__":
 
     write_str = ""
     f = open("data/para/enc_fir_" + str(file_marker) + ".txt", "w")
-    write_str += "========== angle =========="
+    write_str += "========== angle ==========" + "\n"
     write_str += "max value: " + str(np.max(angle)) + "\n"
     write_str += "min value: " + str(np.min(angle)) + "\n"
     write_str += "mean value: " + str(np.mean(angle)) + "\n"
     write_str += "var value: " + str(np.var(angle)) + "\n"
     write_str += "std value: " + str(np.std(angle)) + "\n"
-    write_str += "========== FIR angle =========="
+    write_str += "========== FIR angle ==========" + "\n"
     write_str += "max value: " + str(np.max(new_angle)) + "\n"
     write_str += "min value: " + str(np.min(new_angle)) + "\n"
     write_str += "er_max: " + str(er_max*360/16383) + " degree" + "\n"
