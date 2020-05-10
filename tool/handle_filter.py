@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from datetime import datetime
 from mypickle import save2pickle, load_pickle
 import matplotlib.pyplot as plt
@@ -6,6 +7,7 @@ import argparse
 
 if __name__ == "__main__":
     delat_t = 1/10000
+    FIG_DIR = "figure"
     now = datetime.now()
     default_file_marker = now.strftime("%m_%d_%H_%M_%S")
     default_len = 13
@@ -48,8 +50,6 @@ if __name__ == "__main__":
 
     print("==================================")
 
-
-
     window = 8
     recur_num = 7  # feature = 3 + 1 = 4
     angle_recur = np.zeros([data_length-recur_num, recur_num+1], dtype=np.float64)
@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     # Calculate parameters
     P = np.matmul(np.matmul(np.linalg.inv(np.matmul(angle_recur.T, angle_recur)), angle_recur.T), angle_ans)
-    save2pickle("data/fir_filter_8_5.pickle", P)
+    save2pickle("data/fir_" + file_marker + ".pickle", P)
 
     # Load parameters
     # P = load_pickle("data/fir_filter_8_2.pickle")
@@ -69,9 +69,24 @@ if __name__ == "__main__":
     print(P)
 
     new_angle = np.matmul(angle_recur, P)
-    plt.plot(angle)
-    plt.plot(new_angle)
-    plt.show()
+
+    try:
+        os.mkdir(FIG_DIR+"/"+file_marker)
+    except:
+        pass
+
+    plt.figure(figsize=(20,12))
+    plt.plot(angle*360/16383)
+    plt.plot(new_angle*360/16383)
+    plt.plot(np.ones(angle.shape)*np.mean(angle)*360/16383, 'r')
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title('angle and after FIR filter angle', fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
+    plt.legend(['angle', 'FIR angle', 'mean'], fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/fir_angle_' + file_marker + '.png')
 
     print("===== new_angle =====")
     print("max value: ", np.max(new_angle))
@@ -92,3 +107,29 @@ if __name__ == "__main__":
         c += 1
     temp += "}"
     print(temp)
+
+    try:
+        os.mkdir("data/para")
+    except:
+        pass
+
+    write_str = ""
+    f = open("data/para/enc_fir_" + str(file_marker) + ".txt", "w")
+    write_str += "========== angle =========="
+    write_str += "max value: " + str(np.max(angle)) + "\n"
+    write_str += "min value: " + str(np.min(angle)) + "\n"
+    write_str += "mean value: " + str(np.mean(angle)) + "\n"
+    write_str += "var value: " + str(np.var(angle)) + "\n"
+    write_str += "std value: " + str(np.std(angle)) + "\n"
+    write_str += "========== FIR angle =========="
+    write_str += "max value: " + str(np.max(new_angle)) + "\n"
+    write_str += "min value: " + str(np.min(new_angle)) + "\n"
+    write_str += "er_max: " + str(er_max*360/16383) + " degree" + "\n"
+    write_str += "mean value: " + str(np.mean(new_angle)) + "\n"
+    write_str += "var value: " + str(np.var(new_angle)) + "\n"
+    write_str += "std value: " + str(np.std(new_angle)) + "\n"
+    write_str += "parameters: " + "\n"
+    write_str += temp  
+    f.write(write_str)
+    f.close()
+

@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from datetime import datetime
 from mypickle import save2pickle, load_pickle
 import matplotlib.pyplot as plt
@@ -6,6 +7,7 @@ import argparse
 
 if __name__ == "__main__":
     PLOT_SHOW = False
+    FIG_DIR = "figure"
     step_data = 1024
     delat_t = 1/(100000)
     now = datetime.now()
@@ -81,7 +83,39 @@ if __name__ == "__main__":
         plt.plot(Y)
         plt.show()
 
-    f = open("data/motor_id_phase_" + str(file_marker) + ".txt", "w")
+    try:
+        os.mkdir(FIG_DIR+"/"+file_marker)
+    except:
+        pass
+    plt.figure(figsize=(20,12))
+    # first figure
+    plt.subplot(211)
+    plt.plot(t, angle_mach)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title("angle " + file_marker[:-2] + ", angle velocity=0", fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
+    plt.legend(['angle'], fontsize=20)
+    # second figure
+    plt.subplot(212)
+    plt.plot(t, i_real)
+    plt.grid(True)
+    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.ylabel('A', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.title("current " + file_marker[:-2] + ", angle velocity=0", fontsize=28)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
+    plt.legend(['current'], fontsize=20)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_current_step_' + file_marker + '.png')
+
+    try:
+        os.mkdir("data/para")
+    except:
+        pass
+
+    f = open("data/para/motor_id_phase_" + str(file_marker) + ".txt", "w")
     write_str = "Data size: " + str(step_data) + "\n"
     write_str += "Inductance: " + str(th_para[0][0] * 1000) + " mH" + "\n"
     write_str += "Resistor: " + str(th_para[1][0]) + " ohms" + "\n"
