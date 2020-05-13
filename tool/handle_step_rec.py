@@ -108,7 +108,7 @@ if __name__ == "__main__":
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
     plt.legend(['current'], fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_current_step_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_current_step_' + file_marker + '.png', dpi=600)
 
     plt.figure(figsize=(20,12))
     plt.plot(t, i_real)
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
     plt.legend(['current'], fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/current_step_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/current_step_' + file_marker + '.png', dpi=600)
 
     try:
         os.mkdir("data/para")

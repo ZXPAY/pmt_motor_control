@@ -47,7 +47,7 @@ def plot_data(file_marker, DELTA_T):
     plt.title('angle coding', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/angle_' + file_marker + '.png', dpi=600)
 
     ### ==================================================================================== ###
     plt.figure(figsize=(20, 12))
@@ -85,7 +85,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/scanglecum_er_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/scanglecum_er_' + file_marker + '.png', dpi=600)
 
     ### ==================================================================================== ###
 
@@ -175,7 +175,7 @@ def plot_data(file_marker, DELTA_T):
     plt.yticks(fontsize=20)
     plt.legend(['ia', 'ib'], fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/current_pwm_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/current_pwm_' + file_marker + '.png', dpi=600)
 
     ### ==================================================================================== ###
     fig = plt.figure(figsize=(20, 12))
@@ -200,7 +200,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/current_power_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/current_power_' + file_marker + '.png', dpi=600)
 
     ### ==================================================================================== ###
     report_str = ""
@@ -263,7 +263,7 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_scanglecum_er_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_scanglecum_er_' + file_marker + '.png', dpi=600)
 
 
     fig = plt.figure(figsize=(20, 12))
@@ -290,7 +290,7 @@ def plot_data(file_marker, DELTA_T):
     plt.yticks(fontsize=20)
     plt.legend(['ia', 'ib'], fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_pwm_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_pwm_' + file_marker + '.png', dpi=600)
 
     fig = plt.figure(figsize=(20, 12))
     # first figure
@@ -314,4 +314,4 @@ def plot_data(file_marker, DELTA_T):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     fig.align_labels()
-    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_power_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/sm_current_power_' + file_marker + '.png', dpi=600)

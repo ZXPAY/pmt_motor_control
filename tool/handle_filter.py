@@ -50,7 +50,6 @@ if __name__ == "__main__":
 
     print("==================================")
 
-    window = 8
     recur_num = 7  # feature = 3 + 1 = 4
     angle_recur = np.zeros([data_length-recur_num, recur_num+1], dtype=np.float64)
     angle_ans = np.ones([data_length-recur_num, 1], dtype=np.float64) * np.mean(angle)
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     save2pickle("data/fir_" + file_marker + ".pickle", P)
 
     # Load parameters
-    # P = load_pickle("data/fir_filter_8_2.pickle")
+    # P = load_pickle("data/fir_enc_noinput_10k.pickle")
 
     print(P.shape)
     print(P)
@@ -75,18 +74,19 @@ if __name__ == "__main__":
     except:
         pass
 
+    t_dot = np.linspace(0, new_angle.shape[0]-1, new_angle.shape[0])*delat_t
     plt.figure(figsize=(20,12))
-    plt.plot(angle*360/16383)
-    plt.plot(new_angle*360/16383)
-    plt.plot(np.ones(angle.shape)*np.mean(angle)*360/16383, 'r')
+    plt.plot(t_dot, angle[recur_num:]*360/16383)
+    plt.plot(t_dot, new_angle*360/16383)
+    plt.plot(t_dot, np.ones(new_angle.shape)*np.mean(angle)*360/16383, 'r')
     plt.grid(True)
-    plt.xlabel('t', fontsize=24, position=(1,0))
+    plt.xlabel('t(s)', fontsize=24, position=(1,0))
     plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
     plt.title('angle and after FIR filter angle', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
     plt.legend(['angle', 'FIR angle', 'mean'], fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/fir_angle_' + file_marker + '.png')
+    plt.savefig(FIG_DIR+"/"+file_marker + '/fir_angle_' + file_marker + '.png', dpi=600)
 
     print("===== new_angle =====")
     print("max value: ", np.max(new_angle))

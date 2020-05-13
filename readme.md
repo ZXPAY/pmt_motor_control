@@ -15,6 +15,15 @@ make clt_raw mk={file_mark} len={length} sz={data_size}
 
 ---
 
+## Collect FIR filter data
+Main code is test_id_filter.c  
+Collect command example is below:  
+```
+make clt_raw mk={file_mark} len={length} sz={data_size}
+```
+
+---
+
 ## Collect motor step response or dynamic data
 ```
 make clt_motor_id mk={file_mark} sz={data_size}
