@@ -59,10 +59,10 @@ if __name__ == "__main__":
 
     # Calculate parameters
     P = np.matmul(np.matmul(np.linalg.inv(np.matmul(angle_recur.T, angle_recur)), angle_recur.T), angle_ans)
-    save2pickle("data/fir_" + file_marker + ".pickle", P)
+    # save2pickle("data/fir_" + file_marker + ".pickle", P)
 
     # Load parameters
-    # P = load_pickle("data/fir_enc_noinput_10k.pickle")
+    P = load_pickle("data/fir_enc_noinput_10k.pickle")
 
     print(P.shape)
     print(P)
@@ -81,12 +81,12 @@ if __name__ == "__main__":
     plt.plot(t_dot, np.ones(new_angle.shape)*np.mean(angle)*360/16383, 'r')
     plt.grid(True)
     plt.xlabel('t(s)', fontsize=24, position=(1,0))
-    plt.ylabel('degree', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.ylabel('angle (deg)', fontsize=24, position=(0,1), rotation="horizontal")
     plt.title('angle and after FIR filter angle', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
     plt.legend(['angle', 'FIR angle', 'mean'], fontsize=20)
-    plt.savefig(FIG_DIR+"/"+file_marker + '/fir_angle_' + file_marker + '.png', dpi=600)
+    plt.savefig(FIG_DIR+"/"+file_marker + '/fir_angle_' + file_marker + '.png', dpi=300)
 
     print("===== new_angle =====")
     print("max value: ", np.max(new_angle))
