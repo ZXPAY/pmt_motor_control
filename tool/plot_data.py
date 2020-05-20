@@ -206,6 +206,12 @@ def plot_data(file_marker, DELTA_T):
 
     rms_ia_square = np.mean((ia*ia))
     rms_ib_square = np.mean((ib*ib))
+    P_loss_A = rms_ia_square*6.485
+    P_loss_B = rms_ib_square*6.165
+    P_in_A = np.mean(np.abs(ia*5))
+    P_in_B = np.mean(np.abs(ib*5))
+    P_efficient_A = (P_in_A - P_loss_A) / P_in_A * 100
+    P_efficient_B = (P_in_B - P_loss_B) / P_in_B * 100
 
     report_str = ""
     report_str += "Data size is " +  str(ia.shape[0]) + "\n"
@@ -233,6 +239,15 @@ def plot_data(file_marker, DELTA_T):
     report_str += "===== current Mean Square (watt) =====" + "\n"
     report_str += "rms_ia_square: " + str(rms_ia_square) + " A\n"
     report_str += "rms_ib_square: " + str(rms_ib_square) + " A\n"
+    report_str += "===== P_loss (watt) =====" + "\n"
+    report_str += "P_loss_A: " + str(rms_ia_square*6.485) + " W\n"
+    report_str += "P_loss_B: " + str(rms_ia_square*6.165) + " W\n"
+    report_str += "===== P_in (watt) =====" + "\n"
+    report_str += "P_in_A: " + str(P_in_A) + " W\n"
+    report_str += "P_in_B: " + str(P_in_B) + " W\n"
+    report_str += "===== Eta (H) (%) =====" + "\n"
+    report_str += "P_efficient_A: " + str(P_efficient_A) + " %\n"
+    report_str += "P_efficient_B: " + str(P_efficient_B) + " %\n"
 
     print(report_str)
 
