@@ -39,7 +39,7 @@ plt.ylabel('%', fontsize=24, position=(0,1), rotation="horizontal")
 plt.title('Efficiency', fontsize=28)
 plt.xticks(x_dot, X_TICKS, fontsize=20)
 plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
-plt.legend(["Open loop", "Close loop (servo)", "Close loop (servo + current)"], fontsize=20)
+plt.legend(["Open loop", "Close loop (exi-ang)", "Close loop (exi-ang + current)"], fontsize=20)
 plt.savefig(FIG_DIR + "/" + RESULT_DIR + '/efficiency' + '.png', dpi=300)
 
 
@@ -53,7 +53,7 @@ plt.ylabel('angle (deg)', fontsize=24, position=(0,1.05), rotation="horizontal")
 plt.title('Error STD (standard deviation)', fontsize=28)
 plt.xticks(x_dot, X_TICKS, fontsize=20)
 plt.yticks(fontsize=20, position=(0,1), rotation="horizontal")
-plt.legend(["Open loop", "Close loop (servo)", "Close loop (servo + current)"], fontsize=20)
+plt.legend(["Open loop", "Close loop (exi-ang)", "Close loop (exi-ang + current)"], fontsize=20)
 plt.savefig(FIG_DIR + "/" + RESULT_DIR + '/er_std' + '.png', dpi=300)
 
 
