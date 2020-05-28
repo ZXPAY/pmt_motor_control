@@ -195,7 +195,7 @@ def plot_data(file_marker, DELTA_T):
     plt.plot(t, power)
     plt.grid(True)
     plt.xlabel('t (s)', fontsize=24, position=(1,0))
-    plt.ylabel('P (A)', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.ylabel('P (W)', fontsize=24, position=(0,1), rotation="horizontal")
     plt.title('1A1B 2A2B Power', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
@@ -212,6 +212,7 @@ def plot_data(file_marker, DELTA_T):
     P_in_B = np.mean(np.abs(ib*5))
     P_efficient_A = (P_in_A - P_loss_A) / P_in_A * 100
     P_efficient_B = (P_in_B - P_loss_B) / P_in_B * 100
+    P_all = (P_in_A + P_in_B - P_loss_A - P_loss_B) / (P_in_A + P_in_B) * 100
 
     report_str = ""
     report_str += "Data size is " +  str(ia.shape[0]) + "\n"
@@ -236,9 +237,12 @@ def plot_data(file_marker, DELTA_T):
     report_str += "mean: " + str(np.mean(power)) + "\n"
     report_str += "std: " + str(np.std(power)) + "\n"
     report_str += "sum: " + str(np.sum(np.abs(power))) + " J\n"
-    report_str += "===== current Mean Square (watt) =====" + "\n"
+    report_str += "===== current RMS Square (watt) =====" + "\n"
     report_str += "rms_ia_square: " + str(rms_ia_square) + " A\n"
     report_str += "rms_ib_square: " + str(rms_ib_square) + " A\n"
+    report_str += "===== current RMS (watt) =====" + "\n"
+    report_str += "rms_ia: " + str(np.sqrt(rms_ia_square)) + " A\n"
+    report_str += "rms_ib: " + str(np.sqrt(rms_ib_square)) + " A\n"
     report_str += "===== P_loss (watt) =====" + "\n"
     report_str += "P_loss_A: " + str(rms_ia_square*6.485) + " W\n"
     report_str += "P_loss_B: " + str(rms_ia_square*6.165) + " W\n"
@@ -248,6 +252,7 @@ def plot_data(file_marker, DELTA_T):
     report_str += "===== Eta (H) (%) =====" + "\n"
     report_str += "P_efficient_A: " + str(P_efficient_A) + " %\n"
     report_str += "P_efficient_B: " + str(P_efficient_B) + " %\n"
+    report_str += "P_all: " + str(P_all) + " %\n"
 
     print(report_str)
 
@@ -331,7 +336,7 @@ def plot_data(file_marker, DELTA_T):
     plt.plot(t_small, power[small_start:small_start+small_data_size])
     plt.grid(True)
     plt.xlabel('t (s)', fontsize=24, position=(1,0))
-    plt.ylabel('P (A)', fontsize=24, position=(0,1), rotation="horizontal")
+    plt.ylabel('P (W)', fontsize=24, position=(0,1), rotation="horizontal")
     plt.title('1A1B 2A2B Power', fontsize=28)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
